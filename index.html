@@ -114,7 +114,7 @@
     
         /* ==================== АДАПТАЦИЯ ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА ==================== */
         
-        /* Стили для экрана-заглушки */
+        /* Стили для экрана-заглушки (Вертикально) */
         .rotate-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, var(--blue), #005f6b); color: white;
@@ -125,54 +125,77 @@
         .rotate-overlay h2 { margin-bottom: 10px; font-size: 1.5rem; }
         .rotate-overlay p { font-size: 1rem; opacity: 0.8; line-height: 1.5; }
 
-        @keyframes tilt { 
-            0%, 100% { transform: rotate(0deg); } 
-            50% { transform: rotate(-90deg); } 
-        }
+        @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } }
 
-        /* 1. ПОКАЗЫВАЕМ заглушку, если телефон держат ВЕРТИКАЛЬНО */
+        /* 1. ЕСЛИ ТЕЛЕФОН ВЕРТИКАЛЬНО - показываем заглушку */
         @media screen and (orientation: portrait) and (max-width: 900px) {
             .rotate-overlay { display: flex; }
-            .screen { display: none !important; } /* Скрываем игру */
+            .screen { display: none !important; }
             .border-container { display: none; }
         }
 
-        /* 2. СЖИМАЕМ отступы, если телефон держат ГОРИЗОНТАЛЬНО (чтобы всё влезло) */
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            body { overflow: hidden; }
-            .border-container { display: none; } /* Убираем рамку на телефонах */
-            .home-btn { top: 5px; left: 5px; padding: 5px 10px; font-size: 0.8rem; }
+        /* 2. ЕСЛИ ТЕЛЕФОН ГОРИЗОНТАЛЬНО - Ультра-компактный дизайн */
+        @media screen and (orientation: landscape) and (max-height: 600px) {
+            body, html { height: 100%; overflow: hidden; touch-action: manipulation; }
+            .border-container { display: none; } /* Убираем рамку */
             
-            /* Меню */
-            .menu-card { padding: 15px; margin-top: 5px; height: 90vh; overflow-y: auto; }
-            .main-title { font-size: 1.5rem; margin-bottom: 10px; }
-            .game-icon { font-size: 2rem; }
+            /* Переопределяем экраны, чтобы не было скролла */
+            .screen { padding: 0 !important; height: 100%; box-sizing: border-box; }
+            .screen.active { display: flex; flex-direction: column; justify-content: flex-start; }
             
-            /* Аркан Тартыс */
-            #arkan-screen { padding: 10px; }
-            .arkan-rope-area { height: 40px; }
-            .arkan-layout { padding: 0 10px; gap: 15px; margin-top: 10px; }
-            .arkan-zone { padding: 10px; }
-            .arkan-q-box { padding: 10px; font-size: 1.1rem; margin-bottom: 10px; }
-            .arkan-btn { padding: 10px; font-size: 1rem; }
-            .rope-marker { width: 35px; height: 35px; font-size: 0.7rem; }
+            /* Кнопка "Меню" маленькая, полупрозрачная, в самом углу */
+            .home-btn { top: 2px; left: 2px; padding: 3px 8px; font-size: 0.75rem; border-width: 1px; z-index: 1000; background: rgba(255,255,255,0.9); }
+            h2 { font-size: 0.9rem !important; margin: 0 0 3px 0 !important; text-align: center; }
 
-            /* Бәйге */
-            #baige-screen { padding: 15px 10px 5px 10px; }
-            .race-track-area { margin-bottom: 5px; height: 100px; }
-            .player-panel { padding: 5px; }
-            .baige-q-box { padding: 5px; margin-bottom: 5px; font-size: 0.85rem; }
-            .baige-btn { padding: 5px; font-size: 0.8rem; }
+            /* ==================== АРҚАН ТАРТЫС ==================== */
+            #arkan-screen { padding-top: 25px !important; } /* Место под кнопку меню сверху */
+            .arkan-rope-area { height: 25px; border-bottom: 2px solid var(--gold); flex-shrink: 0; margin: 0; }
+            .rope-track { height: 10px; }
+            .rope-marker { width: 24px; height: 24px; font-size: 0.6rem; border-width: 2px; }
+            
+            .arkan-layout { flex: 1; display: flex; flex-direction: row !important; gap: 8px; padding: 2px 5px !important; margin-top: 2px; overflow: hidden; }
+            .arkan-zone { flex: 1; padding: 5px; justify-content: flex-start; border-radius: 10px; box-sizing: border-box; }
+            .arkan-q-box { font-size: 0.85rem; padding: 5px; margin-bottom: 5px; min-height: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+            .arkan-options { grid-template-columns: 1fr 1fr; gap: 4px; width: 100%; }
+            .arkan-btn { padding: 6px; font-size: 0.8rem; border-radius: 6px; box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
 
-            /* Асық ату */
-            #asyk-screen { padding: 15px 10px 5px 10px; }
-            .asyk-layout { gap: 10px; }
-            .asyk-player-zone { padding: 10px; }
-            .asyk-stats { padding: 5px; margin-bottom: 5px; font-size: 0.9rem; }
-            .asyk-field { padding: 5px; margin-bottom: 5px; }
-            .asyk-target { font-size: 1.5rem; }
-            .asyk-q-box { padding: 10px; margin-bottom: 10px; font-size: 1rem; }
-            .asyk-btn { padding: 10px; font-size: 0.9rem; }
+            /* ==================== БӘЙГЕ ==================== */
+            #baige-screen { padding-top: 25px !important; }
+            .race-track-area { height: 50px; margin-bottom: 2px; border-width: 2px; flex-shrink: 0; justify-content: center; }
+            .track-lane { height: 22px; }
+            .horse { font-size: 1.3rem; top: -6px; }
+            
+            .baige-controls { flex: 1; display: flex; flex-direction: row !important; gap: 8px; padding: 2px 5px !important; overflow: hidden; }
+            .player-panel { flex: 1; padding: 5px; border-width: 2px; justify-content: flex-start; box-sizing: border-box; }
+            .player-header { font-size: 0.9rem; font-weight: bold; text-align: center; margin-bottom: 2px; }
+            .baige-q-box { font-size: 0.8rem; padding: 4px; margin-bottom: 4px; min-height: auto; }
+            .baige-options { grid-template-columns: 1fr 1fr; gap: 4px; }
+            .baige-btn { padding: 6px; font-size: 0.75rem; border-radius: 4px; }
+
+            /* ==================== АСЫҚ АТУ ==================== */
+            #asyk-screen { padding-top: 25px !important; }
+            .asyk-layout { flex: 1; display: flex; flex-direction: row !important; gap: 8px; padding: 2px 5px !important; overflow: hidden; }
+            .asyk-player-zone { flex: 1; padding: 5px; border-width: 2px; border-radius: 10px; box-sizing: border-box; }
+            .asyk-stats { flex-direction: row; margin-bottom: 2px; padding: 2px 5px; font-size: 0.75rem; box-shadow: none; border-bottom: 1px solid #ddd; border-radius: 0; }
+            .asyk-field { padding: 2px; margin-bottom: 2px; background: transparent; box-shadow: none; justify-content: center; align-items: center; }
+            .asyk-target { font-size: 1.1rem; margin: 0 1px; }
+            
+            .asyk-controls { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+            .asyk-q-box { font-size: 0.8rem; padding: 4px; margin-bottom: 4px; min-height: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+            .asyk-options { grid-template-columns: 1fr 1fr; gap: 4px; }
+            .asyk-btn { padding: 6px; font-size: 0.8rem; border-radius: 6px; box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+
+            /* ==================== ГЛАВНОЕ МЕНЮ ==================== */
+            .menu-card { padding: 10px; width: 95%; max-height: 98vh; overflow-y: auto; margin: auto; }
+            .main-title { font-size: 1.2rem; margin-bottom: 10px; }
+            .games-grid { grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-top: 10px; }
+            .game-card { padding: 5px; border-width: 1px; }
+            .game-icon { font-size: 1.5rem; margin-bottom: 2px; display: block; }
+            .game-card h3 { font-size: 0.8rem; margin: 0; }
+            .settings-row { margin-bottom: 5px; flex-direction: row; justify-content: space-around; gap: 5px; }
+            .settings-row div { flex: 1; }
+            select { padding: 4px; font-size: 0.8rem; width: 100%; }
+            .label-text { font-size: 0.7rem; margin-bottom: 2px; }
         }
     </style>
 </head>
@@ -763,5 +786,6 @@
 </body>
 
 </html>
+
 
 
