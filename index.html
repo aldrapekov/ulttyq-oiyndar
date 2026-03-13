@@ -111,7 +111,42 @@
         .p2-color { border-color: var(--red); } .p2-color .asyk-btn { background: var(--red); }
         .p3-color { border-color: var(--green); } .p3-color .baige-btn { background: var(--green); }
         .p4-color { border-color: var(--orange); } .p4-color .baige-btn { background: var(--orange); }
+        
+        /* ==================== АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ ЭКРАНОВ ==================== */
+        @media (max-width: 768px) {
+            /* Меню */
+            .games-grid { grid-template-columns: 1fr; gap: 10px; }
+            .menu-card { padding: 20px; width: 95%; margin-top: 20px; max-height: 90vh; overflow-y: auto; }
+            .main-title { font-size: 1.8rem; margin-bottom: 15px; }
+            .settings-row { flex-direction: column; align-items: stretch; gap: 10px; }
+            
+            /* Кнопка "Домой" */
+            .home-btn { top: 10px; left: 10px; padding: 5px 10px; font-size: 0.9rem; }
 
+            /* Аркан тартыс */
+            #arkan-screen { padding: 50px 10px 10px 10px; }
+            .arkan-layout { flex-direction: column; padding: 10px; gap: 15px; overflow-y: auto; margin-top: 10px; }
+            .arkan-zone { padding: 15px; }
+            .arkan-q-box { font-size: 1.2rem; padding: 15px; margin-bottom: 15px; }
+            .arkan-btn { padding: 15px; font-size: 1.1rem; }
+            .rope-marker { width: 40px; height: 40px; font-size: 0.8rem; }
+
+            /* Бәйге */
+            #baige-screen { padding: 50px 10px 10px 10px; flex-direction: column; }
+            .race-track-area { flex: 0 0 30%; min-height: 120px; margin-bottom: 10px; }
+            .horse { font-size: 1.8rem; top: -5px; }
+            .baige-controls { flex-direction: column; overflow-y: auto; gap: 10px; }
+            .player-panel { margin-bottom: 5px; }
+
+            /* Асық ату */
+            #asyk-screen { padding: 50px 10px 10px 10px; }
+            .asyk-layout { flex-direction: column; gap: 15px; overflow-y: auto; }
+            .asyk-player-zone { padding: 10px; }
+            .asyk-target { font-size: 1.8rem; }
+            .asyk-q-box { font-size: 1.1rem; padding: 15px; margin-bottom: 10px; }
+            .asyk-btn { padding: 15px; font-size: 1rem; }
+            .asyk-stats { font-size: 1rem; flex-direction: column; align-items: center; gap: 5px; }
+        }
     </style>
 </head>
 <body>
@@ -689,4 +724,5 @@
     app.init();
 </script>
 </body>
+
 </html>
