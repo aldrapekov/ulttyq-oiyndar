@@ -2,214 +2,144 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Uly Dala Oyindary</title>
     <style>
         /* --- ГЛОБАЛЬНЫЕ СТИЛИ --- */
         :root {
             --blue: #00B1C1; --blue-light: #E0F7FA;
             --red: #E30A17; --red-light: #FFEBEE;
-            --green: #2ecc71; --green-light: #e8f8f5;
-            --orange: #e67e22; --orange-light: #fdf2e9;
-            --gold: #FFDA44; --text: #333;
+            --green: #2ecc71; --orange: #e67e22; --gold: #FFDA44; --text: #333;
         }
-
-        body {
-            margin: 0; padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh; overflow: hidden; display: flex; flex-direction: column;
-            background-color: #fff;
-        }
-
-        /* --- РАМКА --- */
-        .border-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 999; }
-        .moving-border {
-            position: absolute; background-color: var(--gold);
-            background-image: linear-gradient(45deg, #d4ac0d 25%, transparent 25%, transparent 50%, #d4ac0d 50%, #d4ac0d 75%, transparent 75%, transparent);
-            background-size: 20px 20px;
-        }
-        .moving-border.top { top: 0; left: 0; width: 100%; height: 20px; animation: slide-x 1s linear infinite; }
-        .moving-border.right { top: 0; right: 0; width: 20px; height: 100%; animation: slide-y 1s linear infinite; }
-        .moving-border.bottom { bottom: 0; left: 0; width: 100%; height: 20px; animation: slide-x-rev 1s linear infinite; }
-        .moving-border.left { top: 0; left: 0; width: 20px; height: 100%; animation: slide-y-rev 1s linear infinite; }
-        @keyframes slide-x { from { background-position: 0 0; } to { background-position: 20px 0; } }
-        @keyframes slide-x-rev { from { background-position: 0 0; } to { background-position: -20px 0; } }
-        @keyframes slide-y { from { background-position: 0 0; } to { background-position: 0 20px; } }
-        @keyframes slide-y-rev { from { background-position: 0 0; } to { background-position: 0 -20px; } }
-
-        /* --- ЭКРАНЫ --- */
-        .screen { display: none; width: 100%; height: 100%; flex-direction: column; background: #fff; }
-        .screen.active { display: flex; }
-
-        /* --- МЕНЮ --- */
-        #menu-screen { justify-content: center; align-items: center; background: linear-gradient(135deg, #fdfbf7 0%, #fff 100%); }
-        .menu-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border: 4px solid var(--gold); max-width: 700px; width: 90%; z-index: 10; }
-        .main-title { color: var(--blue); font-size: 2.5rem; margin-bottom: 30px; text-transform: uppercase; }
-        .settings-row { display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
-        select { padding: 10px; border-radius: 8px; border: 2px solid #ddd; font-size: 1rem; cursor: pointer; }
-        .label-text { display: block; font-size: 0.8rem; color: #888; text-align: left; margin-bottom: 5px;}
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff; user-select: none; }
         
-        .games-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .game-card { background: var(--blue-light); padding: 20px; border-radius: 15px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
-        .game-card:hover { border-color: var(--blue); transform: translateY(-5px); }
-        .game-icon { font-size: 3rem; display: block; margin-bottom: 10px; }
-
-        /* --- ОБЩИЕ ЭЛЕМЕНТЫ --- */
-        .home-btn { position: absolute; top: 30px; left: 30px; padding: 10px 20px; z-index: 100; cursor: pointer; background: white; border: 2px solid var(--gold); border-radius: 20px; font-weight: bold; }
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; z-index: 2000; transition: 0.3s; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; text-align: center; border: 4px solid var(--gold); min-width: 300px; }
-
-        /* ==================== АРКАН ТАРТЫС ==================== */
-        #arkan-screen { padding: 40px 20px 20px 20px; }
-        .arkan-rope-area { height: 100px; display: flex; justify-content: center; align-items: center; border-bottom: 4px solid var(--gold); }
-        .rope-track { width: 80%; height: 20px; background: #ddd; border-radius: 10px; position: relative; }
-        .rope-marker { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: white; border: 4px solid gold; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 2; font-weight: bold; transition: left 0.5s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .arkan-layout { flex: 1; display: flex; gap: 40px; padding: 30px 50px; width: 100%; box-sizing: border-box; margin-top: 20px; }
-        .arkan-zone { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px; padding: 30px; border: 2px solid #ccc; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .arkan-q-box { background: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; font-weight: bold; width: 100%; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 2rem; min-height: auto; flex-grow: 0; }
-        .arkan-options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
-        .arkan-btn { padding: 25px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; font-size: 1.6rem; transition: 0.1s; box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
-        .arkan-btn:active { transform: translateY(6px); box-shadow: none; }
-
-        /* ==================== БӘЙГЕ ==================== */
-        #baige-screen { padding: 40px 20px 20px 20px; }
-        .race-track-area { flex: 0 0 35%; background: #e8f5e9; border: 4px solid #4caf50; border-radius: 10px; margin-bottom: 15px; display: flex; flex-direction: column; justify-content: space-evenly; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
-        .finish-line { position: absolute; left: 5%; top: 0; bottom: 0; width: 10px; background: repeating-linear-gradient(-45deg, #000, #000 10px, #fff 10px, #fff 20px); z-index: 0; }
-        .track-lane { position: relative; height: 40px; border-bottom: 1px dashed rgba(0,0,0,0.1); width: 100%; }
-        .horse { font-size: 2.5rem; position: absolute; left: 92%; top: -10px; transition: left 0.5s cubic-bezier(0.25, 1, 0.5, 1); z-index: 1; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3)); transform: scaleX(-1); }
-        .baige-controls { flex: 1; display: flex; gap: 10px; height: 100%; }
-        .player-panel { flex: 1; background: #fff; border-radius: 10px; display: flex; flex-direction: column; padding: 10px; border: 2px solid #ccc; position: relative; }
-        .baige-q-box { background: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 10px; flex-grow: 1; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .baige-options { display: grid; grid-template-columns: 1fr; gap: 8px; }
-        .baige-btn { padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: white; font-size: 0.9rem; transition: 0.1s; }
-        .baige-btn:active { transform: scale(0.98); }
-
-        /* ==================== АСЫҚ АТУ ==================== */
-        #asyk-screen { padding: 40px 20px 20px 20px; }
-        .asyk-layout { flex: 1; display: flex; gap: 30px; height: 100%; }
-        .asyk-player-zone { flex: 1; border: 4px solid #ccc; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; position: relative; background: #fafafa; }
-        
-        /* Табло счета */
-        .asyk-stats { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.2rem; font-weight: bold; color: #555; background: #fff; padding: 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
-        /* Поле с асыками */
-        .asyk-field { display: flex; justify-content: space-around; margin-bottom: 20px; background: #e0e0e0; padding: 15px; border-radius: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
-        .asyk-target { font-size: 2.5rem; transition: all 0.3s; }
-        .asyk-target.hit { transform: rotate(90deg) scale(0.8); opacity: 0.4; filter: grayscale(100%); }
-        
-        /* Вопросы в асыках (похожи на аркан) */
-        .asyk-controls { flex: 1; display: flex; flex-direction: column; }
-        .asyk-q-box { flex: 1; background: white; border-radius: 15px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 20px; }
-        .asyk-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .asyk-btn { padding: 20px; border-radius: 10px; border: none; color: white; font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2); }
-        .asyk-btn:active { transform: translateY(4px); box-shadow: none; }
-        .asyk-btn:disabled { background: #ccc !important; box-shadow: none; cursor: not-allowed; }
-
-        /* Цвета */
-        .p1-color { border-color: var(--blue); } .p1-color .asyk-btn { background: var(--blue); }
-        .p2-color { border-color: var(--red); } .p2-color .asyk-btn { background: var(--red); }
-        .p3-color { border-color: var(--green); } .p3-color .baige-btn { background: var(--green); }
-        .p4-color { border-color: var(--orange); } .p4-color .baige-btn { background: var(--orange); }
-    
-        /* ==================== АДАПТАЦИЯ ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМА ==================== */
-        
-        /* Стили для экрана-заглушки (Вертикально) */
-        .rotate-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--blue), #005f6b); color: white;
-            z-index: 9999; flex-direction: column; justify-content: center; align-items: center; 
-            text-align: center; padding: 20px; box-sizing: border-box; font-family: sans-serif;
-        }
+        .rotate-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--blue), #005f6b); color: white; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
         .rotate-icon { font-size: 5rem; margin-bottom: 20px; animation: tilt 2s infinite ease-in-out; }
         .rotate-overlay h2 { margin-bottom: 10px; font-size: 1.5rem; }
         .rotate-overlay p { font-size: 1rem; opacity: 0.8; line-height: 1.5; }
-
         @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } }
 
-        /* 1. ЕСЛИ ТЕЛЕФОН ВЕРТИКАЛЬНО - показываем заглушку */
+        .screen { display: none; width: 100%; height: 100%; background: #fff; }
+        .screen.active { display: flex; }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; z-index: 2000; transition: 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; text-align: center; border: 4px solid var(--gold); min-width: 300px; }
+        
+        /* --- ТАЙМЕР --- */
+        .timer-container { width: 100%; height: 6px; background: #eee; border-radius: 3px; overflow: hidden; margin-bottom: 5px; display: none; }
+        .timer-bar { height: 100%; width: 100%; background: var(--green); transform-origin: left; }
+        @keyframes shrink { 0% { width: 100%; background: var(--green); } 50% { background: var(--gold); } 100% { width: 0%; background: var(--red); } }
+        
+        .ai-status { display: none; font-size: 1.1rem; font-weight: bold; color: var(--red); text-align: center; padding: 10px; background: var(--red-light); border-radius: 10px; border: 2px dashed var(--red); height: 100%; align-items: center; justify-content: center; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* ВЕРТИКАЛЬНЫЙ РЕЖИМ (ТЕЛЕФОН) */
         @media screen and (orientation: portrait) and (max-width: 900px) {
             .rotate-overlay { display: flex; }
             .screen { display: none !important; }
-            .border-container { display: none; }
         }
 
-        /* 2. ЕСЛИ ТЕЛЕФОН ГОРИЗОНТАЛЬНО - Ультра-компактный дизайн */
-        @media screen and (orientation: landscape) and (max-height: 600px) {
-            body, html { height: 100%; overflow: hidden; touch-action: manipulation; }
-            .border-container { display: none; } /* Убираем рамку */
-            
-            /* Переопределяем экраны, чтобы не было скролла */
-            .screen { padding: 0 !important; height: 100%; box-sizing: border-box; }
-            .screen.active { display: flex; flex-direction: column; justify-content: flex-start; }
-            
-            /* Кнопка "Меню" маленькая, полупрозрачная, в самом углу */
-            .home-btn { top: 2px; left: 2px; padding: 3px 8px; font-size: 0.75rem; border-width: 1px; z-index: 1000; background: rgba(255,255,255,0.9); }
-            h2 { font-size: 0.9rem !important; margin: 0 0 3px 0 !important; text-align: center; }
+        /* УНИВЕРСАЛЬНЫЙ ГОРИЗОНТАЛЬНЫЙ РЕЖИМ (ПК + ТЕЛЕФОН) */
+        body, html { height: 100%; overflow: hidden; touch-action: manipulation; }
+        .screen { padding: 0; height: 100%; box-sizing: border-box; }
+        .screen.active { display: flex; flex-direction: column; justify-content: flex-start; }
+        
+        .home-btn { position: absolute; top: 5px; left: 5px; padding: 5px 10px; font-size: 0.9rem; border: 2px solid var(--gold); border-radius: 10px; z-index: 1000; background: rgba(255,255,255,0.9); font-weight: bold; cursor: pointer;}
+        h2 { font-size: 1rem; margin: 0 0 5px 0; text-align: center; }
 
-            /* ==================== АРҚАН ТАРТЫС ==================== */
-            #arkan-screen { padding-top: 25px !important; } /* Место под кнопку меню сверху */
-            .arkan-rope-area { height: 25px; border-bottom: 2px solid var(--gold); flex-shrink: 0; margin: 0; }
-            .rope-track { height: 10px; }
-            .rope-marker { width: 24px; height: 24px; font-size: 0.6rem; border-width: 2px; }
-            
-            .arkan-layout { flex: 1; display: flex; flex-direction: row !important; gap: 8px; padding: 2px 5px !important; margin-top: 2px; overflow: hidden; }
-            .arkan-zone { flex: 1; padding: 5px; justify-content: flex-start; border-radius: 10px; box-sizing: border-box; }
-            .arkan-q-box { font-size: 0.85rem; padding: 5px; margin-bottom: 5px; min-height: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-            .arkan-options { grid-template-columns: 1fr 1fr; gap: 4px; width: 100%; }
-            .arkan-btn { padding: 6px; font-size: 0.8rem; border-radius: 6px; box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+        /* ГЛАВНОЕ МЕНЮ */
+        #menu-screen { justify-content: center; align-items: center; background: #fdfbf7; overflow-y: auto; }
+        .menu-card { padding: 20px; width: 90%; max-width: 800px; max-height: 95vh; overflow-y: auto; margin: auto; background: white; border-radius: 15px; text-align: center; border: 3px solid var(--gold); box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .main-title { font-size: 1.5rem; margin-bottom: 15px; color: var(--blue); text-transform: uppercase; font-weight: bold;}
+        
+        .settings-row { display: flex; margin-bottom: 15px; flex-direction: row; justify-content: space-around; gap: 10px; flex-wrap: wrap;}
+        .settings-row div { flex: 1; min-width: 120px; text-align: left;}
+        select { padding: 8px; font-size: 0.9rem; width: 100%; border-radius: 5px; border: 1px solid #ccc; cursor: pointer;}
+        .label-text { font-size: 0.8rem; margin-bottom: 4px; display: block; color: #777;}
 
-            /* ==================== БӘЙГЕ ==================== */
-            #baige-screen { padding-top: 25px !important; }
-            .race-track-area { height: 50px; margin-bottom: 2px; border-width: 2px; flex-shrink: 0; justify-content: center; }
-            .track-lane { height: 22px; }
-            .horse { font-size: 1.3rem; top: -6px; }
-            
-            .baige-controls { flex: 1; display: flex; flex-direction: row !important; gap: 8px; padding: 2px 5px !important; overflow: hidden; }
-            .player-panel { flex: 1; padding: 5px; border-width: 2px; justify-content: flex-start; box-sizing: border-box; }
-            .player-header { font-size: 0.9rem; font-weight: bold; text-align: center; margin-bottom: 2px; }
-            .baige-q-box { font-size: 0.8rem; padding: 4px; margin-bottom: 4px; min-height: auto; }
-            .baige-options { grid-template-columns: 1fr 1fr; gap: 4px; }
-            .baige-btn { padding: 6px; font-size: 0.75rem; border-radius: 4px; }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
+        .game-card { padding: 15px; border: 2px solid transparent; background: var(--blue-light); border-radius: 10px; cursor: pointer; transition: 0.2s;}
+        .game-card:hover { border-color: var(--blue); transform: translateY(-3px);}
+        .game-icon { font-size: 2.5rem; margin-bottom: 5px; display: block; }
+        .game-card h3 { font-size: 1rem; margin: 0; color: #333;}
 
-            /* ==================== АСЫҚ АТУ ==================== */
-            #asyk-screen { padding-top: 25px !important; }
-            .asyk-layout { flex: 1; display: flex; flex-direction: row !important; gap: 8px; padding: 2px 5px !important; overflow: hidden; }
-            .asyk-player-zone { flex: 1; padding: 5px; border-width: 2px; border-radius: 10px; box-sizing: border-box; }
-            .asyk-stats { flex-direction: row; margin-bottom: 2px; padding: 2px 5px; font-size: 0.75rem; box-shadow: none; border-bottom: 1px solid #ddd; border-radius: 0; }
-            .asyk-field { padding: 2px; margin-bottom: 2px; background: transparent; box-shadow: none; justify-content: center; align-items: center; }
-            .asyk-target { font-size: 1.1rem; margin: 0 1px; }
-            
-            .asyk-controls { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
-            .asyk-q-box { font-size: 0.8rem; padding: 4px; margin-bottom: 4px; min-height: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-            .asyk-options { grid-template-columns: 1fr 1fr; gap: 4px; }
-            .asyk-btn { padding: 6px; font-size: 0.8rem; border-radius: 6px; box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+        /* АРҚАН ТАРТЫС */
+        #arkan-screen { padding-top: 40px; }
+        .arkan-rope-area { height: 40px; border-bottom: 3px solid var(--gold); flex-shrink: 0; margin: 0; position: relative;}
+        .rope-track { width: 80%; height: 15px; background: #ddd; border-radius: 8px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .rope-marker { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: white; border: 3px solid gold; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 2; font-weight: bold; transition: left 0.3s ease-out; font-size: 0.7rem;}
+        
+        .arkan-layout { flex: 1; display: flex; flex-direction: row; gap: 15px; padding: 10px; overflow: hidden; }
+        .arkan-zone { flex: 1; padding: 10px; border: 2px solid #ccc; justify-content: center; border-radius: 10px; box-sizing: border-box; display: flex; flex-direction: column;}
+        .arkan-q-box { font-size: 1.1rem; padding: 15px; margin-bottom: 10px; text-align: center; font-weight: bold; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .arkan-options { grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; display: grid; }
+        .arkan-btn { padding: 15px; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s;}
+        .arkan-btn:active { transform: translateY(3px); box-shadow: none; }
 
-            /* ==================== ГЛАВНОЕ МЕНЮ ==================== */
-            .menu-card { padding: 10px; width: 95%; max-height: 98vh; overflow-y: auto; margin: auto; }
-            .main-title { font-size: 1.2rem; margin-bottom: 10px; }
-            .games-grid { grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-top: 10px; }
-            .game-card { padding: 5px; border-width: 1px; }
-            .game-icon { font-size: 1.5rem; margin-bottom: 2px; display: block; }
-            .game-card h3 { font-size: 0.8rem; margin: 0; }
-            .settings-row { margin-bottom: 5px; flex-direction: row; justify-content: space-around; gap: 5px; }
-            .settings-row div { flex: 1; }
-            select { padding: 4px; font-size: 0.8rem; width: 100%; }
-            .label-text { font-size: 0.7rem; margin-bottom: 2px; }
+        /* БӘЙГЕ */
+        #baige-screen { padding-top: 40px; }
+        .race-track-area { height: 80px; margin: 0 10px 10px 10px; border: 3px solid #4caf50; background: #e8f5e9; border-radius: 10px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-evenly; position: relative; overflow: hidden;}
+        .finish-line { position: absolute; left: 5%; top: 0; bottom: 0; width: 5px; background: repeating-linear-gradient(-45deg, #000, #000 5px, #fff 5px, #fff 10px); }
+        .track-lane { position: relative; border-bottom: 2px dashed rgba(0,0,0,0.1); width: 100%; }
+        .horse { position: absolute; left: 92%; transition: left 0.3s ease-out; z-index: 1; transform: scaleX(-1); }
+        
+        .baige-controls { flex: 1; display: flex; flex-direction: row; gap: 10px; padding: 0 10px 10px 10px; overflow: hidden; }
+        .player-panel { flex: 1; padding: 10px; border: 2px solid #ccc; justify-content: flex-start; box-sizing: border-box; background: white; border-radius: 10px; display: flex; flex-direction: column;}
+        .player-header { font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 5px; }
+        .baige-q-box { font-size: 0.9rem; padding: 10px; margin-bottom: 10px; text-align: center; font-weight: bold; flex-grow: 1; display: flex; align-items: center; justify-content: center; background: #f9f9f9; border-radius: 8px;}
+        .baige-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .baige-btn { padding: 10px; font-size: 0.8rem; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold;}
+
+        /* АСЫҚ АТУ */
+        #asyk-screen { padding-top: 40px; }
+        .asyk-layout { flex: 1; display: flex; flex-direction: row; gap: 15px; padding: 10px; overflow: hidden; }
+        .asyk-player-zone { flex: 1; padding: 10px; border: 2px solid #ccc; border-radius: 10px; box-sizing: border-box; display: flex; flex-direction: column; background: #fafafa;}
+        .asyk-stats { display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 5px; padding: 5px 10px; font-size: 1rem; font-weight: bold; color: #555; border-bottom: 2px solid #ddd; }
+        .asyk-field { display: flex; flex-wrap: wrap; padding: 5px; margin-bottom: 10px; justify-content: center; align-items: center; gap: 5px;}
+        .asyk-target { font-size: 1.5rem; margin: 0 2px; transition: 0.3s; }
+        .asyk-target.hit { transform: rotate(90deg) scale(0.8); opacity: 0.3; filter: grayscale(100%); }
+        
+        .asyk-controls { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+        .asyk-q-box { font-size: 1rem; padding: 15px; margin-bottom: 10px; text-align: center; font-weight: bold; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; flex-grow: 1;}
+        .asyk-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .asyk-btn { padding: 12px; font-size: 0.9rem; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; box-shadow: 0 3px 0 rgba(0,0,0,0.2); }
+
+        /* Цвета игроков */
+        .p1-color { border-color: var(--blue) !important; } .p1-color .arkan-btn, .p1-color .baige-btn, .p1-color .asyk-btn { background: var(--blue); }
+        .p2-color { border-color: var(--red) !important; } .p2-color .arkan-btn, .p2-color .baige-btn, .p2-color .asyk-btn { background: var(--red); }
+        .p3-color { border-color: var(--green) !important; } .p3-color .baige-btn { background: var(--green); }
+        .p4-color { border-color: var(--orange) !important; } .p4-color .baige-btn { background: var(--orange); }
+
+        /* УЛЬТРА КОМПАКТНЫЙ РЕЖИМ (ДЛЯ ТЕЛЕФОНОВ ГОРИЗОНТАЛЬНО) */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .home-btn { top: 2px; left: 2px; padding: 3px 8px; font-size: 0.75rem; border-width: 1px;}
+            h2 { font-size: 0.9rem; margin: 0 0 3px 0; }
+            .menu-card { padding: 10px; max-height: 98vh; width: 98%;}
+            .main-title { font-size: 1.1rem; margin-bottom: 5px;}
+            .settings-row { margin-bottom: 5px; gap: 5px;}
+            select { padding: 4px; font-size: 0.8rem;}
+            .game-icon { font-size: 1.5rem; }
+            .games-grid { gap: 5px; margin-top: 10px;}
+            .game-card { padding: 5px; }
+
+            #arkan-screen, #baige-screen, #asyk-screen { padding-top: 25px; }
+            .arkan-rope-area { height: 25px; }
+            .arkan-layout, .baige-controls, .asyk-layout { gap: 5px; padding: 2px 5px; margin-top: 2px;}
+            .arkan-zone, .player-panel, .asyk-player-zone { padding: 5px; }
+            .arkan-q-box, .baige-q-box, .asyk-q-box { font-size: 0.8rem; padding: 5px; margin-bottom: 5px; }
+            .arkan-btn, .baige-btn, .asyk-btn { padding: 6px; font-size: 0.75rem; }
+            .race-track-area { height: 50px; margin-bottom: 2px; }
+            .asyk-stats { margin-bottom: 2px; padding: 2px 5px; font-size: 0.75rem; }
+            .asyk-target { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
+
     <div id="rotate-screen" class="rotate-overlay">
         <div class="rotate-icon">📱</div>
         <h2>Бұрыңыз / Поверните экран</h2>
         <p>Ойын көлденең режимге арналған<br>Игра предназначена для горизонтального режима</p>
-    </div>
-    <div class="border-container">
-        <div class="moving-border top"></div>
-        <div class="moving-border right"></div>
-        <div class="moving-border bottom"></div>
-        <div class="moving-border left"></div>
     </div>
 
     <div id="menu-screen" class="screen active">
@@ -218,10 +148,10 @@
             
             <div class="settings-row">
                 <div>
-                    <span class="label-text">Язык / Тіл</span>
-                    <select id="lang-select">
-                        <option value="ru">Русский</option>
-                        <option value="kz">Қазақша</option>
+                    <span class="label-text">Режим / Режим</span>
+                    <select id="mode-select" onchange="app.updateInterface()">
+                        <option value="pve">👤 Игрок vs 🤖 ИИ</option>
+                        <option value="pvp">👥 Игрок vs Игрок</option>
                     </select>
                 </div>
                 <div>
@@ -233,7 +163,24 @@
                     </select>
                 </div>
                 <div>
-                    <span class="label-text">Игроки / Ойыншылар</span>
+                    <span class="label-text">Язык / Тіл</span>
+                    <select id="lang-select" onchange="app.updateInterface()">
+                        <option value="ru">Русский</option>
+                        <option value="kz">Қазақша</option>
+                    </select>
+                </div>
+                
+                <div id="wrap-difficulty">
+                    <span class="label-text">Сложность / Қиындық</span>
+                    <select id="difficulty-select">
+                        <option value="easy">Легко (6с)</option>
+                        <option value="medium" selected>Средне (5с)</option>
+                        <option value="hard">Сложно (4с)</option>
+                        <option value="impossible">Невозможно (3с)</option>
+                    </select>
+                </div>
+                <div id="wrap-players" style="display:none;">
+                    <span class="label-text">Игроки (для Бәйге)</span>
                     <select id="players-select">
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -242,141 +189,108 @@
                 </div>
             </div>
 
-            <div class="games-grid">
+            <div class="games-grid" id="games-container">
                 <div class="game-card" onclick="app.startGame('arkan')">
-                    <span class="game-icon">🪢</span>
-                    <h3 id="txt-game1">Арқан Тартыс</h3>
+                    <span class="game-icon">🪢</span><h3 id="txt-game1">Арқан Тартыс</h3>
                 </div>
                 <div class="game-card" onclick="app.startGame('baige')">
-                    <span class="game-icon">🐎</span>
-                    <h3 id="txt-game2">Бәйге</h3>
+                    <span class="game-icon">🐎</span><h3 id="txt-game2">Бәйге</h3>
                 </div>
                 <div class="game-card" onclick="app.startGame('asyk')">
-                    <span class="game-icon">🦴</span>
-                    <h3 id="txt-game3">Асық Ату</h3>
+                    <span class="game-icon">🦴</span><h3 id="txt-game3">Асық Ату</h3>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="arkan-screen" class="screen">
+        <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
         <div class="arkan-rope-area">
-            <div class="rope-track">
-                <div id="rope-marker" class="rope-marker">VS</div>
-            </div>
+            <div class="rope-track"><div id="rope-marker" class="rope-marker">VS</div></div>
         </div>
         <div class="arkan-layout">
             <div class="arkan-zone p1-color">
-                <h2 id="at-team-a">Команда А</h2>
+                <h2 id="at-team-a">Игрок 1</h2>
+                <div class="timer-container" id="at-timer-box"><div class="timer-bar" id="at-timer"></div></div>
                 <div class="arkan-q-box" id="at-q-a">?</div>
                 <div class="arkan-options" id="at-opt-a"></div>
             </div>
             <div class="arkan-zone p2-color">
-                <h2 id="at-team-b">Команда Б</h2>
-                <div class="arkan-q-box" id="at-q-b">?</div>
-                <div class="arkan-options" id="at-opt-b"></div>
+                <h2 id="at-team-b">Игрок 2</h2>
+                <div class="ai-status" id="at-ai-status">🤖 ИИ ждет ошибку...</div>
+                <div id="at-p2-controls" style="display:flex; flex-direction:column; flex:1; justify-content: flex-end;">
+                    <div class="arkan-q-box" id="at-q-b">?</div>
+                    <div class="arkan-options" id="at-opt-b"></div>
+                </div>
             </div>
         </div>
-        <button class="home-btn" onclick="app.goHome()" id="btn-menu">🏠 Меню</button>
     </div>
 
     <div id="baige-screen" class="screen">
-        <div class="race-track-area" id="race-track">
-            <div class="finish-line"></div>
-        </div>
-        <div class="baige-controls" id="baige-controls"></div>
         <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
+        <div class="race-track-area" id="race-track">
+            </div>
+        <div class="baige-controls" id="baige-controls">
+            </div>
     </div>
 
     <div id="asyk-screen" class="screen">
+        <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
         <div class="asyk-layout">
             <div class="asyk-player-zone p1-color">
                 <h2 id="as-name-1">Игрок 1</h2>
-                <div class="asyk-stats">
-                    <span id="as-hand-1">В руке: 10</span>
-                    <span id="as-score-1">Сбито: 0</span>
-                </div>
-                <div class="asyk-field" id="as-field-1">
-                    </div>
+                <div class="asyk-stats"><span id="as-hand-1">В руке: 10</span><span id="as-score-1">Сбито: 0</span></div>
+                <div class="asyk-field" id="as-field-1"></div>
                 <div class="asyk-controls">
+                    <div class="timer-container" id="as-timer-box"><div class="timer-bar" id="as-timer"></div></div>
                     <div class="asyk-q-box" id="as-q-1">?</div>
                     <div class="asyk-options" id="as-opt-1"></div>
                 </div>
             </div>
-
             <div class="asyk-player-zone p2-color">
                 <h2 id="as-name-2">Игрок 2</h2>
-                <div class="asyk-stats">
-                    <span id="as-hand-2">В руке: 10</span>
-                    <span id="as-score-2">Сбито: 0</span>
-                </div>
-                <div class="asyk-field" id="as-field-2">
-                    </div>
-                <div class="asyk-controls">
+                <div class="asyk-stats"><span id="as-hand-2">В руке: 10</span><span id="as-score-2">Сбито: 0</span></div>
+                <div class="asyk-field" id="as-field-2"></div>
+                <div class="ai-status" id="as-ai-status">🤖 ИИ целится...</div>
+                <div class="asyk-controls" id="as-p2-controls">
                     <div class="asyk-q-box" id="as-q-2">?</div>
                     <div class="asyk-options" id="as-opt-2"></div>
                 </div>
             </div>
         </div>
-        <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
     </div>
 
     <div id="modal" class="modal-overlay">
         <div class="modal-content">
-            <h2 id="winner-text">Победа!</h2>
-            <button onclick="app.restartCurrentGame()" id="btn-restart" style="padding: 10px 20px; font-size: 1.2rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer;">Рестарт</button>
-            <br><br>
-            <button onclick="app.goHome()" id="btn-menu-modal" style="padding: 10px 20px; background: none; border: 1px solid #ccc; border-radius: 8px; cursor: pointer;">Меню</button>
+            <h2 id="winner-text" style="color:var(--blue); font-size: 1.5rem; margin-bottom: 15px;">Победа!</h2>
+            <button onclick="app.restartCurrentGame()" style="padding: 10px 20px; font-size: 1rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px;">Рестарт</button>
+            <button onclick="app.goHome()" style="padding: 10px 20px; font-size: 1rem; background: #eee; border: none; border-radius: 8px; cursor: pointer; width: 100%;">Меню</button>
         </div>
     </div>
 
 <script>
-    /* --- ДАННЫЕ (ПОЛНЫЕ БАЗЫ) --- */
+    /* --- БАЗЫ ВОПРОСОВ --- */
     const historyDB_RU = [
         { q: "Царица саков, победившая Кира?", correct: "Томирис", wrong: ["Зарина", "Бопай", "Бегим"] },
-        { q: "Где был найден «Золотой человек»?", correct: "Иссыкский курган", wrong: ["Берельский курган", "Бесшатыр", "Тамгалы"] },
         { q: "Стиль искусства саков?", correct: "Звериный стиль", wrong: ["Геометрический", "Абстрактный", "Готический"] },
-        { q: "Древний город, центр торговли на Шелковом пути?", correct: "Отырар", wrong: ["Караганда", "Павлодар", "Атырау"] },
-        { q: "Ученый, «Второй учитель» после Аристотеля?", correct: "Аль-Фараби", wrong: ["Аль-Бируни", "Ибн Сина", "Ходжа Ахмет"] },
-        { q: "В каком году монголы (Чингисхан) вторглись в Отырар?", correct: "1219", wrong: ["1300", "1150", "1465"] },
-        { q: "Столица Золотой Орды?", correct: "Сарай-Бату", wrong: ["Сыгнак", "Баласагун", "Туркестан"] },
-        { q: "Мавзолей Ходжа Ахмета Яссауи построил...", correct: "Тамерлан (Тимур)", wrong: ["Чингисхан", "Батый", "Тохтамыш"] },
+        { q: "Древний город на Шелковом пути?", correct: "Отырар", wrong: ["Караганда", "Павлодар", "Атырау"] },
+        { q: "Ученый, «Второй учитель»?", correct: "Аль-Фараби", wrong: ["Аль-Бируни", "Ибн Сина", "Ходжа Ахмет"] },
         { q: "Год образования Казахского ханства?", correct: "1465", wrong: ["1550", "1723", "1492"] },
         { q: "Первые ханы Казахского ханства?", correct: "Керей и Жанибек", wrong: ["Абылай и Кенесары", "Касым и Хакназар", "Толе и Айтеке"] },
-        { q: "Хан, при котором был расцвет и «Чистая дорога»?", correct: "Касым хан", wrong: ["Есим хан", "Тауке хан", "Жангир хан"] },
-        { q: "Автор свода законов «Жеты Жаргы»?", correct: "Тауке хан", wrong: ["Касым хан", "Есим хан", "Абылай хан"] },
-        { q: "Битва 1729 года против джунгар?", correct: "Анракайская", wrong: ["Атлахская", "Каталаунская", "Орбулакская"] },
+        { q: "Автор свода «Жеты Жаргы»?", correct: "Тауке хан", wrong: ["Касым хан", "Есим хан", "Абылай хан"] },
         { q: "Хан, объединивший три жуза?", correct: "Абылай хан", wrong: ["Кенесары", "Бокей", "Абулхаир"] },
-        { q: "Последний казахский хан, поднявший восстание?", correct: "Кенесары", wrong: ["Махамбет", "Сырым", "Исатай"] },
-        { q: "Знаменитые бии трех жузов?", correct: "Толе, Казыбек, Айтеке", wrong: ["Абай, Шакарим, Ыбырай", "Керей, Жанибек, Касым", "Исатай, Махамбет, Амангельды"] },
-        { q: "Священная книга мусульман?", correct: "Коран", wrong: ["Библия", "Тора", "Авеста"] },
+        { q: "Последний казахский хан?", correct: "Кенесары", wrong: ["Махамбет", "Сырым", "Исатай"] },
         { q: "Национальный напиток из кобыльего молока?", correct: "Кумыс", wrong: ["Шубат", "Айран", "Кефир"] },
-        { q: "Верхняя купольная часть юрты?", correct: "Шанырак", wrong: ["Кереге", "Уык", "Босага"] },
-        { q: "Струнный музыкальный инструмент (2 струны)?", correct: "Домбра", wrong: ["Кобыз", "Жетыген", "Сыбызгы"] },
+        { q: "Струнный музыкальный инструмент?", correct: "Домбра", wrong: ["Кобыз", "Жетыген", "Сыбызгы"] },
         { q: "Автор кюя «Адай»?", correct: "Курмангазы", wrong: ["Таттимбет", "Даулеткерей", "Дина Нурпеисова"] },
-        { q: "Великий поэт и просветитель?", correct: "Абай Кунанбаев", wrong: ["Шокан Уалиханов", "Ибрай Алтынсарин", "Жамбыл Жабаев"] },
-        { q: "Кто написал «Слова назидания»?", correct: "Абай", wrong: ["Шакарим", "Ыбырай", "Магжан"] },
-        { q: "Автор романа-эпопеи «Путь Абая»?", correct: "М. Ауэзов", wrong: ["С. Сейфуллин", "А. Кунанбаев", "Г. Мусрепов"] },
+        { q: "Автор «Слов назидания»?", correct: "Абай", wrong: ["Шакарим", "Ыбырай", "Магжан"] },
+        { q: "Автор романа «Путь Абая»?", correct: "М. Ауэзов", wrong: ["С. Сейфуллин", "А. Кунанбаев", "Г. Мусрепов"] },
         { q: "Первый казахский ученый-путешественник?", correct: "Шокан Уалиханов", wrong: ["Ибрай Алтынсарин", "Каныш Сатпаев", "Алькей Маргулан"] },
-        { q: "Лидер партии «Алаш»?", correct: "А. Букейханов", wrong: ["Т. Рыскулов", "С. Сейфуллин", "М. Шокай"] },
-        { q: "Герой восстания 1916 года?", correct: "Амангельды Иманов", wrong: ["Кенесары", "Исатай", "Сырым"] },
-        { q: "Первая столица КазАССР?", correct: "Оренбург", wrong: ["Кызылорда", "Алматы", "Астана"] },
-        { q: "Герой ВОВ, писатель, панфиловец?", correct: "Бауыржан Момышулы", wrong: ["Талгат Бигельдинов", "Рахимжан Кошкарбаев", "Маншук Маметова"] },
-        { q: "Девушки-героини ВОВ?", correct: "Алия и Маншук", wrong: ["Томирис и Зарина", "Бопай и Айганым", "Куляш и Роза"] },
-        { q: "Первый президент Академии Наук Казахстана?", correct: "К. Сатпаев", wrong: ["М. Ауэзов", "Е. Бекмаханов", "А. Маргулан"] },
-        { q: "Участник водружения флага над Рейхстагом?", correct: "Р. Кошкарбаев", wrong: ["Б. Момышулы", "Т. Бигельдинов", "К. Кайсенов"] },
-        { q: "События в Алматы в 1986 году?", correct: "Желтоксан", wrong: ["Наурыз", "Кантар", "Алаш"] },
-        { q: "Когда закрыли Семипалатинский полигон?", correct: "1991", wrong: ["1989", "1995", "2000"] },
+        { q: "Герой ВОВ, панфиловец?", correct: "Б. Момышулы", wrong: ["Т. Бигельдинов", "Р. Кошкарбаев", "М. Маметова"] },
         { q: "Год независимости РК?", correct: "1991", wrong: ["1986", "1995", "1990"] },
-        { q: "Первый Президент РК?", correct: "Н. Назарбаев", wrong: ["К. Токаев", "Д. Кунаев", "Ж. Ташенов"] },
         { q: "В каком году ввели тенге?", correct: "1993", wrong: ["1991", "1995", "2000"] },
-        { q: "В каком году столицу перенесли в Акмолу?", correct: "1997", wrong: ["1991", "1998", "2000"] },
-        { q: "Государственный символ с орлом и солнцем?", correct: "Флаг", wrong: ["Герб", "Гимн", "Конституция"] },
-        { q: "Первый космонавт Казахстана?", correct: "Токтар Аубакиров", wrong: ["Талгат Мусабаев", "Айдын Аимбетов", "Юрий Гагарин"] },
-        { q: "Птица на флаге Казахстана?", correct: "Беркут", wrong: ["Сокол", "Ястреб", "Орел"] },
-        { q: "Символ города Алматы?", correct: "Яблоко (Апорт)", wrong: ["Тюльпан", "Барс", "Горы"] },
-        { q: "Валюта Казахстана?", correct: "Тенге", wrong: ["Сом", "Рубль", "Динар"] },
-        { q: "Высокогорный каток?", correct: "Медеу", wrong: ["Шымбулак", "Кок-Тобе", "Бурабай"] }
+        { q: "Первый космонавт Казахстана?", correct: "Т. Аубакиров", wrong: ["Т. Мусабаев", "А. Аимбетов", "Ю. Гагарин"] },
+        { q: "Символ города Алматы?", correct: "Яблоко (Апорт)", wrong: ["Тюльпан", "Барс", "Горы"] }
     ];
 
     const historyDB_KZ = [
@@ -385,52 +299,19 @@
         { q: "«Абай жолы» авторы?", correct: "М. Әуезов", wrong: ["С. Сейфуллин", "А. Құнанбаев", "Ғ. Мүсірепов"] },
         { q: "ҚР валютасы?", correct: "Теңге", wrong: ["Сом", "Рубль", "Динар"] },
         { q: "Тәуелсіздік жылы?", correct: "1991", wrong: ["1986", "1995", "1990"] },
-        { q: "Қасиетті кітап?", correct: "Құран", wrong: ["Інжіл", "Тәурат", "Авеста"] },
         { q: "ҚР астанасы?", correct: "Астана", wrong: ["Алматы", "Шымкент", "Тараз"] },
         { q: "Тұңғыш ғарышкер?", correct: "Т. Әубәкіров", wrong: ["Т. Мұсабаев", "Ю. Гагарин", "А. Айымбетов"] },
         { q: "Ұлттық аспап?", correct: "Домбыра", wrong: ["Қобыз", "Жетіген", "Сыбызғы"] },
         { q: "Алматы символы?", correct: "Апорт", wrong: ["Қызғалдақ", "Барыс", "Медеу"] },
-        { q: "Тудың бетіндегі құс?", correct: "Бүркіт", wrong: ["Сұңқар", "Лашын", "Қаршыға"] },
-        { q: "Алтын адам табылған жер?", correct: "Есік", wrong: ["Берел", "Отырар", "Түркістан"] },
-        { q: "1729 жылғы шайқас?", correct: "Аңырақай", wrong: ["Атлах", "Орбұлақ", "Бородино"] },
         { q: "Үш жүздің басын қосқан?", correct: "Абылай", wrong: ["Кенесары", "Әбілқайыр", "Тәуке"] },
-        { q: "Соңғы хан?", correct: "Кенесары", wrong: ["Махамбет", "Исатай", "Сырым"] },
         { q: "Кирді жеңген сақ патшайымы?", correct: "Томирис", wrong: ["Зарина", "Бопай", "Бегім"] },
-        { q: "«Алтын адам» табылған жер?", correct: "Есік қорғаны", wrong: ["Берел қорғаны", "Бесшатыр", "Таңбалы"] },
-        { q: "Сақтардың өнер стилі?", correct: "Аң стилі", wrong: ["Геометриялық", "Абстрактілі", "Готикалық"] },
-        { q: "Жібек жолындағы ірі сауда орталығы?", correct: "Отырар", wrong: ["Қарағанды", "Павлодар", "Атырау"] },
         { q: "Әлемнің «Екінші ұстазы»?", correct: "Әл-Фараби", wrong: ["Әл-Бируни", "Ибн Сина", "Қожа Ахмет"] },
-        { q: "Шыңғысхан әскері Отырарды қай жылы қоршады?", correct: "1219", wrong: ["1300", "1150", "1465"] },
-        { q: "Алтын Орда астанасы?", correct: "Сарай-Бату", wrong: ["Сығанақ", "Баласағұн", "Түркістан"] },
-        { q: "Ясауи кесенесін кім салдырды?", correct: "Әмір Темір", wrong: ["Шыңғысхан", "Батый", "Тоқтамыс"] },
-        { q: "«Қасқа жолы» бар хан?", correct: "Қасым хан", wrong: ["Есім хан", "Тәуке хан", "Жәңгір хан"] },
-        { q: "«Жеті жарғы» заңдар жинағының авторы?", correct: "Тәуке хан", wrong: ["Қасым хан", "Есім хан", "Абылай хан"] },
+        { q: "«Жеті жарғы» авторы?", correct: "Тәуке хан", wrong: ["Қасым хан", "Есім хан", "Абылай хан"] },
         { q: "Бие сүтінен дайындалатын сусын?", correct: "Қымыз", wrong: ["Шұбат", "Айран", "Кефир"] },
-        { q: "Киіз үйдің ең жоғарғы бөлігі?", correct: "Шаңырақ", wrong: ["Кереге", "Уық", "Босаға"] },
-        { q: "Екі ішекті ұлттық аспап?", correct: "Домбыра", wrong: ["Қобыз", "Жетіген", "Сыбызғы"] },
         { q: "«Адай» күйінің авторы?", correct: "Құрманғазы", wrong: ["Тәттімбет", "Дәулеткерей", "Дина Нұрпейісова"] },
-        { q: "Ұлы ақын, ағартушы?", correct: "Абай Құнанбаев", wrong: ["Шоқан Уәлиханов", "Ыбырай Алтынсарин", "Жамбыл Жабаев"] },
         { q: "«Қара сөздердің» авторы?", correct: "Абай", wrong: ["Шәкәрім", "Ыбырай", "Мағжан"] },
-        { q: "Тұңғыш қазақ ғалымы, саяхатшы?", correct: "Шоқан Уәлиханов", wrong: ["Ыбырай Алтынсарин", "Қаныш Сәтбаев", "Әлкей Марғұлан"] },
         { q: "«Алаш» партиясының көсемі?", correct: "Ә. Бөкейханов", wrong: ["Т. Рысқұлов", "С. Сейфуллин", "М. Шоқай"] },
-        { q: "1916 жылғы көтеріліс басшысы?", correct: "Амангелді Иманов", wrong: ["Кенесары", "Исатай", "Сырым"] },
-        { q: "ҚазКСР-нің алғашқы астанасы?", correct: "Орынбор", wrong: ["Қызылорда", "Алматы", "Астана"] },
-        { q: "Даңқты қолбасшы, жазушы, батыр?", correct: "Бауыржан Момышұлы", wrong: ["Талғат Бигелдинов", "Рақымжан Қошқарбаев", "Мәншүк Мәметова"] },
-        { q: "Шығыстың қос шынары?", correct: "Әлия мен Мәншүк", wrong: ["Томирис пен Зарина", "Бопай мен Айғаным", "Күләш пен Роза"] },
-        { q: "Ғылым академиясының тұңғыш президенті?", correct: "Қ. Сәтбаев", wrong: ["М. Әуезов", "Е. Бекмаханов", "Ә. Марғұлан"] },
-        { q: "Рейхстагқа ту тіккен қазақ?", correct: "Р. Қошқарбаев", wrong: ["Б. Момышұлы", "Т. Бигелдинов", "Қ. Қайсенов"] },
-        { q: "1986 жылғы Алматыдағы оқиға?", correct: "Желтоқсан", wrong: ["Наурыз", "Қаңтар", "Алаш"] },
-        { q: "Семей полигоны жабылған жыл?", correct: "1991", wrong: ["1989", "1995", "2000"] },
-        { q: "Тәуелсіздік алған жыл?", correct: "1991", wrong: ["1986", "1995", "1990"] },
-        { q: "Тұңғыш Президент?", correct: "Н. Назарбаев", wrong: ["Қ. Тоқаев", "Д. Қонаев", "Ж. Тәшенов"] },
-        { q: "Ұлттық валюта - теңге енгізілген жыл?", correct: "1993", wrong: ["1991", "1995", "2000"] },
-        { q: "Астана Ақмолаға көшірілген жыл?", correct: "1997", wrong: ["1991", "1998", "2000"] },
-        { q: "Бүркіт пен күн бейнеленген рәміз?", correct: "Ту", wrong: ["Елтаңба", "Әнұран", "Ата Заң"] },
-        { q: "Тұңғыш ғарышкер?", correct: "Тоқтар Әубәкіров", wrong: ["Талғат Мұсабаев", "Айдын Айымбетов", "Юрий Гагарин"] },
-        { q: "Алматының символы?", correct: "Апорт", wrong: ["Қызғалдақ", "Барыс", "Таулар"] },
-        { q: "Конституция күні?", correct: "30 тамыз", wrong: ["16 желтоқсан", "25 қазан", "1 мамыр"] },
-        { q: "Қазақстанның Парламенті?", correct: "Мәжіліс және Сенат", wrong: ["Дума", "Рада", "Конгресс"] },
-        { q: "Биік таулы мұз айдыны?", correct: "Медеу", wrong: ["Шымбұлақ", "Көктөбе", "Бурабай"] }
+        { q: "Шығыстың қос шынары?", correct: "Әлия мен Мәншүк", wrong: ["Томирис пен Зарина", "Бопай пен Айғаным", "Күләш пен Роза"] }
     ];
 
     const geoDB = {
@@ -440,47 +321,26 @@
         "Турция": { cap: "Анкара", kz: "Түркия" }, "Великобритания": { cap: "Лондон", kz: "Ұлыбритания" },
         "Италия": { cap: "Рим", kz: "Италия" }, "Египет": { cap: "Каир", kz: "Мысыр" },
         "Узбекистан": { cap: "Ташкент", kz: "Өзбекстан" }, "Кыргызстан": { cap: "Бишкек", kz: "Қырғызстан" },
-        "Монголия": { cap: "Улан-Батор", kz: "Моңғолия", capKZ: "Ұланбатыр" },
-        "Южная Корея": { cap: "Сеул", kz: "Оңтүстік Корея" },
-        "Испания": { cap: "Мадрид", kz: "Испания" },
-        "Бразилия": { cap: "Бразилиа", kz: "Бразилия" },
-        "Канада": { cap: "Оттава", kz: "Канада" },
-        "Индия": { cap: "Нью-Дели", kz: "Үндістан" },
-        "Украина": { cap: "Киев", kz: "Украина" }
+        "Южная Корея": { cap: "Сеул", kz: "Оңтүстік Корея" }, "Испания": { cap: "Мадрид", kz: "Испания" }
     };
 
     const UI = {
         ru: {
             math: "Математика", history: "История Казахстана", geo: "География (Столицы)",
             game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату",
-            teamA: "Команда А", teamB: "Команда Б",
-            menu: "🏠 Меню", restart: "Рестарт", menuModal: "Меню",
-            win: " победил(а)!", p: "Игрок",
-            hand: "В руке: ", hit: "Сбито: ", draw: "Ничья!"
+            p: "Игрок", bot: "🤖 Бот (ИИ)", win: " победил!", draw: "Ничья!", hand: "В руке: ", hit: "Сбито: "
         },
         kz: {
             math: "Математика", history: "Қазақстан тарихы", geo: "География (Елордалар)",
             game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату",
-            teamA: "А тобы", teamB: "Б тобы",
-            menu: "🏠 Мәзір", restart: "Қайталау", menuModal: "Мәзір",
-            win: " жеңді!", p: "Ойыншы",
-            hand: "Сақа: ", hit: "Кеней: ", draw: "Тең!"
+            p: "Ойыншы", bot: "🤖 Бот (ЖИ)", win: " жеңді!", draw: "Тең!", hand: "Сақа: ", hit: "Кеней: "
         }
     };
 
-    /* --- ЗВУКИ --- */
-    const sounds = {
-        correct: new Audio('da.mp3'),
-        wrong: new Audio('net.mp3'),
-        win: new Audio('win.mp3')
-    };
-    function playSnd(name) {
-        if(sounds[name]) {
-            const c = sounds[name].cloneNode(); c.volume=0.2; c.play().catch(()=>{});
-        }
-    }
+    const diffMap = { 'easy': 6000, 'medium': 5000, 'hard': 4000, 'impossible': 3000 };
+    const sounds = { correct: new Audio('da.mp3'), wrong: new Audio('net.mp3'), win: new Audio('win.mp3') };
+    function playSnd(name) { if(sounds[name]) { const c = sounds[name].cloneNode(); c.volume=0.2; c.play().catch(()=>{}); } }
 
-    /* --- ГЕНЕРАТОР ВОПРОСОВ --- */
     function generateQuestionData() {
         const lang = document.getElementById('lang-select').value;
         const subj = document.getElementById('subject-select').value;
@@ -514,278 +374,334 @@
         return { text, correct, options: options.sort(()=>Math.random()-0.5) };
     }
 
-    /* --- ПРИЛОЖЕНИЕ --- */
-    const app = {
-        currentGame: null, 
+    let timerId = null;
+    function startPveTimer(barElementId, onTimeoutCallback) {
+        clearTimeout(timerId);
+        const bar = document.getElementById(barElementId);
+        if(!bar) return;
+        
+        const diff = document.getElementById('difficulty-select').value;
+        const timeMs = diffMap[diff];
 
-        init() {
-            document.getElementById('lang-select').onchange = (e) => { this.updateInterface(); };
-            this.updateInterface(); 
-        },
+        bar.style.animation = 'none';
+        void bar.offsetWidth; 
+        bar.style.animation = `shrink ${timeMs}ms linear forwards`;
+        
+        const box = document.getElementById(barElementId.replace('timer', 'timer-box'));
+        if(box) box.style.display = 'block';
+
+        timerId = setTimeout(() => {
+            playSnd('wrong');
+            onTimeoutCallback(); 
+        }, timeMs);
+    }
+    function stopTimer() {
+        clearTimeout(timerId);
+        document.querySelectorAll('.timer-bar').forEach(b => b.style.animation = 'none');
+        document.querySelectorAll('.timer-container').forEach(c => c.style.display = 'none');
+    }
+
+    /* ФУНКЦИИ-ПОМОЩНИКИ ДЛЯ БЕЗОПАСНОГО ИЗМЕНЕНИЯ ДОМ-ДЕРЕВА */
+    function setTxt(id, txt) { const el = document.getElementById(id); if (el) el.innerText = txt; }
+    function setDisplay(id, style) { const el = document.getElementById(id); if (el) el.style.display = style; }
+
+    const app = {
+        currentGame: null, mode: 'pve',
 
         updateInterface() {
-            const lang = document.getElementById('lang-select').value;
+            const langEl = document.getElementById('lang-select');
+            const modeEl = document.getElementById('mode-select');
+            if (!langEl || !modeEl) return;
+
+            const lang = langEl.value;
+            this.mode = modeEl.value;
             const t = UI[lang];
 
-            document.getElementById('opt-math').innerText = t.math;
-            document.getElementById('opt-hist').innerText = t.history;
-            document.getElementById('opt-geo').innerText = t.geo;
+            setTxt('opt-math', t.math);
+            setTxt('opt-hist', t.history);
+            setTxt('opt-geo', t.geo);
+            setTxt('txt-game1', t.game1);
+            setTxt('txt-game2', t.game2);
+            setTxt('txt-game3', t.game3);
             
-            document.getElementById('txt-game1').innerText = t.game1;
-            document.getElementById('txt-game2').innerText = t.game2;
-            document.getElementById('txt-game3').innerText = t.game3;
-            
-            document.getElementById('txt-team-a').innerText = t.teamA;
-            document.getElementById('txt-team-b').innerText = t.teamB;
-            
-            document.getElementById('as-name-1').innerText = t.p + ' 1';
-            document.getElementById('as-name-2').innerText = t.p + ' 2';
-            
-            document.querySelectorAll('.home-btn').forEach(b => b.innerText = t.menu);
-            document.getElementById('btn-restart').innerText = t.restart;
-            document.getElementById('btn-menu-modal').innerText = t.menuModal;
+            const isPve = this.mode === 'pve';
+            setDisplay('wrap-difficulty', isPve ? 'block' : 'none');
+            setDisplay('wrap-players', isPve ? 'none' : 'block');
+
+            let p2Name = isPve ? t.bot : t.p + ' 2';
+            setTxt('at-team-a', t.p + ' 1');
+            setTxt('at-team-b', p2Name);
+            setTxt('as-name-1', t.p + ' 1');
+            setTxt('as-name-2', p2Name);
+
+            setDisplay('at-ai-status', isPve ? 'flex' : 'none');
+            setDisplay('at-p2-controls', isPve ? 'none' : 'flex');
+            setDisplay('as-ai-status', isPve ? 'flex' : 'none');
+            setDisplay('as-p2-controls', isPve ? 'none' : 'block');
         },
 
         startGame(type) {
-            // --- НОВЫЙ КОД: Запрос полноэкранного режима ---
             let elem = document.documentElement;
             if (elem.requestFullscreen) { elem.requestFullscreen().catch(()=>{}); }
             else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen().catch(()=>{}); }
-            // -----------------------------------------------
 
+            this.updateInterface();
             this.currentGame = type;
-            document.getElementById('menu-screen').classList.remove('active');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             
-            if (type === 'arkan') {
-                document.getElementById('arkan-screen').classList.add('active');
-                arkanGame.start();
-            } else if (type === 'baige') {
-                document.getElementById('baige-screen').classList.add('active');
-                baigeGame.start();
-            } else {
-                document.getElementById('asyk-screen').classList.add('active');
-                asykGame.start();
-            }
+            if (type === 'arkan') { document.getElementById('arkan-screen').classList.add('active'); arkanGame.start(); } 
+            else if (type === 'baige') { document.getElementById('baige-screen').classList.add('active'); baigeGame.start(); } 
+            else { document.getElementById('asyk-screen').classList.add('active'); asykGame.start(); }
         },
 
-        restartCurrentGame() {
-            if (this.currentGame === 'arkan') arkanGame.start();
-            else if (this.currentGame === 'baige') baigeGame.start();
-            else asykGame.start();
-        },
+        restartCurrentGame() { this.startGame(this.currentGame); },
 
         goHome() {
+            stopTimer();
+            if (document.exitFullscreen) { document.exitFullscreen().catch(()=>{}); }
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('menu-screen').classList.add('active');
             document.getElementById('modal').classList.remove('active');
         },
 
         showWin(text) {
-            document.getElementById('winner-text').innerText = text;
+            stopTimer();
+            setTxt('winner-text', text);
             document.getElementById('modal').classList.add('active');
         }
     };
 
-    /* --- ИГРА 1: АРКАН ТАРТЫС --- */
+    /* ==================== АРҚАН ТАРТЫС ==================== */
     const arkanGame = {
         pos: 50, active: false,
         start() {
             this.pos = 50; this.active = true;
             document.getElementById('rope-marker').style.left = '50%';
             document.getElementById('modal').classList.remove('active');
-            this.nextQ('a'); this.nextQ('b');
+            this.nextQ('a');
+            if(app.mode === 'pvp') this.nextQ('b');
         },
         nextQ(team) {
             if (!this.active) return;
             const data = generateQuestionData();
-            document.getElementById(`at-q-${team}`).innerText = data.text;
+            setTxt(`at-q-${team}`, data.text);
             const div = document.getElementById(`at-opt-${team}`);
-            div.innerHTML = '';
-            data.options.forEach(opt => {
-                let b = document.createElement('button');
-                b.className = 'arkan-btn'; b.innerText = opt;
-                b.onclick = () => this.check(team, opt, data.correct, b);
-                div.appendChild(b);
-            });
+            if(div) {
+                div.innerHTML = '';
+                data.options.forEach(opt => {
+                    let b = document.createElement('button');
+                    b.className = 'arkan-btn'; b.innerText = opt;
+                    b.onclick = () => this.check(team, opt, data.correct, b);
+                    div.appendChild(b);
+                });
+            }
+            if(app.mode === 'pve' && team === 'a') {
+                startPveTimer('at-timer', () => { this.applyMove(5); this.nextQ('a'); });
+            }
         },
         check(team, val, corr, btn) {
             if(!this.active) return;
             if(val == corr) {
-                playSnd('correct');
-                this.pos += (team==='a' ? -5 : 5);
-                document.getElementById('rope-marker').style.left = this.pos + '%';
-                
-                const lang = document.getElementById('lang-select').value;
-                if(this.pos<=0) { this.active=false; app.showWin(UI[lang].teamA + UI[lang].win); }
-                else if(this.pos>=100) { this.active=false; app.showWin(UI[lang].teamB + UI[lang].win); }
-                else this.nextQ(team);
+                playSnd('correct'); this.applyMove(team === 'a' ? -10 : 10);
+                if(this.active) this.nextQ(team);
             } else {
                 playSnd('wrong');
-                btn.style.background = '#555';
-                setTimeout(()=> btn.style.background='', 300);
+                btn.style.background = '#555'; setTimeout(()=> btn.style.background='', 300);
+                if(app.mode === 'pve' && team === 'a') { this.applyMove(10); if(this.active) this.nextQ('a'); }
             }
+        },
+        applyMove(amount) {
+            this.pos += amount;
+            document.getElementById('rope-marker').style.left = this.pos + '%';
+            const lang = document.getElementById('lang-select').value;
+            if(this.pos <= 0) { this.active=false; app.showWin(UI[lang].p + " 1" + UI[lang].win); }
+            else if(this.pos >= 100) { this.active=false; app.showWin((app.mode==='pve' ? UI[lang].bot : UI[lang].p + " 2") + UI[lang].win); }
         }
     };
 
-    /* --- ИГРА 2: БӘЙГЕ --- */
+    /* ==================== БӘЙГЕ ==================== */
     const baigeGame = {
         players: [], active: false,
         start() {
             this.active = true;
             document.getElementById('modal').classList.remove('active');
-            const count = parseInt(document.getElementById('players-select').value);
-            const lang = document.getElementById('lang-select').value;
+            
+            const count = app.mode === 'pve' ? 2 : parseInt(document.getElementById('players-select').value);
             const trackDiv = document.getElementById('race-track');
-            trackDiv.innerHTML = '<div class="finish-line" style="left: 5%; right: auto;"></div>';
+            trackDiv.innerHTML = '<div class="finish-line"></div>';
             const controlsDiv = document.getElementById('baige-controls');
             controlsDiv.innerHTML = '';
+            
             this.players = [];
+            const lang = document.getElementById('lang-select').value;
+            const laneHeight = count > 2 ? '25%' : '40%';
+            const horseTop = count > 2 ? '-10px' : '-5px';
+            const horseSize = count > 2 ? '1.5rem' : '2rem';
+
             for(let i=1; i<=count; i++) {
                 this.players.push({ id: i, progress: 92 });
+                
                 const lane = document.createElement('div');
                 lane.className = 'track-lane';
-                lane.innerHTML = `<div class="horse" id="horse-${i}" style="left: 92%">🐎</div>`;
+                lane.style.height = laneHeight;
+                lane.innerHTML = `<div class="horse" id="horse-${i}" style="left: 92%; top: ${horseTop}; font-size: ${horseSize}">🐎</div>`;
                 trackDiv.appendChild(lane);
-                const pName = UI[lang].p + ' ' + i;
+                
+                const pName = (app.mode === 'pve' && i === 2) ? UI[lang].bot : UI[lang].p + ' ' + i;
                 const panel = document.createElement('div');
                 panel.className = `player-panel p${i}-color`;
-                panel.innerHTML = `<div class="player-header">${pName}</div><div class="baige-q-box" id="bq-${i}">...</div><div class="baige-options" id="bopt-${i}"></div>`;
+                
+                if (app.mode === 'pve' && i === 2) {
+                    panel.innerHTML = `<div class="player-header">${pName}</div><div class="ai-status" style="display:flex; flex:1; font-size:0.9rem;">🤖 ИИ скачет...</div>`;
+                } else {
+                    panel.innerHTML = `<div class="player-header">${pName}</div>
+                                       ${i===1 && app.mode==='pve' ? '<div class="timer-container" id="bg-timer-box"><div class="timer-bar" id="bg-timer"></div></div>' : ''}
+                                       <div class="baige-q-box" id="bq-${i}">...</div>
+                                       <div class="baige-options" id="bopt-${i}"></div>`;
+                }
                 controlsDiv.appendChild(panel);
                 this.nextQ(i);
             }
         },
         nextQ(id) {
             if (!this.active) return;
+            if (app.mode === 'pve' && id === 2) return; 
+            
             const data = generateQuestionData();
-            const qEl = document.getElementById(`bq-${id}`);
-            if(qEl) qEl.innerText = data.text;
-            const optDiv = document.getElementById(`bopt-${id}`);
-            if(optDiv) {
-                optDiv.innerHTML = '';
+            setTxt(`bq-${id}`, data.text);
+            
+            const div = document.getElementById(`bopt-${id}`);
+            if(div) {
+                div.innerHTML = '';
                 data.options.forEach(opt => {
                     let b = document.createElement('button');
                     b.className = 'baige-btn'; b.innerText = opt;
-                    if(String(opt).length > 12) b.style.fontSize = '0.8rem';
                     b.onclick = () => this.check(id, opt, data.correct, b);
-                    optDiv.appendChild(b);
+                    div.appendChild(b);
                 });
+            }
+            if(app.mode === 'pve' && id === 1) {
+                startPveTimer('bg-timer', () => { this.applyMove(2); this.nextQ(1); }); 
             }
         },
         check(id, val, corr, btn) {
             if(!this.active) return;
-            const pIndex = id - 1;
             if(val == corr) {
-                playSnd('correct');
-                this.players[pIndex].progress -= 7;
-                if(this.players[pIndex].progress < 5) this.players[pIndex].progress = 5;
-                const horse = document.getElementById(`horse-${id}`);
-                if(horse) horse.style.left = this.players[pIndex].progress + '%';
-                if(this.players[pIndex].progress <= 6) {
-                    this.active = false;
-                    const lang = document.getElementById('lang-select').value;
-                    app.showWin(UI[lang].p + ' ' + id + UI[lang].win);
-                } else {
-                    this.nextQ(id);
-                }
+                playSnd('correct'); this.applyMove(id);
+                if(this.active) this.nextQ(id);
             } else {
                 playSnd('wrong');
-                btn.style.background = '#555';
-                setTimeout(()=> { btn.style.background = ''; }, 300);
+                btn.style.background = '#555'; setTimeout(()=> btn.style.background='', 300);
+                if(app.mode === 'pve' && id === 1) { this.applyMove(2); if(this.active) this.nextQ(1); }
+            }
+        },
+        applyMove(id) {
+            const pIndex = id - 1;
+            this.players[pIndex].progress -= 10;
+            if(this.players[pIndex].progress < 5) this.players[pIndex].progress = 5;
+            document.getElementById(`horse-${id}`).style.left = this.players[pIndex].progress + '%';
+            
+            const lang = document.getElementById('lang-select').value;
+            if(this.players[pIndex].progress <= 5) {
+                this.active = false;
+                const pName = (app.mode === 'pve' && id === 2) ? UI[lang].bot : UI[lang].p + ' ' + id;
+                app.showWin(pName + UI[lang].win);
             }
         }
     };
 
-    /* --- ИГРА 3: АСЫҚ АТУ --- */
+    /* ==================== АСЫҚ АТУ ==================== */
     const asykGame = {
-        players: [], active: false,
+        p1: { ammo: 10, score: 0 }, p2: { ammo: 10, score: 0 }, active: false,
         start() {
             this.active = true;
             document.getElementById('modal').classList.remove('active');
-            const lang = document.getElementById('lang-select').value;
-            // Сброс и создание
-            this.players = [{ ammo: 10, score: 0 }, { ammo: 10, score: 0 }];
+            this.p1 = { ammo: 10, score: 0 }; this.p2 = { ammo: 10, score: 0 };
             
-            // Рендер полей
             for(let i=1; i<=2; i++) {
                 this.updateStats(i);
-                // Рисуем 10 асыков
                 const field = document.getElementById(`as-field-${i}`);
-                field.innerHTML = '';
-                for(let k=0; k<10; k++) {
-                    const asyk = document.createElement('div');
-                    asyk.className = 'asyk-target';
-                    asyk.innerText = '🦴';
-                    asyk.id = `as-target-${i}-${k}`;
-                    field.appendChild(asyk);
+                if(field) {
+                    field.innerHTML = '';
+                    for(let k=0; k<10; k++) {
+                        let a = document.createElement('div'); a.className = 'asyk-target'; a.innerText = '🦴'; a.id = `as-target-${i}-${k}`;
+                        field.appendChild(a);
+                    }
                 }
-                this.nextQ(i);
             }
+            this.nextQ(1);
+            if(app.mode === 'pvp') this.nextQ(2);
         },
         updateStats(id) {
-            const p = this.players[id-1];
             const lang = document.getElementById('lang-select').value;
-            document.getElementById(`as-hand-${id}`).innerText = UI[lang].hand + p.ammo;
-            document.getElementById(`as-score-${id}`).innerText = UI[lang].hit + p.score;
+            setTxt(`as-hand-${id}`, UI[lang].hand + (id===1?this.p1.ammo:this.p2.ammo));
+            setTxt(`as-score-${id}`, UI[lang].hit + (id===1?this.p1.score:this.p2.score));
         },
         nextQ(id) {
-            if (!this.active || this.players[id-1].ammo <= 0) return;
+            if (!this.active) return;
+            const p = id===1 ? this.p1 : this.p2;
+            if (p.ammo <= 0) return;
+
             const data = generateQuestionData();
-            document.getElementById(`as-q-${id}`).innerText = data.text;
+            setTxt(`as-q-${id}`, data.text);
             const div = document.getElementById(`as-opt-${id}`);
-            div.innerHTML = '';
-            data.options.forEach(opt => {
-                let b = document.createElement('button');
-                b.className = 'asyk-btn'; b.innerText = opt;
-                b.onclick = () => this.check(id, opt, data.correct, b);
-                div.appendChild(b);
-            });
+            if(div) {
+                div.innerHTML = '';
+                data.options.forEach(opt => {
+                    let b = document.createElement('button');
+                    b.className = 'asyk-btn'; b.innerText = opt;
+                    b.onclick = () => this.check(id, opt, data.correct, b);
+                    div.appendChild(b);
+                });
+            }
+
+            if(app.mode === 'pve' && id === 1) {
+                startPveTimer('as-timer', () => { this.applyScore(2); this.checkEnd(); });
+            }
         },
         check(id, val, corr, btn) {
             if(!this.active) return;
-            const pIndex = id - 1;
-            const p = this.players[pIndex];
-            
-            p.ammo--; // Тратим асык в любом случае
-            
-            if(val == corr) {
-                playSnd('correct');
-                // Сбиваем асык на поле (по индексу счета)
-                const targetId = `as-target-${id}-${p.score}`;
-                const target = document.getElementById(targetId);
-                if(target) target.classList.add('hit');
-                p.score++;
-            } else {
-                playSnd('wrong');
+            if(val == corr) { playSnd('correct'); this.applyScore(id); } 
+            else { 
+                playSnd('wrong'); 
+                if(app.mode === 'pve' && id === 1) this.applyScore(2); 
+                else { (id===1?this.p1:this.p2).ammo--; this.updateStats(id); }
             }
+            this.checkEnd(id);
+        },
+        applyScore(id) {
+            const p = id===1 ? this.p1 : this.p2;
+            if(app.mode === 'pve' && id === 2) { this.p1.ammo--; }
+            else { p.ammo--; }
             
-            this.updateStats(id);
-            
-            // Если асыки кончились у этого игрока - блокируем его
-            if (p.ammo <= 0) {
-                document.getElementById(`as-q-${id}`).innerText = "...";
-                document.getElementById(`as-opt-${id}`).innerHTML = "";
-            } else {
-                this.nextQ(id);
-            }
+            const target = document.getElementById(`as-target-${id}-${p.score}`);
+            if(target) target.classList.add('hit');
+            p.score++;
+            this.updateStats(1); this.updateStats(2);
+        },
+        checkEnd(lastId = 1) {
+            if(!this.active) return;
+            let isEnd = false;
+            if (app.mode === 'pve' && this.p1.ammo <= 0) isEnd = true;
+            if (app.mode === 'pvp' && this.p1.ammo <= 0 && this.p2.ammo <= 0) isEnd = true;
 
-            // Проверка конца игры (оба без асыков)
-            if (this.players[0].ammo <= 0 && this.players[1].ammo <= 0) {
-                this.active = false;
+            if (isEnd) {
+                this.active = false; stopTimer();
                 const lang = document.getElementById('lang-select').value;
                 let text = "";
-                if (this.players[0].score > this.players[1].score) text = UI[lang].p + " 1" + UI[lang].win;
-                else if (this.players[1].score > this.players[0].score) text = UI[lang].p + " 2" + UI[lang].win;
+                if (this.p1.score > this.p2.score) text = UI[lang].p + " 1" + UI[lang].win;
+                else if (this.p2.score > this.p1.score) text = (app.mode==='pve'?UI[lang].bot:UI[lang].p + " 2") + UI[lang].win;
                 else text = UI[lang].draw;
                 app.showWin(text);
+            } else {
+                if(app.mode === 'pve') this.nextQ(1);
+                else if (lastId === 1 && this.p1.ammo > 0) this.nextQ(1);
+                else if (lastId === 2 && this.p2.ammo > 0) this.nextQ(2);
             }
         }
     };
 
-    app.init();
+    app.updateInterface();
 </script>
 </body>
-
 </html>
-
-
-
