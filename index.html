@@ -110,32 +110,28 @@
         .p3-color { border-color: var(--green) !important; } .p3-color .baige-btn { background: var(--green); }
         .p4-color { border-color: var(--orange) !important; } .p4-color .baige-btn { background: var(--orange); }
 
-        /* УЛЬТРА КОМПАКТНЫЙ РЕЖИМ (ДЛЯ ТЕЛЕФОНОВ ГОРИЗОНТАЛЬНО) */
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            .home-btn { top: 2px; left: 2px; padding: 3px 8px; font-size: 0.75rem; border-width: 1px;}
-            h2 { font-size: 0.9rem; margin: 0 0 3px 0; }
-            .menu-card { padding: 10px; max-height: 98vh; width: 98%;}
-            .main-title { font-size: 1.1rem; margin-bottom: 5px;}
-            .settings-row { margin-bottom: 5px; gap: 5px;}
-            select { padding: 4px; font-size: 0.8rem;}
-            .game-icon { font-size: 1.5rem; }
-            .games-grid { gap: 5px; margin-top: 10px;}
-            .game-card { padding: 5px; }
+       /* ==================== АНИМИРОВАННЫЙ ОРНАМЕНТ В КАЧЕСТВЕ ФОНА ==================== */
+        #spinning-pattern {
+            /* 1. Позиционирование */
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -10; 
+            overflow: hidden; pointer-events: none; opacity: 0.15; /* Полупрозрачность */
+            
+            /* 2. Изображение орнамента (имя вашего файла) */
+            background-image: url('ornament.png'); 
+            background-repeat: repeat; /* Чтобы орнамент замостил весь фон, если он маленький */
+            
+            /* 3. Анимация вращения (60 секунд на один полный круг) */
+            animation: spin 60s linear infinite;
+        }
 
-            #arkan-screen, #baige-screen, #asyk-screen { padding-top: 25px; }
-            .arkan-rope-area { height: 25px; }
-            .arkan-layout, .baige-controls, .asyk-layout { gap: 5px; padding: 2px 5px; margin-top: 2px;}
-            .arkan-zone, .player-panel, .asyk-player-zone { padding: 5px; }
-            .arkan-q-box, .baige-q-box, .asyk-q-box { font-size: 0.8rem; padding: 5px; margin-bottom: 5px; }
-            .arkan-btn, .baige-btn, .asyk-btn { padding: 6px; font-size: 0.75rem; }
-            .race-track-area { height: 50px; margin-bottom: 2px; }
-            .asyk-stats { margin-bottom: 2px; padding: 2px 5px; font-size: 0.75rem; }
-            .asyk-target { font-size: 1.1rem; }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); } 
         }
     </style>
 </head>
 <body>
-
+    <div id="spinning-pattern"></div>
     <div id="rotate-screen" class="rotate-overlay">
         <div class="rotate-icon">📱</div>
         <h2>Бұрыңыз / Поверните экран</h2>
