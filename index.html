@@ -41,7 +41,7 @@
 
         /* УНИВЕРСАЛЬНЫЙ ГОРИЗОНТАЛЬНЫЙ РЕЖИМ (ПК + ТЕЛЕФОН) */
         body, html { height: 100%; overflow: hidden; touch-action: manipulation; }
-        .screen { padding: 0; height: 100%; box-sizing: border-box; }
+        .screen { padding: 0; height: 100%; box-sizing: border-box; background: transparent; position: relative; z-index: 10; }
         .screen.active { display: flex; flex-direction: column; justify-content: flex-start; }
         
         .home-btn { position: absolute; top: 5px; left: 5px; padding: 5px 10px; font-size: 0.9rem; border: 2px solid var(--gold); border-radius: 10px; z-index: 1000; background: rgba(255,255,255,0.9); font-weight: bold; cursor: pointer;}
@@ -113,14 +113,15 @@
        /* ==================== АНИМИРОВАННЫЙ ОРНАМЕНТ В КАЧЕСТВЕ ФОНА ==================== */
         #spinning-pattern {
             /* 1. Позиционирование */
-            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -10; 
-            overflow: hidden; pointer-events: none; opacity: 0.15; /* Полупрозрачность */
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; 
+            z-index: 0; /* <--- ИСПРАВЛЕНО ТУТ: вытащили из-под фона */
+            overflow: hidden; pointer-events: none; opacity: 0.15; 
             
-            /* 2. Изображение орнамента (имя вашего файла) */
+            /* 2. Изображение орнамента */
             background-image: url('ornament.png'); 
-            background-repeat: repeat; /* Чтобы орнамент замостил весь фон, если он маленький */
+            background-repeat: repeat; 
             
-            /* 3. Анимация вращения (60 секунд на один полный круг) */
+            /* 3. Анимация вращения */
             animation: spin 60s linear infinite;
         }
 
