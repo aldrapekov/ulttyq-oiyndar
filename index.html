@@ -1,4 +1,6 @@
-<html lang="ru"><head>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Uly Dala Oyindary</title>
@@ -16,9 +18,9 @@
             position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 1; 
             overflow: hidden; pointer-events: none; opacity: 0.15; 
             background-image: url('ornament.png'); 
-            background-repeat: no-repeat; /* Отключаем размножение */
-            background-position: center;  /* Ставим строго по центру */
-            background-size: 70vmin;      /* Размер: 70% от высоты экрана, чтобы красиво влезал */
+            background-repeat: no-repeat; 
+            background-position: center;  
+            background-size: 70vmin;      
             animation: spin 60s linear infinite; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -29,7 +31,6 @@
         .rotate-overlay p { font-size: 1rem; opacity: 0.8; line-height: 1.5; }
         @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } }
 
-        /* Экраны теперь прозрачные, чтобы было видно узор! */
         .screen { display: none; width: 100%; height: 100%; background: transparent; position: relative; z-index: 10; }
         .screen.active { display: flex; }
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; z-index: 2000; transition: 0.3s; }
@@ -168,8 +169,8 @@
                     <span class="label-text">Предмет / Пән</span>
                     <select id="subject-select">
                         <option value="math" id="opt-math">Математика</option>
-                        <option value="history" id="opt-hist">История Казахстана</option>
-                        <option value="geo" id="opt-geo">География (Столицы)</option>
+                        <option value="history" id="opt-hist">История</option>
+                        <option value="geo" id="opt-geo">География</option>
                         <option value="cs" id="opt-cs">Информатика</option>
                     </select>
                 </div>
@@ -181,11 +182,11 @@
                     </select>
                 </div>
                 
-                <div id="wrap-difficulty" style="display: block;">
+                <div id="wrap-difficulty">
                     <span class="label-text">Сложность / Қиындық</span>
                     <select id="difficulty-select">
                         <option value="easy">Легко (6с)</option>
-                        <option value="medium" selected="">Средне (5с)</option>
+                        <option value="medium" selected>Средне (5с)</option>
                         <option value="hard">Сложно (4с)</option>
                         <option value="impossible">Невозможно (3с)</option>
                     </select>
@@ -217,19 +218,19 @@
     <div id="arkan-screen" class="screen">
         <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
         <div class="arkan-rope-area">
-            <div class="rope-track"><div id="rope-marker" class="rope-marker" style="left: 50%;">VS</div></div>
+            <div class="rope-track"><div id="rope-marker" class="rope-marker">VS</div></div>
         </div>
         <div class="arkan-layout">
             <div class="arkan-zone p1-color">
                 <h2 id="at-team-a">Игрок 1</h2>
-                <div class="timer-container" id="at-timer-box" style="display: none;"><div class="timer-bar" id="at-timer" style="animation: 0s ease 0s 1 normal none running none;"></div></div>
-                <div class="arkan-q-box" id="at-q-a">20 - 8</div>
-                <div class="arkan-options" id="at-opt-a"><button class="arkan-btn">7</button><button class="arkan-btn">11</button><button class="arkan-btn">8</button><button class="arkan-btn">12</button></div>
+                <div class="timer-container" id="at-timer-box"><div class="timer-bar" id="at-timer"></div></div>
+                <div class="arkan-q-box" id="at-q-a">?</div>
+                <div class="arkan-options" id="at-opt-a"></div>
             </div>
             <div class="arkan-zone p2-color">
-                <h2 id="at-team-b">🤖 Бот (ИИ)</h2>
-                <div class="ai-status" id="at-ai-status" style="display: flex;">🤖 ИИ ждет ошибку...</div>
-                <div id="at-p2-controls" style="display: none; flex-direction: column; flex: 1 1 0%; justify-content: flex-end;">
+                <h2 id="at-team-b">Игрок 2</h2>
+                <div class="ai-status" id="at-ai-status">🤖 ИИ ждет ошибку...</div>
+                <div id="at-p2-controls" style="display:flex; flex-direction:column; flex:1; justify-content: flex-end;">
                     <div class="arkan-q-box" id="at-q-b">?</div>
                     <div class="arkan-options" id="at-opt-b"></div>
                 </div>
@@ -251,17 +252,17 @@
                 <div class="asyk-stats"><span id="as-hand-1">В руке: 10</span><span id="as-score-1">Сбито: 0</span></div>
                 <div class="asyk-field" id="as-field-1"></div>
                 <div class="asyk-controls">
-                    <div class="timer-container" id="as-timer-box" style="display: none;"><div class="timer-bar" id="as-timer" style="animation: 0s ease 0s 1 normal none running none;"></div></div>
+                    <div class="timer-container" id="as-timer-box"><div class="timer-bar" id="as-timer"></div></div>
                     <div class="asyk-q-box" id="as-q-1">?</div>
                     <div class="asyk-options" id="as-opt-1"></div>
                 </div>
             </div>
             <div class="asyk-player-zone p2-color">
-                <h2 id="as-name-2">🤖 Бот (ИИ)</h2>
+                <h2 id="as-name-2">Игрок 2</h2>
                 <div class="asyk-stats"><span id="as-hand-2">В руке: 10</span><span id="as-score-2">Сбито: 0</span></div>
                 <div class="asyk-field" id="as-field-2"></div>
-                <div class="ai-status" id="as-ai-status" style="display: flex;">🤖 ИИ целится...</div>
-                <div class="asyk-controls" id="as-p2-controls" style="display: none;">
+                <div class="ai-status" id="as-ai-status">🤖 ИИ целится...</div>
+                <div class="asyk-controls" id="as-p2-controls">
                     <div class="asyk-q-box" id="as-q-2">?</div>
                     <div class="asyk-options" id="as-opt-2"></div>
                 </div>
@@ -383,8 +384,8 @@
 
         if (subj === 'math') {
             let a = Math.floor(Math.random()*20)+1, b = Math.floor(Math.random()*20)+1;
-            if (Math.random()>0.5) { correct=a+b; text=`${a} + ${b}`; }
-            else { if(a<b)[a,b]=[b,a]; correct=a-b; text=`${a} - ${b}`; }
+            if (Math.random()>0.5) { correct=a+b; text=${a} + ${b}; }
+            else { if(a<b)[a,b]=[b,a]; correct=a-b; text=${a} - ${b}; }
             let s = new Set([correct]);
             while(s.size<4) s.add(correct + (Math.floor(Math.random()*10)-5));
             options = Array.from(s);
@@ -424,7 +425,7 @@
 
         bar.style.animation = 'none';
         void bar.offsetWidth; 
-        bar.style.animation = `shrink ${timeMs}ms linear forwards`;
+        bar.style.animation = shrink ${timeMs}ms linear forwards;
         
         const box = document.getElementById(barElementId.replace('timer', 'timer-box'));
         if(box) box.style.display = 'block';
@@ -523,8 +524,8 @@
         nextQ(team) {
             if (!this.active) return;
             const data = generateQuestionData();
-            setTxt(`at-q-${team}`, data.text);
-            const div = document.getElementById(`at-opt-${team}`);
+            setTxt(at-q-${team}, data.text);
+            const div = document.getElementById(at-opt-${team});
             if(div) {
                 div.innerHTML = '';
                 data.options.forEach(opt => {
@@ -583,15 +584,15 @@
                 const lane = document.createElement('div');
                 lane.className = 'track-lane';
                 lane.style.height = laneHeight;
-                lane.innerHTML = `<div class="horse" id="horse-${i}" style="left: 92%; top: ${horseTop}; font-size: ${horseSize}">🐎</div>`;
+                lane.innerHTML = <div class="horse" id="horse-${i}" style="left: 92%; top: ${horseTop}; font-size: ${horseSize}">🐎</div>;
                 trackDiv.appendChild(lane);
                 
                 const pName = (app.mode === 'pve' && i === 2) ? UI[lang].bot : UI[lang].p + ' ' + i;
                 const panel = document.createElement('div');
-                panel.className = `player-panel p${i}-color`;
+                panel.className = player-panel p${i}-color;
                 
                 if (app.mode === 'pve' && i === 2) {
-                    panel.innerHTML = `<div class="player-header">${pName}</div><div class="ai-status" style="display:flex; flex:1; font-size:0.9rem;">🤖 ИИ скачет...</div>`;
+                    panel.innerHTML = <div class="player-header">${pName}</div><div class="ai-status" style="display:flex; flex:1; font-size:0.9rem;">🤖 ИИ скачет...</div>;
                 } else {
                     panel.innerHTML = `<div class="player-header">${pName}</div>
                                        ${i===1 && app.mode==='pve' ? '<div class="timer-container" id="bg-timer-box"><div class="timer-bar" id="bg-timer"></div></div>' : ''}
@@ -607,9 +608,9 @@
             if (app.mode === 'pve' && id === 2) return; 
             
             const data = generateQuestionData();
-            setTxt(`bq-${id}`, data.text);
+            setTxt(bq-${id}, data.text);
             
-            const div = document.getElementById(`bopt-${id}`);
+            const div = document.getElementById(bopt-${id});
             if(div) {
                 div.innerHTML = '';
                 data.options.forEach(opt => {
@@ -638,7 +639,7 @@
             const pIndex = id - 1;
             this.players[pIndex].progress -= 10;
             if(this.players[pIndex].progress < 5) this.players[pIndex].progress = 5;
-            document.getElementById(`horse-${id}`).style.left = this.players[pIndex].progress + '%';
+            document.getElementById(horse-${id}).style.left = this.players[pIndex].progress + '%';
             
             const lang = document.getElementById('lang-select').value;
             if(this.players[pIndex].progress <= 5) {
@@ -659,11 +660,11 @@
             
             for(let i=1; i<=2; i++) {
                 this.updateStats(i);
-                const field = document.getElementById(`as-field-${i}`);
+                const field = document.getElementById(as-field-${i});
                 if(field) {
                     field.innerHTML = '';
                     for(let k=0; k<10; k++) {
-                        let a = document.createElement('div'); a.className = 'asyk-target'; a.innerText = '🦴'; a.id = `as-target-${i}-${k}`;
+                        let a = document.createElement('div'); a.className = 'asyk-target'; a.innerText = '🦴'; a.id = as-target-${i}-${k};
                         field.appendChild(a);
                     }
                 }
@@ -673,8 +674,8 @@
         },
         updateStats(id) {
             const lang = document.getElementById('lang-select').value;
-            setTxt(`as-hand-${id}`, UI[lang].hand + (id===1?this.p1.ammo:this.p2.ammo));
-            setTxt(`as-score-${id}`, UI[lang].hit + (id===1?this.p1.score:this.p2.score));
+            setTxt(as-hand-${id}, UI[lang].hand + (id===1?this.p1.ammo:this.p2.ammo));
+            setTxt(as-score-${id}, UI[lang].hit + (id===1?this.p1.score:this.p2.score));
         },
         nextQ(id) {
             if (!this.active) return;
@@ -682,8 +683,8 @@
             if (p.ammo <= 0) return;
 
             const data = generateQuestionData();
-            setTxt(`as-q-${id}`, data.text);
-            const div = document.getElementById(`as-opt-${id}`);
+            setTxt(as-q-${id}, data.text);
+            const div = document.getElementById(as-opt-${id});
             if(div) {
                 div.innerHTML = '';
                 data.options.forEach(opt => {
@@ -713,7 +714,7 @@
             if(app.mode === 'pve' && id === 2) { this.p1.ammo--; }
             else { p.ammo--; }
             
-            const target = document.getElementById(`as-target-${id}-${p.score}`);
+            const target = document.getElementById(as-target-${id}-${p.score});
             if(target) target.classList.add('hit');
             p.score++;
             this.updateStats(1); this.updateStats(2);
@@ -742,6 +743,5 @@
 
     app.updateInterface();
 </script>
-
-
-</body></html>
+</body>
+</html>
