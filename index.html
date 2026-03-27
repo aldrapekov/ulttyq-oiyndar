@@ -418,7 +418,9 @@
             game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату", game4: "Кездейсоқ оқушы",
             p: "Ойыншы", bot: "🤖 Бот (ЖИ)", win: " жеңді!", draw: "Тең!", hand: "Сақа: ", hit: "Кеней: "
         }
-        // Хранилище для вопросов от ИИ
+    }; // <-- ВОТ ЗДЕСЬ НЕ ХВАТАЛО СКОБОЧКИ И ТОЧКИ С ЗАПЯТОЙ
+
+    // Хранилище для вопросов от ИИ
     let customAIdatabase = []; 
 
     // Функция общения с нейросетью
@@ -462,7 +464,6 @@
             alert(`Успешно! Сгенерировано ${customAIdatabase.length} вопросов. Теперь выберите любую игру выше, и она запустится с вашими вопросами!`);
             
             // Автоматически переключаем селект на режим "Своя игра"
-            // Для этого сначала добавим опцию в селект программно, если её еще нет
             let subjSelect = document.getElementById('subject-select');
             if (!document.getElementById('opt-custom')) {
                 let newOption = document.createElement('option');
@@ -481,8 +482,7 @@
             btn.disabled = false;
             btn.style.background = 'var(--blue)';
         }
-    }
-    };
+    } // <-- А ЗДЕСЬ БЫЛА ЛИШНЯЯ СКОБКА
 
     const diffMap = { 'easy': 6000, 'medium': 5000, 'hard': 4000, 'impossible': 3000 };
     const sounds = { correct: new Audio('da.mp3'), wrong: new Audio('net.mp3'), win: new Audio('win.mp3') };
