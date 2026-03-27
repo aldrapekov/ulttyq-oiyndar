@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -19,9 +18,9 @@
             position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 1; 
             overflow: hidden; pointer-events: none; opacity: 0.15; 
             background-image: url('ornament.png'); 
-            background-repeat: no-repeat; /* Отключаем размножение */
-            background-position: center;  /* Ставим строго по центру */
-            background-size: 70vmin;      /* Размер: 70% от высоты экрана, чтобы красиво влезал */
+            background-repeat: no-repeat; 
+            background-position: center;  
+            background-size: 70vmin;      
             animation: spin 60s linear infinite; 
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -32,7 +31,6 @@
         .rotate-overlay p { font-size: 1rem; opacity: 0.8; line-height: 1.5; }
         @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } }
 
-        /* Экраны теперь прозрачные, чтобы было видно узор! */
         .screen { display: none; width: 100%; height: 100%; background: transparent; position: relative; z-index: 10; }
         .screen.active { display: flex; }
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; z-index: 2000; transition: 0.3s; }
@@ -60,41 +58,51 @@
         .home-btn { position: absolute; top: 5px; left: 5px; padding: 5px 10px; font-size: 0.9rem; border: 2px solid var(--gold); border-radius: 10px; z-index: 1000; background: rgba(255,255,255,0.9); font-weight: bold; cursor: pointer;}
         h2 { font-size: 1rem; margin: 0 0 5px 0; text-align: center; }
 
-        /* ГЛАВНОЕ МЕНЮ */
+        /* ГЛАВНОЕ МЕНЮ (ОБНОВЛЕНО: Больше отступов, больше иконки) */
         #menu-screen { justify-content: center; align-items: center; overflow-y: auto; }
-        .menu-card { padding: 20px; width: 90%; max-width: 800px; max-height: 95vh; overflow-y: auto; margin: auto; background: rgba(255, 255, 255, 0.95); border-radius: 15px; text-align: center; border: 3px solid var(--gold); box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.2); backdrop-filter: blur(5px); }
-        .main-title { font-size: 1.5rem; margin-bottom: 15px; color: var(--blue); text-transform: uppercase; font-weight: bold;}
+        .menu-card { padding: 30px; /* Увеличено */ width: 90%; max-width: 900px; /* Увеличено */ max-height: 95vh; overflow-y: auto; margin: auto; background: rgba(255, 255, 255, 0.95); border-radius: 15px; text-align: center; border: 3px solid var(--gold); box-sizing: border-box; backdrop-filter: blur(5px); }
+        .main-title { font-size: 1.8rem; /* Увеличено */ margin-bottom: 25px; /* Увеличено */ color: var(--blue); text-transform: uppercase; font-weight: bold;}
         
-        .settings-row { display: flex; margin-bottom: 15px; flex-direction: row; justify-content: space-around; gap: 10px; flex-wrap: wrap;}
-        .settings-row div { flex: 1; min-width: 120px; text-align: left;}
-        select { padding: 8px; font-size: 0.9rem; width: 100%; border-radius: 5px; border: 1px solid #ccc; cursor: pointer; background: white;}
-        .label-text { font-size: 0.8rem; margin-bottom: 4px; display: block; color: #777;}
+        .settings-row { display: flex; margin-bottom: 25px; /* Увеличено */ flex-direction: row; justify-content: space-around; gap: 15px; /* Увеличено */ flex-wrap: wrap;}
+        .settings-row div { flex: 1; min-width: 140px; /* Увеличено */ text-align: left;}
+        select { padding: 12px; /* Увеличено */ font-size: 1rem; /* Увеличено */ width: 100%; border-radius: 8px; /* Увеличено */ border: 1px solid #ccc; cursor: pointer; background: white;}
+        .label-text { font-size: 0.9rem; /* Увеличено */ margin-bottom: 6px; /* Увеличено */ display: block; color: #777;}
 
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
-        .game-card { padding: 15px; border: 2px solid transparent; background: rgba(224, 247, 250, 0.9); border-radius: 10px; cursor: pointer; transition: 0.2s;}
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Увеличено */ gap: 25px; /* Увеличено */ margin-top: 25px; /* Увеличено */ }
+        
+        /* .game-card: УБРАНЫ ТЕНИ */
+        .game-card { padding: 30px; /* Увеличено */ border: 2px solid transparent; background: rgba(224, 247, 250, 0.9); border-radius: 12px; /* Увеличено */ cursor: pointer; transition: 0.2s; /* УБРАН box-shadow */}
         .game-card:hover { border-color: var(--blue); transform: translateY(-3px);}
-        .game-icon { font-size: 2.5rem; margin-bottom: 5px; display: block; }
-        .game-card h3 { font-size: 1rem; margin: 0; color: #333;}
-
-        /* АРҚАН ТАРТЫС */
-        #arkan-screen { padding-top: 40px; }
-        .arkan-rope-area { height: 40px; border-bottom: 3px solid var(--gold); flex-shrink: 0; margin: 0; position: relative; background: rgba(255,255,255,0.8);}
-        .rope-track { width: 80%; height: 15px; background: #ddd; border-radius: 8px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);}
-        .rope-marker { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: white; border: 3px solid gold; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 2; font-weight: bold; transition: left 0.3s ease-out; font-size: 0.7rem; box-shadow: 0 2px 5px rgba(0,0,0,0.3);}
         
-        .arkan-layout { flex: 1; display: flex; flex-direction: row; gap: 15px; padding: 10px; overflow: hidden; }
-        .arkan-zone { flex: 1; padding: 10px; border: 2px solid #ccc; justify-content: center; border-radius: 10px; box-sizing: border-box; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px);}
+        /* СТИЛЬ ДЛЯ КАРТИНОК В МЕНЮ (УВЕЛИЧЕНЫ ГИФКИ) */
+        .game-img-icon { height: 150px; /* Значительно увеличено (было 45px) */ width: auto; max-width: 100%; margin: 0 auto 10px auto; /* Скорректирован отступ */ display: block; object-fit: contain; }
+        .game-card h3 { font-size: 1.2rem; /* Увеличено */ margin: 0; color: #333;}
+
+        /* ==================== АРҚАН ТАРТЫС ==================== */
+        #arkan-screen { padding: 45px 10px 10px 10px; box-sizing: border-box; }
+        .arkan-layout { display: flex; flex-direction: row; height: 100%; gap: 10px; width: 100%; box-sizing: border-box; }
+        
+        .arkan-zone { flex: 1; max-width: 350px; padding: 10px; border: 2px solid #ccc; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(4px); box-sizing: border-box;}
+        
+        .arkan-arena { flex: 2; position: relative; background: rgba(255,255,255,0.7); border: 3px solid var(--gold); border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box; box-shadow: inset 0 0 15px rgba(0,0,0,0.1); }
+        .center-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 6px; background: rgba(227, 10, 23, 0.7); z-index: 1; transform: translateX(-50%); border-radius: 3px; }
+        
+        /* КАРТИНКА ПЕРЕТЯГИВАНИЯ (ПОДГРУЖАЕМ arqan.gif) */
+        .rope-marker { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200%; height: 80%; background-image: url('arqan.gif'); background-size: contain; background-repeat: no-repeat; background-position: center; z-index: 2; transition: left 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+
         .arkan-q-box { font-size: 1.1rem; padding: 15px; margin-bottom: 10px; text-align: center; font-weight: bold; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .arkan-options { grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; display: grid; }
         .arkan-btn { padding: 15px; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s;}
         .arkan-btn:active { transform: translateY(3px); box-shadow: none; }
 
-        /* БӘЙГЕ */
+        /* ==================== БӘЙГЕ (УВЕЛИЧЕНО ПОЛЕ И ЛОШАДИ) ==================== */
         #baige-screen { padding-top: 40px; }
-        .race-track-area { height: 80px; margin: 0 10px 10px 10px; border: 3px solid #4caf50; background: rgba(232, 245, 233, 0.95); border-radius: 10px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-evenly; position: relative; overflow: hidden;}
-        .finish-line { position: absolute; left: 5%; top: 0; bottom: 0; width: 5px; background: repeating-linear-gradient(-45deg, #000, #000 5px, #fff 5px, #fff 10px); }
-        .track-lane { position: relative; border-bottom: 2px dashed rgba(0,0,0,0.1); width: 100%; }
-        .horse { position: absolute; left: 92%; transition: left 0.3s ease-out; z-index: 1; transform: scaleX(-1); }
+        .race-track-area { height: 250px; /* Значительно увеличено (было 80px) */ margin: 0 10px 10px 10px; border: 4px solid #4caf50; background: rgba(232, 245, 233, 0.95); border-radius: 12px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-evenly; position: relative; overflow: hidden; box-sizing: border-box;}
+        .finish-line { position: absolute; left: 5%; top: 0; bottom: 0; width: 10px; background: repeating-linear-gradient(-45deg, #000, #000 8px, #fff 8px, #fff 16px); }
+        .track-lane { position: relative; border-bottom: 2px dashed rgba(0,0,0,0.1); width: 100%; display: flex; align-items: center;}
+        
+        /* СТИЛЬ ДЛЯ КАРТИНКИ ЛОШАДИ (УВЕЛИЧЕНО В JS) */
+        .horse { position: absolute; left: 92%; transition: left 0.3s ease-out; z-index: 1; transform: scaleX(-1); object-fit: contain; }
         
         .baige-controls { flex: 1; display: flex; flex-direction: row; gap: 10px; padding: 0 10px 10px 10px; overflow: hidden; }
         .player-panel { flex: 1; padding: 10px; border: 2px solid #ccc; justify-content: flex-start; box-sizing: border-box; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px); border-radius: 10px; display: flex; flex-direction: column;}
@@ -103,13 +111,16 @@
         .baige-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .baige-btn { padding: 10px; font-size: 0.8rem; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold;}
 
-        /* АСЫҚ АТУ */
+        /* ==================== АСЫҚ АТУ (УВЕЛИЧЕНЫ ЦЕЛИ) ==================== */
         #asyk-screen { padding-top: 40px; }
         .asyk-layout { flex: 1; display: flex; flex-direction: row; gap: 15px; padding: 10px; overflow: hidden; }
         .asyk-player-zone { flex: 1; padding: 10px; border: 2px solid #ccc; border-radius: 10px; box-sizing: border-box; display: flex; flex-direction: column; background: rgba(250, 250, 250, 0.9); backdrop-filter: blur(4px);}
         .asyk-stats { display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 5px; padding: 5px 10px; font-size: 1rem; font-weight: bold; color: #555; border-bottom: 2px solid #ddd; }
         .asyk-field { display: flex; flex-wrap: wrap; padding: 5px; margin-bottom: 10px; justify-content: center; align-items: center; gap: 5px; background: rgba(0,0,0,0.03); border-radius: 8px;}
-        .asyk-target { font-size: 1.5rem; margin: 0 2px; transition: 0.3s; }
+        
+        /* СТИЛЬ ДЛЯ КАРТИНКИ АСЫКА (УВЕЛИЧЕНЫ КОРЗИНЫ) */
+        .asyk-target { width: 120px; height: 120px; /* Значительно увеличено (было 32px) */ margin: 0 5px; transition: 0.3s; display: flex; justify-content: center; align-items: center; }
+        .asyk-target img { width: 100%; height: 100%; object-fit: contain; }
         .asyk-target.hit { transform: rotate(90deg) scale(0.8); opacity: 0.3; filter: grayscale(100%); }
         
         .asyk-controls { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -131,24 +142,33 @@
             .main-title { font-size: 1.1rem; margin-bottom: 5px;}
             .settings-row { margin-bottom: 5px; gap: 5px;}
             select { padding: 4px; font-size: 0.8rem;}
-            .game-icon { font-size: 1.5rem; }
+            .game-img-icon { height: 100px; /* На телефоне меньше, но все равно крупно */ }
             .games-grid { gap: 5px; margin-top: 10px;}
             .game-card { padding: 5px; }
 
-            #arkan-screen, #baige-screen, #asyk-screen { padding-top: 25px; }
-            .arkan-rope-area { height: 25px; }
-            .arkan-layout, .baige-controls, .asyk-layout { gap: 5px; padding: 2px 5px; margin-top: 2px;}
-            .arkan-zone, .player-panel, .asyk-player-zone { padding: 5px; }
-            .arkan-q-box, .baige-q-box, .asyk-q-box { font-size: 0.8rem; padding: 5px; margin-bottom: 5px; }
-            .arkan-btn, .baige-btn, .asyk-btn { padding: 6px; font-size: 0.75rem; }
-            .race-track-area { height: 50px; margin-bottom: 2px; }
+            /* Бәйге на телефоне */
+            .race-track-area { height: 180px; }
+            .baige-controls { flex-direction: column; overflow-y: auto;}
+            .player-panel { padding: 5px; border-width: 1px;}
+            .player-header { font-size: 0.9rem; margin-bottom: 2px; }
+            .baige-q-box { font-size: 0.9rem; padding: 5px; margin-bottom: 5px; }
+            .baige-btn { padding: 6px; font-size: 0.8rem; }
+
+            #arkan-screen, #asyk-screen { padding-top: 25px; }
+            .arkan-layout, .asyk-layout { gap: 5px; padding: 2px 5px; margin-top: 2px;}
+            .arkan-zone, .asyk-player-zone { padding: 5px; max-width: 250px; }
+            .arkan-q-box, .asyk-q-box { font-size: 0.8rem; padding: 5px; margin-bottom: 5px; }
+            .arkan-btn, .asyk-btn { padding: 6px; font-size: 0.75rem; }
             .asyk-stats { margin-bottom: 2px; padding: 2px 5px; font-size: 0.75rem; }
-            .asyk-target { font-size: 1.1rem; }
+            .asyk-target { width: 80px; height: 80px; }
         }
     </style>
 </head>
 <body>
+    <audio id="bgm" src="bgm.mp3" loop></audio>
+
     <div id="spinning-pattern"></div>
+    
     <div id="rotate-screen" class="rotate-overlay">
         <div class="rotate-icon">📱</div>
         <h2>Бұрыңыз / Поверните экран</h2>
@@ -205,13 +225,16 @@
 
             <div class="games-grid" id="games-container">
                 <div class="game-card" onclick="app.startGame('arkan')">
-                    <span class="game-icon">🪢</span><h3 id="txt-game1">Арқан Тартыс</h3>
+                    <img src="arqan_i.png" class="game-img-icon" alt="Арқан">
+                    <h3 id="txt-game1">Арқан Тартыс</h3>
                 </div>
                 <div class="game-card" onclick="app.startGame('baige')">
-                    <span class="game-icon">🐎</span><h3 id="txt-game2">Бәйге</h3>
+                    <img src="horse_i.png" class="game-img-icon" alt="Бәйге">
+                    <h3 id="txt-game2">Бәйге</h3>
                 </div>
                 <div class="game-card" onclick="app.startGame('asyk')">
-                    <span class="game-icon">🦴</span><h3 id="txt-game3">Асық Ату</h3>
+                    <img src="asyq.png" class="game-img-icon" alt="Асық">
+                    <h3 id="txt-game3">Асық Ату</h3>
                 </div>
             </div>
         </div>
@@ -219,9 +242,7 @@
 
     <div id="arkan-screen" class="screen">
         <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
-        <div class="arkan-rope-area">
-            <div class="rope-track"><div id="rope-marker" class="rope-marker">VS</div></div>
-        </div>
+        
         <div class="arkan-layout">
             <div class="arkan-zone p1-color">
                 <h2 id="at-team-a">Игрок 1</h2>
@@ -229,10 +250,16 @@
                 <div class="arkan-q-box" id="at-q-a">?</div>
                 <div class="arkan-options" id="at-opt-a"></div>
             </div>
+            
+            <div class="arkan-arena">
+                <div class="center-line"></div>
+                <div id="rope-marker" class="rope-marker"></div>
+            </div>
+
             <div class="arkan-zone p2-color">
                 <h2 id="at-team-b">Игрок 2</h2>
                 <div class="ai-status" id="at-ai-status">🤖 ИИ ждет ошибку...</div>
-                <div id="at-p2-controls" style="display:flex; flex-direction:column; flex:1; justify-content: flex-end;">
+                <div id="at-p2-controls" style="display:flex; flex-direction:column; flex:1; justify-content: center;">
                     <div class="arkan-q-box" id="at-q-b">?</div>
                     <div class="arkan-options" id="at-opt-b"></div>
                 </div>
@@ -242,8 +269,11 @@
 
     <div id="baige-screen" class="screen">
         <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
-        <div class="race-track-area" id="race-track"></div>
-        <div class="baige-controls" id="baige-controls"></div>
+        <div class="race-track-area" id="race-track">
+            <div class="finish-line"></div>
+            </div>
+        <div class="baige-controls" id="baige-controls">
+            </div>
     </div>
 
     <div id="asyk-screen" class="screen">
@@ -308,11 +338,11 @@
     const historyDB_KZ = [
         { q: "Қазақ хандығы құрылған жыл?", correct: "1465", wrong: ["1550", "1723", "1492"] },
         { q: "Алғашқы хандар?", correct: "Керей мен Жәнібек", wrong: ["Абылай мен Кенесары", "Қасым мен Хақназар", "Төле мен Әйтеке"] },
-        { q: "«Абай жолы» авторы?", correct: "М. Әуезов", wrong: ["С. Сейфуллин", "А. Құнанбаев", "Ғ. Мүсірепов"] },
+        { q: "«Абай жолы» авторы?", correct: "M. Әуезов", wrong: ["С. Сейфуллин", "А. Құнанбаев", "Ғ. Мүсірепов"] },
         { q: "ҚР валютасы?", correct: "Теңге", wrong: ["Сом", "Рубль", "Динар"] },
         { q: "Тәуелсіздік жылы?", correct: "1991", wrong: ["1986", "1995", "1990"] },
         { q: "ҚР астанасы?", correct: "Астана", wrong: ["Алматы", "Шымкент", "Тараз"] },
-        { q: "Тұңғыш ғарышкер?", correct: "Т. Әубәкіров", wrong: ["Т. Мұсабаев", "Ю. Гагарин", "А. Айымбетов"] },
+        { q: "Тұңғыш ғарышкер?", correct: "Т. Әубәкіров", wrong: ["T. Мұсабаев", "Ю. Гагарин", "А. Айымбетов"] },
         { q: "Ұлттық аспап?", correct: "Домбыра", wrong: ["Қобыз", "Жетіген", "Сыбызғы"] },
         { q: "Алматы символы?", correct: "Апорт", wrong: ["Қызғалдақ", "Барыс", "Медеу"] },
         { q: "Үш жүздің басын қосқан?", correct: "Абылай", wrong: ["Кенесары", "Әбілқайыр", "Тәуке"] },
@@ -322,7 +352,7 @@
         { q: "Бие сүтінен дайындалатын сусын?", correct: "Қымыз", wrong: ["Шұбат", "Айран", "Кефир"] },
         { q: "«Адай» күйінің авторы?", correct: "Құрманғазы", wrong: ["Тәттімбет", "Дәулеткерей", "Дина Нұрпейісова"] },
         { q: "«Қара сөздердің» авторы?", correct: "Абай", wrong: ["Шәкәрім", "Ыбырай", "Мағжан"] },
-        { q: "«Алаш» партиясының көсемі?", correct: "Ә. Бөкейханов", wrong: ["Т. Рысқұлов", "С. Сейфуллин", "М. Шоқай"] },
+        { q: "«Алаш» партиясының көсемі?", correct: "Ә. Бөкейханов", wrong: ["Т. Рысқұлов", "С. Сейфуллин", "M. Шоқай"] },
         { q: "Шығыстың қос шынары?", correct: "Әлия мен Мәншүк", wrong: ["Томирис пен Зарина", "Бопай пен Айғаным", "Күләш пен Роза"] }
     ];
 
@@ -483,9 +513,20 @@
         },
 
         startGame(type) {
-            let elem = document.documentElement;
-            if (elem.requestFullscreen) { elem.requestFullscreen().catch(()=>{}); }
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen().catch(()=>{}); }
+            const bgm = document.getElementById('bgm');
+            if (bgm && bgm.paused) { bgm.volume = 0.3; bgm.play().catch(()=>{}); }
+
+            try {
+                let elem = document.documentElement;
+                if (elem.requestFullscreen) { 
+                    let req = elem.requestFullscreen();
+                    if (req && req.catch) req.catch(err => console.log("FS error:", err));
+                } else if (elem.webkitRequestFullscreen) { 
+                    elem.webkitRequestFullscreen(); 
+                }
+            } catch (e) {
+                console.log("Browser blocked fullscreen API");
+            }
 
             this.updateInterface();
             this.currentGame = type;
@@ -500,7 +541,19 @@
 
         goHome() {
             stopTimer();
-            if (document.exitFullscreen) { document.exitFullscreen().catch(()=>{}); }
+            
+            const bgm = document.getElementById('bgm');
+            if (bgm) { bgm.pause(); bgm.currentTime = 0; }
+
+            try {
+                if (document.exitFullscreen) { 
+                    let req = document.exitFullscreen();
+                    if (req && req.catch) req.catch(err => console.log(err));
+                } else if (document.webkitExitFullscreen) { 
+                    document.webkitExitFullscreen(); 
+                }
+            } catch(e) {}
+            
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('menu-screen').classList.add('active');
             document.getElementById('modal').classList.remove('active');
@@ -515,9 +568,9 @@
 
     /* ==================== АРҚАН ТАРТЫС ==================== */
     const arkanGame = {
-        pos: 50, active: false,
+        score: 0, active: false,
         start() {
-            this.pos = 50; this.active = true;
+            this.score = 0; this.active = true;
             document.getElementById('rope-marker').style.left = '50%';
             document.getElementById('modal').classList.remove('active');
             this.nextQ('a');
@@ -538,30 +591,46 @@
                 });
             }
             if(app.mode === 'pve' && team === 'a') {
-                startPveTimer('at-timer', () => { this.applyMove(5); this.nextQ('a'); });
+                startPveTimer('at-timer', () => { 
+                    this.score++; 
+                    this.updateVisuals();
+                    if(this.active) this.nextQ('a'); 
+                });
             }
         },
         check(team, val, corr, btn) {
             if(!this.active) return;
+            
             if(val == corr) {
-                playSnd('correct'); this.applyMove(team === 'a' ? -10 : 10);
-                if(this.active) this.nextQ(team);
+                playSnd('correct'); 
+                this.score += (team === 'a' ? -1 : 1);
             } else {
                 playSnd('wrong');
                 btn.style.background = '#555'; setTimeout(()=> btn.style.background='', 300);
-                if(app.mode === 'pve' && team === 'a') { this.applyMove(10); if(this.active) this.nextQ('a'); }
+                this.score += (team === 'a' ? 1 : -1);
             }
+            
+            this.updateVisuals();
+            if(this.active) this.nextQ(team);
         },
-        applyMove(amount) {
-            this.pos += amount;
-            document.getElementById('rope-marker').style.left = this.pos + '%';
+        updateVisuals() {
             const lang = document.getElementById('lang-select').value;
-            if(this.pos <= 0) { this.active=false; app.showWin(UI[lang].p + " 1" + UI[lang].win); }
-            else if(this.pos >= 100) { this.active=false; app.showWin((app.mode==='pve' ? UI[lang].bot : UI[lang].p + " 2") + UI[lang].win); }
+            
+            let visualScore = Math.max(-5, Math.min(5, this.score));
+            let newLeft = 50 + (visualScore * 8); 
+            document.getElementById('rope-marker').style.left = newLeft + '%';
+
+            if(this.score <= -5) {
+                this.active = false;
+                setTimeout(() => app.showWin(UI[lang].p + " 1" + UI[lang].win), 800);
+            } else if(this.score >= 5) {
+                this.active = false;
+                setTimeout(() => app.showWin((app.mode==='pve' ? UI[lang].bot : UI[lang].p + " 2") + UI[lang].win), 800);
+            }
         }
     };
 
-    /* ==================== БӘЙГЕ ==================== */
+    /* ==================== БӘЙГЕ (ОБНОВЛЕНО: Поддержка большого поля, увеличены скакуны в JS) ==================== */
     const baigeGame = {
         players: [], active: false,
         start() {
@@ -576,17 +645,31 @@
             
             this.players = [];
             const lang = document.getElementById('lang-select').value;
-            const laneHeight = count > 2 ? '25%' : '40%';
-            const horseTop = count > 2 ? '-10px' : '-5px';
-            const horseSize = count > 2 ? '1.5rem' : '2rem';
+            
+            const laneHeightPercent = (100 / count).toFixed(2) + '%';
+            
+            // Динамический расчет вертикального положения и размера лошадей в зависимости от кол-ва игроков.
+            // Теперь скакуны ЗНАЧИТЕЛЬНО увеличены.
+            let horseTop, horseSize;
+            if (count === 2) { 
+                horseTop = '10px'; // Ближе к центру, больше места
+                horseSize = '100px'; 
+            } else if (count === 3) { 
+                horseTop = '0px'; 
+                horseSize = '80px'; 
+            } else { // 4 игрока
+                horseTop = '-5px'; // Теснее
+                horseSize = '60px'; 
+            }
 
             for(let i=1; i<=count; i++) {
                 this.players.push({ id: i, progress: 92 });
                 
                 const lane = document.createElement('div');
                 lane.className = 'track-lane';
-                lane.style.height = laneHeight;
-                lane.innerHTML = `<div class="horse" id="horse-${i}" style="left: 92%; top: ${horseTop}; font-size: ${horseSize}">🐎</div>`;
+                lane.style.height = laneHeightPercent;
+                // ИСПОЛЬЗУЕМ horse.gif - Применяем новые стили horseTop и horseSize (масштабирование)
+                lane.innerHTML = `<img src="horse.gif" class="horse" id="horse-${i}" style="left: 92%; top: ${horseTop}; height: ${horseSize};">`;
                 trackDiv.appendChild(lane);
                 
                 const pName = (app.mode === 'pve' && i === 2) ? UI[lang].bot : UI[lang].p + ' ' + i;
@@ -594,7 +677,7 @@
                 panel.className = `player-panel p${i}-color`;
                 
                 if (app.mode === 'pve' && i === 2) {
-                    panel.innerHTML = `<div class="player-header">${pName}</div><div class="ai-status" style="display:flex; flex:1; font-size:0.9rem;">🤖 ИИ скачет...</div>`;
+                    panel.innerHTML = `<div class="player-header">${pName}</div><div class="ai-status" style="display:flex; flex:1; font-size:1.1rem;">🤖 ИИ скачет...</div>`;
                 } else {
                     panel.innerHTML = `<div class="player-header">${pName}</div>
                                        ${i===1 && app.mode==='pve' ? '<div class="timer-container" id="bg-timer-box"><div class="timer-bar" id="bg-timer"></div></div>' : ''}
@@ -666,7 +749,10 @@
                 if(field) {
                     field.innerHTML = '';
                     for(let k=0; k<10; k++) {
-                        let a = document.createElement('div'); a.className = 'asyk-target'; a.innerText = '🦴'; a.id = `as-target-${i}-${k}`;
+                        let a = document.createElement('div'); 
+                        a.className = 'asyk-target'; 
+                        a.innerHTML = '<img src="asyq.png" alt="Асық">'; 
+                        a.id = `as-target-${i}-${k}`;
                         field.appendChild(a);
                     }
                 }
