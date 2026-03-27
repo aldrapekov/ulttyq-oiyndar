@@ -86,19 +86,16 @@
             this.status.innerText = "⏳ Загрузка нейросети... Пожалуйста, подождите.";
 
             try {
-                // ПУТЬ К ВАШЕЙ ПАПКЕ MODELS
-                const MODEL_URL = './models'; 
+                // БЕРЕМ МОДЕЛИ НАПРЯМУЮ ИЗ ОБЛАКА
+                const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/'; 
                 
-                // Загружаем только необходимые модели для нахождения лиц
                 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
-                // Если нужны точки лица (для более точного фото)
-                // await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL); 
-
+                
                 this.modelsLoaded = true;
                 this.status.innerText = "";
                 this.startCamera();
             } catch (err) {
-                this.status.innerText = "❌ Ошибка загрузки моделей. Проверьте путь /models.";
+                this.status.innerText = "❌ Ошибка облачной загрузки. Проверьте интернет-соединение.";
                 console.error(err);
                 this.startBtn.disabled = false;
             }
