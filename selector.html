@@ -87,7 +87,7 @@
 
             try {
                 // ПУТЬ К ВАШЕЙ ПАПКЕ MODELS
-                const MODEL_URL = '/models'; 
+                const MODEL_URL = './models'; 
                 
                 // Загружаем только необходимые модели для нахождения лиц
                 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
