@@ -453,7 +453,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: "google/gemini-2.0-flash:free", // Берем бесплатную версию Gemini через мост
+                    model: "google/gemini-2.0-flash-exp:free", // Точное название для бесплатного доступа
                     messages: [{ role: "user", content: prompt }]
                 })
             });
