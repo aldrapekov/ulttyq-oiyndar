@@ -240,6 +240,17 @@
                     <img src="camera_i.png" class="game-img-icon" alt="Камера">
                     <h3 id="txt-game4">Случайный ученик</h3>
                 </div>
+                <div id="ai-generator-section" style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ccc; text-align: left;">
+                <h3 style="color: var(--blue); margin-bottom: 10px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Создать свою игру (ИИ)</h3>
+                
+                <input type="password" id="gemini-api-key" placeholder="AIzaSyBYPFZCboVdeDp1-njptGe77zIz4PaFtJs" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box;">
+                
+                <textarea id="ai-context-text" placeholder="📝 Вставьте текст параграфа или конспект (на русском или казахском)..." style="width: 100%; padding: 10px; height: 100px; border-radius: 8px; border: 1px solid #ccc; resize: none; margin-bottom: 10px; font-family: inherit; box-sizing: border-box;"></textarea>
+                
+                <button onclick="generateCustomGame()" id="generate-btn" style="width: 100%; padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer;">Сгенерировать вопросы</button>
+                
+                <p id="ai-loading-status" style="text-align: center; color: var(--orange); font-weight: bold; margin-top: 10px; display: none;">⏳ Нейросеть читает текст и придумывает вопросы...</p>
+            </div>
             </div>
         </div>
     </div>
@@ -407,6 +418,70 @@
             game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату", game4: "Кездейсоқ оқушы",
             p: "Ойыншы", bot: "🤖 Бот (ЖИ)", win: " жеңді!", draw: "Тең!", hand: "Сақа: ", hit: "Кеней: "
         }
+        // Хранилище для вопросов от ИИ
+    let customAIdatabase = []; 
+
+    // Функция общения с нейросетью
+    async function generateCustomGame() {
+        const apiKey = document.getElementById('gemini-api-key').value.trim();
+        const text = document.getElementById('ai-context-text').value.trim();
+        const statusEl = document.getElementById('ai-loading-status');
+        const btn = document.getElementById('generate-btn');
+
+        if (!apiKey) { alert("Пожалуйста, введите API ключ!"); return; }
+        if (!text) { alert("Пожалуйста, вставьте текст для генерации!"); return; }
+
+        statusEl.style.display = 'block';
+        btn.disabled = true;
+        btn.style.background = '#ccc';
+
+        // Промпт - приказ для нейросети
+        const prompt = `Ты профессиональный учитель. Составь 20 тестовых вопросов по следующему тексту. 
+        Формат ответа должен быть СТРОГО валидным JSON массивом, без лишнего текста, без маркдауна (\`\`\`json). 
+        Каждый объект должен иметь структуру: {"q": "Сам вопрос", "correct": "Правильный ответ", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}.
+        Текст: ${text}`;
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) throw new Error(data.error.message);
+
+            // Очищаем ответ от возможных маркдаун-тегов ```json ... ```
+            let rawJson = data.candidates[0].content.parts[0].text;
+            rawJson = rawJson.replace(/```json/g, '').replace(/```/g, '').trim();
+
+            // Превращаем текст в массив вопросов
+            customAIdatabase = JSON.parse(rawJson);
+            
+            alert(`Успешно! Сгенерировано ${customAIdatabase.length} вопросов. Теперь выберите любую игру выше, и она запустится с вашими вопросами!`);
+            
+            // Автоматически переключаем селект на режим "Своя игра"
+            // Для этого сначала добавим опцию в селект программно, если её еще нет
+            let subjSelect = document.getElementById('subject-select');
+            if (!document.getElementById('opt-custom')) {
+                let newOption = document.createElement('option');
+                newOption.value = 'custom';
+                newOption.id = 'opt-custom';
+                newOption.text = '✨ Свои вопросы (ИИ)';
+                subjSelect.appendChild(newOption);
+            }
+            subjSelect.value = 'custom';
+
+        } catch (error) {
+            console.error(error);
+            alert("Ошибка генерации. Проверьте API ключ или попробуйте другой текст. Детали в консоли.");
+        } finally {
+            statusEl.style.display = 'none';
+            btn.disabled = false;
+            btn.style.background = 'var(--blue)';
+        }
+    }
     };
 
     const diffMap = { 'easy': 6000, 'medium': 5000, 'hard': 4000, 'impossible': 3000 };
@@ -417,6 +492,12 @@
         const lang = document.getElementById('lang-select').value;
         const subj = document.getElementById('subject-select').value;
         let text, correct, options;
+        // Если выбран режим сгенерированных вопросов
+        if (subj === 'custom' && customAIdatabase.length > 0) {
+            const q = customAIdatabase[Math.floor(Math.random() * customAIdatabase.length)];
+            text = q.q; correct = q.correct; options = [q.correct, ...q.wrong];
+            return { text, correct, options: options.sort(() => Math.random() - 0.5) };
+        }
 
         if (subj === 'math') {
             let a = Math.floor(Math.random()*20)+1, b = Math.floor(Math.random()*20)+1;
