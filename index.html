@@ -424,13 +424,14 @@
     let customAIdatabase = []; 
 
     // Функция общения с нейросетью
+    // Функция общения с нейросетью через OpenRouter
     async function generateCustomGame() {
         const apiKey = document.getElementById('gemini-api-key').value.trim();
         const text = document.getElementById('ai-context-text').value.trim();
         const statusEl = document.getElementById('ai-loading-status');
         const btn = document.getElementById('generate-btn');
 
-        if (!apiKey) { alert("Пожалуйста, введите API ключ!"); return; }
+        if (!apiKey) { alert("Пожалуйста, введите API ключ от OpenRouter!"); return; }
         if (!text) { alert("Пожалуйста, вставьте текст для генерации!"); return; }
 
         statusEl.style.display = 'block';
@@ -444,18 +445,25 @@
         Текст: ${text}`;
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+            // Обращаемся к мосту OpenRouter (он сам свяжется с Google из США)
+            const response = await fetch(`https://openrouter.ai/api/v1/chat/completions`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: "google/gemini-2.0-flash:free", // Берем бесплатную версию Gemini через мост
+                    messages: [{ role: "user", content: prompt }]
+                })
             });
 
             const data = await response.json();
             
             if (data.error) throw new Error(data.error.message);
 
-            // Очищаем ответ от возможных маркдаун-тегов ```json ... ```
-            let rawJson = data.candidates[0].content.parts[0].text;
+            // OpenRouter отдает текст чуть иначе, берем его из choices
+            let rawJson = data.choices[0].message.content;
             rawJson = rawJson.replace(/```json/g, '').replace(/```/g, '').trim();
 
             // Превращаем текст в массив вопросов
@@ -482,7 +490,7 @@
             btn.disabled = false;
             btn.style.background = 'var(--blue)';
         }
-    } // <-- А ЗДЕСЬ БЫЛА ЛИШНЯЯ СКОБКА
+    }
 
     const diffMap = { 'easy': 6000, 'medium': 5000, 'hard': 4000, 'impossible': 3000 };
     const sounds = { correct: new Audio('da.mp3'), wrong: new Audio('net.mp3'), win: new Audio('win.mp3') };
