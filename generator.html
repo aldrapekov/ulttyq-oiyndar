@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать свой тест (ИИ)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="spinning-pattern"></div>
+
+    <div class="screen">
+        <button class="home-btn" onclick="app.goHome()">🏠 Назад в меню</button>
+
+        <div class="menu-card" style="margin-top: 50px;">
+            <h1 class="main-title" style="font-size: 1.5rem;">✨ Создать свою игру</h1>
+            
+            <p style="font-size: 1rem; color: #555; margin-bottom: 5px; text-align: left;"><b>Шаг 1:</b> Скопируйте задание и отправьте его в ChatGPT, Яндекс Алису или Gemini вместе с материалом урока.</p>
+            <textarea id="prompt-to-copy" readonly style="width: 100%; padding: 15px; height: 120px; border-radius: 8px; border: 1px solid #ccc; background: #f9f9f9; resize: none; margin-bottom: 10px; font-family: inherit; font-size: 1rem; box-sizing: border-box;">Ты профессиональный учитель. Составь 30 тестовых вопросов по моему тексту. Формат ответа - СТРОГО валидный JSON массив, без лишних слов и без маркдауна. Структура: {"q": "Вопрос", "correct": "Правильный", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}. Текст урока: [ВСТАВЬТЕ ТЕКСТ]</textarea>
+            
+            <button onclick="copyPrompt()" style="width: 100%; padding: 12px; background: #eee; color: #333; border: 2px solid #ccc; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-bottom: 30px;">📋 Скопировать задание для ИИ</button>
+            
+            <p style="font-size: 1rem; color: #555; margin-bottom: 5px; text-align: left;"><b>Шаг 2:</b> Скопируйте ответ от ИИ, вставьте сюда и загрузите в игру.</p>
+            <textarea id="ai-json-result" placeholder='[ {"q": "Сколько...", "correct": "...", "wrong": ["..."] } ]' style="width: 100%; padding: 15px; height: 150px; border-radius: 8px; border: 2px dashed var(--blue); resize: none; margin-bottom: 15px; font-family: monospace; font-size: 1rem; box-sizing: border-box;"></textarea>
+            
+            <button onclick="loadCustomQuestions()" style="width: 100%; padding: 15px; background: var(--blue); color: white; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer;">🚀 Сохранить и перейти в игру</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

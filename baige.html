@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бәйге</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <audio id="bgm" src="bgm.mp3" loop></audio>
+    <div id="spinning-pattern"></div>
+    
+    <div id="rotate-screen" class="rotate-overlay">
+        <div class="rotate-icon">📱</div>
+        <h2>Бұрыңыз / Поверните экран</h2>
+        <p>Ойын көлденең режимге арналған</p>
+    </div>
+
+    <div id="baige-screen" class="screen">
+        <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
+        
+        <div class="race-track-area" id="race-track">
+            <div class="finish-line"></div>
+        </div>
+        
+        <div class="baige-controls" id="baige-controls">
+            </div>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="winner-text" style="color:var(--blue); font-size: 1.5rem; margin-bottom: 15px;">Победа!</h2>
+            <button onclick="app.restartCurrentGame()" style="padding: 10px 20px; font-size: 1rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px;">Рестарт</button>
+            <button onclick="app.goHome()" style="padding: 10px 20px; font-size: 1rem; background: #eee; border: none; border-radius: 8px; cursor: pointer; width: 100%;">Меню</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Асық Ату</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <audio id="bgm" src="bgm.mp3" loop></audio>
+    <div id="spinning-pattern"></div>
+    
+    <div id="rotate-screen" class="rotate-overlay">
+        <div class="rotate-icon">📱</div>
+        <h2>Бұрыңыз / Поверните экран</h2>
+    </div>
+
+    <div id="asyk-screen" class="screen">
+        <button class="home-btn" onclick="app.goHome()">🏠 Меню</button>
+        
+        <div class="asyk-layout">
+            <div class="asyk-player-zone p1-color">
+                <h2 id="as-name-1">Игрок 1</h2>
+                <div class="asyk-stats">
+                    <span id="as-hand-1">В руке: 10</span>
+                    <span id="as-score-1">Сбито: 0</span>
+                </div>
+                <div class="asyk-field" id="as-field-1"></div>
+                <div class="asyk-controls">
+                    <div class="timer-container" id="as-timer-box"><div class="timer-bar" id="as-timer"></div></div>
+                    <div class="asyk-q-box" id="as-q-1">?</div>
+                    <div class="asyk-options" id="as-opt-1"></div>
+                </div>
+            </div>
+            
+            <div class="asyk-player-zone p2-color">
+                <h2 id="as-name-2">Игрок 2</h2>
+                <div class="asyk-stats">
+                    <span id="as-hand-2">В руке: 10</span>
+                    <span id="as-score-2">Сбито: 0</span>
+                </div>
+                <div class="asyk-field" id="as-field-2"></div>
+                
+                <div class="ai-status" id="as-ai-status">🤖 ИИ целится...</div>
+                
+                <div class="asyk-controls" id="as-p2-controls">
+                    <div class="asyk-q-box" id="as-q-2">?</div>
+                    <div class="asyk-options" id="as-opt-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="winner-text" style="color:var(--blue); font-size: 1.5rem; margin-bottom: 15px;">Победа!</h2>
+            <button onclick="app.restartCurrentGame()" style="padding: 10px 20px; font-size: 1rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px;">Рестарт</button>
+            <button onclick="app.goHome()" style="padding: 10px 20px; font-size: 1rem; background: #eee; border: none; border-radius: 8px; cursor: pointer; width: 100%;">Меню</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
