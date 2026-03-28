@@ -1,6 +1,6 @@
 const UI = {
-    ru: { math: "Математика", game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату", game4: "Случайный ученик", p: "Игрок", bot: "🤖 Бот (ИИ)", win: " победил!", draw: "Ничья!", hand: "В руке: ", hit: "Сбито: " },
-    kz: { math: "Математика", game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату", game4: "Кездейсоқ оқушы", p: "Ойыншы", bot: "🤖 Бот (ЖИ)", win: " жеңді!", draw: "Тең!", hand: "Сақа: ", hit: "Кеней: " }
+    ru: { math: "Математика", game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату", game4: "Случайный ученик", game5: "Қыз қуу", p: "Игрок", bot: "🤖 Бот (ИИ)", win: " победил(а)!", draw: "Ничья!", hand: "В руке: ", hit: "Сбито: " },
+    kz: { math: "Математика", game1: "Арқан Тартыс", game2: "Бәйге", game3: "Асық Ату", game4: "Кездейсоқ оқушы", game5: "Қыз қуу", p: "Ойыншы", bot: "🤖 Бот (ЖИ)", win: " жеңді!", draw: "Тең!", hand: "Сақа: ", hit: "Кеней: " }
 };
 
 const diffMap = { 'easy': 6000, 'medium': 5000, 'hard': 4000, 'impossible': 3000 };
@@ -100,6 +100,13 @@ const app = {
         setTxt('txt-game2', t.game2);
         setTxt('txt-game3', t.game3);
         setTxt('txt-game4', t.game4);
+        setTxt('txt-game5', t.game5);
+        
+        let p2NameKq = isPve ? t.bot : t.p + ' 2 (Қыз)';
+        setTxt('kq-team-a', t.p + ' 1 (Жігіт)');
+        setTxt('kq-team-b', p2NameKq);
+        setDisplay('kq-ai-status', isPve ? 'flex' : 'none');
+        setDisplay('kq-p2-controls', isPve ? 'none' : 'flex');
         
         const isPve = this.mode === 'pve';
         setDisplay('wrap-difficulty', isPve ? 'block' : 'none');
@@ -375,7 +382,77 @@ const asykGame = {
         }
     }
 };
+// --- ЛОГИКА ҚЫЗ ҚУУ ---
+const kyzquuGame = {
+    boyPos: 5, girlPos: 30, active: false,
+    start() {
+        this.boyPos = 5; this.girlPos = 30; this.active = true;
+        document.getElementById('modal').classList.remove('active');
+        this.updateVisuals();
+        this.nextQ('a');
+        if(app.mode === 'pvp') this.nextQ('b');
+    },
+    nextQ(team) {
+        if (!this.active) return;
+        const data = generateQuestionData();
+        setTxt(`kq-q-${team}`, data.text);
+        const div = document.getElementById(`kq-opt-${team}`);
+        if(div) {
+            div.innerHTML = '';
+            data.options.forEach(opt => {
+                let b = document.createElement('button');
+                b.className = 'arkan-btn'; // используем те же красивые кнопки
+                b.innerText = opt;
+                b.onclick = () => this.check(team, opt, data.correct, b);
+                div.appendChild(b);
+            });
+        }
+        // Если играет ИИ, он "убегает" по таймеру
+        if(app.mode === 'pve' && team === 'a') {
+            startPveTimer('kq-timer', () => { 
+                this.girlPos += 12; // Девушка ускакала вперед
+                this.updateVisuals();
+                if(this.active) this.nextQ('a'); 
+            });
+        }
+    },
+    check(team, val, corr, btn) {
+        if(!this.active) return;
+        if(val == corr) {
+            playSnd('correct'); 
+            if (team === 'a') this.boyPos += 15; // Парень делает рывок
+            else this.girlPos += 12; // Девушка убегает
+        } else {
+            playSnd('wrong');
+            btn.style.background = '#555'; setTimeout(()=> btn.style.background='', 300);
+            // При ошибке противник получает преимущество
+            if (app.mode === 'pve' && team === 'a') this.girlPos += 12; 
+        }
+        this.updateVisuals();
+        if(this.active) this.nextQ(team);
+    },
+    updateVisuals() {
+        const boyEl = document.getElementById('kq-boy');
+        const girlEl = document.getElementById('kq-girl');
+        
+        if (boyEl) boyEl.style.left = this.boyPos + '%';
+        if (girlEl) girlEl.style.left = this.girlPos + '%';
 
+        const lang = localStorage.getItem('gameLang') || 'ru';
+        
+        // Парень догнал девушку
+        if (this.boyPos + 10 >= this.girlPos) {
+            this.active = false; 
+            setTimeout(() => app.showWin(UI[lang].p + " 1 (Жігіт)" + UI[lang].win), 500);
+        } 
+        // Девушка добежала до финиша (90%)
+        else if (this.girlPos >= 85) { 
+            this.active = false; 
+            const pName = app.mode === 'pve' ? UI[lang].bot : UI[lang].p + " 2 (Қыз)";
+            setTimeout(() => app.showWin(pName + UI[lang].win), 500);
+        }
+    }
+};
 // --- ФУНКЦИИ ГЕНЕРАТОРА (КОПИРОВАНИЕ И ВСТАВКА) ---
 function copyPrompt() {
     const promptText = document.getElementById('prompt-to-copy');
@@ -411,6 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('arkan-screen')) { arkanGame.start(); }
     if (document.getElementById('baige-screen')) { baigeGame.start(); }
     if (document.getElementById('asyk-screen')) { asykGame.start(); }
+    if (document.getElementById('kyzquu-screen')) { kyzquuGame.start(); }
     
     // Запускаем фоновую музыку, если она есть на странице
     const bgm = document.getElementById('bgm');
