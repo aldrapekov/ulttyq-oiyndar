@@ -93,6 +93,7 @@ const app = {
         this.loadSettings();
         const lang = localStorage.getItem('gameLang') || 'ru';
         const t = UI[lang];
+        const isPve = this.mode === 'pve'; // ИСПРАВЛЕНИЕ: Сначала проверяем режим
 
         // Обновление текстов в меню
         setTxt('opt-math', t.math);
@@ -102,27 +103,28 @@ const app = {
         setTxt('txt-game4', t.game4);
         setTxt('txt-game5', t.game5);
         
-        let p2NameKq = isPve ? t.bot : t.p + ' 2 (Қыз)';
-        setTxt('kq-team-a', t.p + ' 1 (Жігіт)');
-        setTxt('kq-team-b', p2NameKq);
-        setDisplay('kq-ai-status', isPve ? 'flex' : 'none');
-        setDisplay('kq-p2-controls', isPve ? 'none' : 'flex');
-        
-        const isPve = this.mode === 'pve';
         setDisplay('wrap-difficulty', isPve ? 'block' : 'none');
         setDisplay('wrap-players', isPve ? 'none' : 'block');
 
-        // Обновление текстов в играх
         let p2Name = isPve ? t.bot : t.p + ' 2';
+        
+        // Арқан и Бәйге
         setTxt('at-team-a', t.p + ' 1');
         setTxt('at-team-b', p2Name);
         setTxt('as-name-1', t.p + ' 1');
         setTxt('as-name-2', p2Name);
 
+        // Қыз қуу
+        let p2NameKq = isPve ? t.bot : t.p + ' 2 (Қыз)';
+        setTxt('kq-team-a', t.p + ' 1 (Жігіт)');
+        setTxt('kq-team-b', p2NameKq);
+
         setDisplay('at-ai-status', isPve ? 'flex' : 'none');
         setDisplay('at-p2-controls', isPve ? 'none' : 'flex');
         setDisplay('as-ai-status', isPve ? 'flex' : 'none');
         setDisplay('as-p2-controls', isPve ? 'none' : 'block');
+        setDisplay('kq-ai-status', isPve ? 'flex' : 'none');
+        setDisplay('kq-p2-controls', isPve ? 'none' : 'flex');
     },
 
     startGame(type) {
@@ -382,6 +384,7 @@ const asykGame = {
         }
     }
 };
+
 // --- ЛОГИКА ҚЫЗ ҚУУ ---
 const kyzquuGame = {
     boyPos: 5, girlPos: 30, active: false,
@@ -449,20 +452,6 @@ const kyzquuGame = {
     }
 };
 
-// --- АВТОЗАПУСК ПРИ ОТКРЫТИИ СТРАНИЦЫ ---
-document.addEventListener('DOMContentLoaded', () => {
-    app.updateInterface(); // Загружает настройки
-
-    // Проверяем, на какой мы странице, и запускаем нужную игру
-    if (document.getElementById('arkan-screen')) { arkanGame.start(); }
-    if (document.getElementById('baige-screen')) { baigeGame.start(); }
-    if (document.getElementById('asyk-screen')) { asykGame.start(); }
-    if (document.getElementById('kyzquu-screen')) { kyzquuGame.start(); } // <--- ВОТ ЭТА СТРОЧКА ОЧЕНЬ ВАЖНА!
-    
-    // Запускаем фоновую музыку, если она есть на странице
-    const bgm = document.getElementById('bgm');
-    if (bgm && bgm.paused) { bgm.volume = 0.3; bgm.play().catch(()=>{}); }
-});
 // --- ФУНКЦИИ ГЕНЕРАТОРА (КОПИРОВАНИЕ И ВСТАВКА) ---
 function copyPrompt() {
     const promptText = document.getElementById('prompt-to-copy');
@@ -478,9 +467,8 @@ function loadCustomQuestions() {
         rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
         let questions = JSON.parse(rawText);
         
-        // Сохраняем в память браузера!
         localStorage.setItem('myCustomQuestions', JSON.stringify(questions));
-        localStorage.setItem('gameSubject', 'custom'); // Автоматически ставим режим "Свой тест"
+        localStorage.setItem('gameSubject', 'custom'); 
         
         alert(`Успешно загружено вопросов: ${questions.length}. Возвращаемся в меню!`);
         window.location.href = 'index.html';
@@ -490,17 +478,15 @@ function loadCustomQuestions() {
     }
 }
 
-// --- АВТОЗАПУСК ПРИ ОТКРЫТИИ СТРАНИЦЫ ---
+// --- ЕДИНСТВЕННЫЙ АВТОЗАПУСК ПРИ ОТКРЫТИИ СТРАНИЦЫ ---
 document.addEventListener('DOMContentLoaded', () => {
-    app.updateInterface(); // Загружает настройки
+    app.updateInterface(); 
 
-    // Проверяем, на какой мы странице, и запускаем нужную игру
     if (document.getElementById('arkan-screen')) { arkanGame.start(); }
     if (document.getElementById('baige-screen')) { baigeGame.start(); }
     if (document.getElementById('asyk-screen')) { asykGame.start(); }
-    if (document.getElementById('kyzquu-screen')) { kyzquuGame.start(); }
+    if (document.getElementById('kyzquu-screen')) { kyzquuGame.start(); } 
     
-    // Запускаем фоновую музыку, если она есть на странице
     const bgm = document.getElementById('bgm');
     if (bgm && bgm.paused) { bgm.volume = 0.3; bgm.play().catch(()=>{}); }
 });
