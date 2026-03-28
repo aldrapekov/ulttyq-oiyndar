@@ -401,16 +401,15 @@ const kyzquuGame = {
             div.innerHTML = '';
             data.options.forEach(opt => {
                 let b = document.createElement('button');
-                b.className = 'arkan-btn'; // используем те же красивые кнопки
+                b.className = 'arkan-btn'; 
                 b.innerText = opt;
                 b.onclick = () => this.check(team, opt, data.correct, b);
                 div.appendChild(b);
             });
         }
-        // Если играет ИИ, он "убегает" по таймеру
         if(app.mode === 'pve' && team === 'a') {
             startPveTimer('kq-timer', () => { 
-                this.girlPos += 12; // Девушка ускакала вперед
+                this.girlPos += 12; 
                 this.updateVisuals();
                 if(this.active) this.nextQ('a'); 
             });
@@ -420,12 +419,11 @@ const kyzquuGame = {
         if(!this.active) return;
         if(val == corr) {
             playSnd('correct'); 
-            if (team === 'a') this.boyPos += 15; // Парень делает рывок
-            else this.girlPos += 12; // Девушка убегает
+            if (team === 'a') this.boyPos += 15; 
+            else this.girlPos += 12; 
         } else {
             playSnd('wrong');
             btn.style.background = '#555'; setTimeout(()=> btn.style.background='', 300);
-            // При ошибке противник получает преимущество
             if (app.mode === 'pve' && team === 'a') this.girlPos += 12; 
         }
         this.updateVisuals();
@@ -440,19 +438,31 @@ const kyzquuGame = {
 
         const lang = localStorage.getItem('gameLang') || 'ru';
         
-        // Парень догнал девушку
         if (this.boyPos + 10 >= this.girlPos) {
             this.active = false; 
             setTimeout(() => app.showWin(UI[lang].p + " 1 (Жігіт)" + UI[lang].win), 500);
-        } 
-        // Девушка добежала до финиша (90%)
-        else if (this.girlPos >= 85) { 
+        } else if (this.girlPos >= 85) { 
             this.active = false; 
             const pName = app.mode === 'pve' ? UI[lang].bot : UI[lang].p + " 2 (Қыз)";
             setTimeout(() => app.showWin(pName + UI[lang].win), 500);
         }
     }
 };
+
+// --- АВТОЗАПУСК ПРИ ОТКРЫТИИ СТРАНИЦЫ ---
+document.addEventListener('DOMContentLoaded', () => {
+    app.updateInterface(); // Загружает настройки
+
+    // Проверяем, на какой мы странице, и запускаем нужную игру
+    if (document.getElementById('arkan-screen')) { arkanGame.start(); }
+    if (document.getElementById('baige-screen')) { baigeGame.start(); }
+    if (document.getElementById('asyk-screen')) { asykGame.start(); }
+    if (document.getElementById('kyzquu-screen')) { kyzquuGame.start(); } // <--- ВОТ ЭТА СТРОЧКА ОЧЕНЬ ВАЖНА!
+    
+    // Запускаем фоновую музыку, если она есть на странице
+    const bgm = document.getElementById('bgm');
+    if (bgm && bgm.paused) { bgm.volume = 0.3; bgm.play().catch(()=>{}); }
+});
 // --- ФУНКЦИИ ГЕНЕРАТОРА (КОПИРОВАНИЕ И ВСТАВКА) ---
 function copyPrompt() {
     const promptText = document.getElementById('prompt-to-copy');
