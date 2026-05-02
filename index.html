@@ -2,91 +2,125 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Uly Dala Oyindary - Меню</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÚLY DALA OIYNDARY</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #d1d5db; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
+        /* Верхняя панель */
+        .top-navbar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 60px;
+            background: linear-gradient(90deg, #1a237e, #8e24aa);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; box-sizing: border-box; z-index: 20; color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .nav-btn { background: none; border: none; color: white; cursor: pointer; font-size: 24px; display: flex; align-items: center; }
+        .nav-title { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Видео и оверлей */
+        .video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        
+        .content-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2; display: flex; justify-content: center; align-items: center;
+            background: rgba(0, 0, 0, 0.1); /* Совсем легкое затемнение */
+        }
+        
+        .placeholder-text { 
+            font-size: 2rem; font-weight: 900; max-width: 70%; line-height: 1.3; 
+            text-transform: uppercase; color: rgba(255,255,255,0.7); text-align: center;
+        }
+
+        /* Кнопка звука */
+        .mute-btn { 
+            position: absolute; bottom: 20px; right: 20px; z-index: 10; 
+            background: rgba(0,0,0,0.5); border: none; color: white; border-radius: 50%;
+            width: 50px; height: 50px; font-size: 24px; cursor: pointer; display: flex; 
+            justify-content: center; align-items: center;
+        }
+
+        /* БОКОВОЕ МЕНЮ */
+        .dark-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); z-index: 15;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .dark-overlay.active { opacity: 1; pointer-events: all; }
+
+        .sidebar {
+            position: absolute; top: 0; left: -320px; width: 320px; height: 100%;
+            background: white; z-index: 25; box-shadow: 2px 0 15px rgba(0,0,0,0.5);
+            transition: left 0.3s ease; display: flex; flex-direction: column;
+            padding-top: 70px; box-sizing: border-box;
+        }
+        .sidebar.active { left: 0; }
+
+        .sidebar-category {
+            padding: 15px 20px 5px 20px; font-size: 0.85rem; color: #aaa;
+            text-transform: uppercase; font-weight: bold; border-bottom: 1px solid #eee;
+        }
+        .sidebar-item {
+            display: block; padding: 18px 20px; font-size: 1.1rem; color: #333;
+            text-decoration: none; font-weight: bold; transition: 0.2s; cursor: pointer;
+        }
+        .sidebar-item:hover { background: #f0faff; color: #00B1C1; padding-left: 28px; }
+
+        .close-sidebar {
+            position: absolute; top: 15px; right: 15px; background: none; border: none;
+            font-size: 24px; cursor: pointer; color: #555;
+        }
+    </style>
+</head>
 <body>
-    <audio id="bgm" src="bgm.mp3" loop></audio>
-    <div id="spinning-pattern"></div>
-    
-    <div id="rotate-screen" class="rotate-overlay">
-        <div class="rotate-icon">📱</div>
-        <h2>Бұрыңыз / Поверните экран</h2>
-        <p>Ойын көлденең режимге арналған</p>
-    </div>
 
-    <div id="menu-screen" class="screen">
-        <div class="menu-card">
-            <h1 class="main-title">ULY DALA OYINDARY</h1>
-            
-            <div class="settings-row">
-                <div>
-                    <span class="label-text">Режим / Режим</span>
-                    <select id="mode-select" onchange="app.saveSettings()">
-                        <option value="pve">👤 Игрок vs 🤖 ИИ</option>
-                        <option value="pvp">👥 Игрок vs Игрок</option>
-                    </select>
-                </div>
-                <div>
-                    <span class="label-text">Предмет / Пән</span>
-                    <select id="subject-select" onchange="app.saveSettings()">
-                        <option value="math" id="opt-math">Математика</option>
-                        <option value="custom">✨ Свой тест (ИИ)</option>
-                    </select>
-                </div>
-                <div>
-                    <span class="label-text">Язык / Тіл</span>
-                    <select id="lang-select" onchange="app.saveSettings()">
-                        <option value="ru">Русский</option>
-                        <option value="kz">Қазақша</option>
-                    </select>
-                </div>
-                
-                <div id="wrap-difficulty">
-                    <span class="label-text">Сложность / Қиындық</span>
-                    <select id="difficulty-select" onchange="app.saveSettings()">
-                        <option value="easy">Легко (6с)</option>
-                        <option value="medium">Средне (5с)</option>
-                        <option value="hard">Сложно (4с)</option>
-                        <option value="impossible">Невозможно (3с)</option>
-                    </select>
-                </div>
-                <div id="wrap-players" style="display:none;">
-                    <span class="label-text">Игроки (для Бәйге)</span>
-                    <select id="players-select" onchange="app.saveSettings()">
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                    </select>
-                </div>
-            </div>
+    <header class="top-navbar">
+        <button class="nav-btn" onclick="toggleSidebar()">☰</button>
+        <div class="nav-title">Úly Dala Oıyndary</div>
+        <div style="width: 40px;"></div> </header>
 
-            <div class="games-grid" id="games-container">
-                <div class="game-card" onclick="app.startGame('arkan')">
-                    <img src="arqan_i.png" class="game-img-icon" alt="Арқан">
-                    <h3 id="txt-game1">Арқан Тартыс</h3>
-                </div>
-                <div class="game-card" onclick="app.startGame('baige')">
-                    <img src="horse_i.png" class="game-img-icon" alt="Бәйге">
-                    <h3 id="txt-game2">Бәйге</h3>
-                </div>
-                <div class="game-card" onclick="app.startGame('asyk')">
-                    <img src="asyq.png" class="game-img-icon" alt="Асық">
-                    <h3 id="txt-game3">Асық Ату</h3>
-                </div>
-                <div class="game-card" onclick="app.startGame('kyzquu')">
-                    <img src="kyzquu_i.png" class="game-img-icon" alt="Қыз қуу" onerror="this.src='horse_i.png'">
-                    <h3 id="txt-game5">Қыз қуу</h3>
-                </div>
-                <div class="game-card" onclick="window.location.href='selector.html'">
-                    <img src="camera_i.png" class="game-img-icon" alt="Камера">
-                    <h3 id="txt-game4">Случайный ученик</h3>
-                </div>
-            </div>
+    <div class="dark-overlay" id="dark-overlay" onclick="toggleSidebar()"></div>
 
-            <button onclick="window.location.href='generator.html'" style="margin-top: 30px; width: 100%; padding: 15px; background: var(--gold); color: #333; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #d4b52b;">✨ Загрузить свой текст (ИИ)</button>
+    <nav class="sidebar" id="sidebar">
+        <button class="close-sidebar" onclick="toggleSidebar()">✖</button>
+
+        <div class="sidebar-category">Ұлттық ойындар / Игры</div>
+        
+        <a class="sidebar-item" href="menu.html?game=arkan">🪢 Арқан Тартыс</a>
+        <a class="sidebar-item" href="menu.html?game=baige">🐎 Бәйге</a>
+        <a class="sidebar-item" href="menu.html?game=asyk">🦴 Асық Ату</a>
+        <a class="sidebar-item" href="menu.html?game=kyzquu">🏇 Қыз қуу</a>
+
+        <div class="sidebar-category" style="margin-top: 20px;">Сервис</div>
+        <a class="sidebar-item" href="menu.html?game=selector">📷 Случайный ученик</a>
+    </nav>
+
+    <video class="video-bg" id="bg-video" autoplay loop muted playsinline>
+        </video>
+
+    <div class="content-overlay">
+        <div class="placeholder-text">
+            Выберите игру в меню слева
         </div>
     </div>
 
-    <script src="app.js"></script> </body>
+    <button class="mute-btn" onclick="toggleMute()">🔇</button>
+
+    <script>
+        function toggleMute() {
+            const video = document.getElementById('bg-video');
+            const btn = document.querySelector('.mute-btn');
+            if (video) {
+                video.muted = !video.muted;
+                btn.innerText = video.muted ? '🔇' : '🔊';
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('dark-overlay').classList.toggle('active');
+        }
+    </script>
+</body>
 </html>
