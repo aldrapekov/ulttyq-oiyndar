@@ -3,41 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Домбырашы</title>
+    <title>Домбырашы | ÚLY DALA OIYNDARY</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Фикс для гарантированного отображения сетки ответов */
+        #dombra-opt {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 12px !important;
+            width: 100% !important;
+        }
+    </style>
 </head>
 <body>
-    <!-- Звуковые файлы -->
+    <!-- АУДИО ФАЙЛЫ -->
     <audio id="audio-dombra" loop></audio>
     <audio id="audio-wrong" src="wrong_note.mp3"></audio>
     <div id="spinning-pattern"></div>
     
-    <!-- Переворот экрана для мобильных -->
     <div id="rotate-screen" class="rotate-overlay">
         <div class="rotate-icon">📱</div>
         <h2>Бұрыңыз / Поверните экран</h2>
     </div>
 
-    <!-- ИГРОВОЙ ЭКРАН -->
-    <div id="dombra-screen" class="screen" style="padding: 45px 10px 10px 10px; box-sizing: border-box;">
-        <button class="home-btn" onclick="window.location.href='menu.html?game=dombra'">🏠 Меню</button>
+    <!-- СТАНДАРТНАЯ ШАПКА САЙТА -->
+    <header class="top-navbar">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button class="nav-btn" onclick="toggleSidebar()">☰</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'" style="font-size: 1.2rem;" title="На главную">🏠</button>
+        </div>
+        <div class="nav-title">ÚLY DALA OIYNDARY</div>
+        <div style="display: flex; justify-content: flex-end;">
+            <div class="main-lang-switcher">
+                <button onclick="setLanguage('kk')">KZ</button>
+                <button onclick="setLanguage('ru')">RU</button>
+                <button onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dark-overlay" id="dark-overlay" onclick="toggleSidebar()"></div>
+    <nav class="sidebar" id="sidebar">
+        <button class="close-sidebar" onclick="toggleSidebar()">✖</button>
+        <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;">🏠 Басты бет / Главная</a>
         
-        <!-- Главный контейнер, разделенный на верх (видео/мальчик) и низ (управление) -->
-        <div class="dombra-layout-clean">
+        <div class="sidebar-category" onclick="toggleSubmenu('submenu-games', 'arrow-games')">
+            <span>Ұлттық ойындар / Игры</span><span class="category-arrow" id="arrow-games">▼</span>
+        </div>
+        <div class="submenu" id="submenu-games">
+            <a class="sidebar-item" href="menu.html?game=arkan">➰ Арқан Тартыс</a>
+            <a class="sidebar-item" href="menu.html?game=baige">🐎 Бәйге</a>
+            <a class="sidebar-item" href="menu.html?game=asyk">🦴 Асық Ату</a>
+            <a class="sidebar-item" href="menu.html?game=kyzquu">🏇 Қыз қуу</a>
+            <a class="sidebar-item" href="dombra.html" style="color: #00B1C1;">🪕 Домбырашы (Одиночная)</a>
+        </div>
+        <div class="sidebar-category" style="margin-top: 10px;" onclick="toggleSubmenu('submenu-tools', 'arrow-tools')">
+            <span>Құралдар / Инструменты</span><span class="category-arrow" id="arrow-tools">▼</span>
+        </div>
+        <div class="submenu" id="submenu-tools">
+            <a class="sidebar-item" href="selector.html">📷 Случайный ученик</a>
+            <a class="sidebar-item" href="https://aldrapekov.github.io/trening/">🎯 Тренинг</a>
+        </div>
+    </nav>
+
+    <!-- ИГРОВОЙ ЭКРАН С УЧЕТОМ ОТСТУПА ПОД ШАПКУ -->
+    <div id="dombra-screen" class="screen" style="padding-top: 70px; box-sizing: border-box;">
+        
+        <div class="dombra-layout" style="display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 10px; box-sizing: border-box;">
             
             <!-- Верхняя зона: Видео игрока и полоса прогресса -->
-            <div class="dombra-media-zone">
-                <div class="melody-progress-container">
-                    <div class="melody-bar" id="melody-progress"></div>
+            <div class="dombra-media-zone" style="flex: 1.3; position: relative; width: 100%; background: #e8f5e9; border: 3px solid var(--gold); border-radius: 12px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                <div class="melody-progress-container" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 80%; max-width: 500px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 8px; border: 2px solid white; overflow: hidden; z-index: 10;">
+                    <div class="melody-bar" id="melody-progress" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--gold), var(--orange)); transition: width 0.4s;"></div>
                 </div>
-                <video id="bg-video" src="dombra_playing.mp4" loop muted playsinline></video>
-                <img id="bg-angry" src="boy_angry_bg.jpeg" style="display: none;">
+                <video id="bg-video" src="dombra_playing.mp4" loop muted playsinline style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0;"></video>
+                <img id="bg-angry" src="boy_angry_bg.jpeg" style="display: none; width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0;">
             </div>
 
-            <!-- Нижняя зона: Вопросы и сетка ответов -->
-            <div class="dombra-bottom-zone" id="controls-panel">
-                <div class="dombra-q-box" id="dombra-q">Загрузка вопроса...</div>
-                <div class="baige-options" id="dombra-opt"></div>
+            <!-- Нижняя зона: Вопрос и сетка ответов -->
+            <div class="dombra-bottom-zone" id="controls-panel" style="flex: 1; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(4px); border: 3px solid var(--gold); border-radius: 12px; padding: 15px; box-sizing: border-box; justify-content: space-between;">
+                <div class="dombra-q-box" id="dombra-q" style="font-size: 1.15rem; font-weight: bold; text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #eee; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">Загрузка вопроса...</div>
+                <div id="dombra-opt"></div>
             </div>
 
         </div>
@@ -49,12 +95,21 @@
             <h2 id="winner-text" style="color:var(--blue); font-size: 1.5rem; margin-bottom: 15px;">Керемет! 🎵</h2>
             <p style="margin-bottom: 15px;">Мелодия сыграна до конца!</p>
             <button onclick="restartGame()" style="padding: 10px 20px; font-size: 1rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px;">Рестарт</button>
-            <button onclick="window.location.href='menu.html?game=dombra'" style="padding: 10px 20px; font-size: 1rem; background: #eee; border: none; border-radius: 8px; cursor: pointer; width: 100%;">Меню</button>
+            <button onclick="window.location.href='menu.html?game=dombra'" style="padding: 10px 20px; font-size: 1rem; background: #eee; border: none; border-radius: 8px; cursor: pointer; width: 100%;">Меню настроек</button>
         </div>
     </div>
 
     <script>
-        // Игровые переменные (данные подтягиваются из настроек меню)
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('dark-overlay').classList.toggle('active');
+        }
+        function toggleSubmenu(submenuId, arrowId) {
+            document.getElementById(submenuId).classList.toggle('open');
+            document.getElementById(arrowId).classList.toggle('open');
+        }
+        function setLanguage(lang) { localStorage.setItem('siteLanguage', lang); location.reload(); }
+
         let streak = 0;
         let targetStreak = parseInt(localStorage.getItem('dombra_streak')) || 7; 
         let questions = [];
@@ -68,7 +123,6 @@
         const controlsPanel = document.getElementById('controls-panel');
         const modal = document.getElementById('modal');
 
-        // Стандартные вопросы на случай, если пользователь ничего не вставил в меню
         const defaultQuestions = [
             { q: "Қазақ халқының екі ішекті шертпелі музыкалық аспабы қалай аталады?", options: ["Домбыра", "Қобыз", "Сыбызғы", "Жетіген"], correct: 0 },
             { q: "Құрманғазының әйгілі күйі қалай аталады?", options: ["Адай", "Қоштасу", "Желдірме", "Толғау"], correct: 0 },
@@ -79,26 +133,21 @@
             { q: "Әйгілі «Сарыарқа» күйінің авторы кім?", options: ["Құрманғазы", "Тәттімбет", "Құдайберген", "Мұхит"], correct: 0 }
         ];
 
-        // Запуск при загрузке страницы
         window.onload = () => {
-            // Подгружаем выбранный в меню кюй
             const selectedKui = localStorage.getItem('dombra_kui') || 'adai.mp3';
             audioDombra.src = selectedKui;
 
-            // Загружаем кастомные вопросы из меню, если они есть
             const customJSON = localStorage.getItem('custom_questions');
             if (customJSON) {
                 try {
                     const parsed = JSON.parse(customJSON);
-                    // Поддержка формата ответа из промпта меню (где correct - строка, а wrong - массив)
                     questions = parsed.map(item => {
                         if (item.wrong && item.correct) {
                             let opts = [item.correct, ...item.wrong];
-                            // Перемешиваем варианты
                             opts.sort(() => Math.random() - 0.5);
                             return { q: item.q, options: opts, correct: opts.indexOf(item.correct) };
                         }
-                        return item; // Если формат уже стандартный
+                        return item;
                     });
                 } catch(e) {
                     questions = defaultQuestions;
@@ -107,7 +156,6 @@
                 questions = defaultQuestions;
             }
 
-            // Автозапуск музыки и видео при первом клике (обход ограничений браузеров)
             document.body.addEventListener('click', () => {
                 if (audioDombra.paused && streak < targetStreak) audioDombra.play().catch(()=>{});
                 if (videoEl.paused && streak < targetStreak) videoEl.play().catch(()=>{});
@@ -126,7 +174,7 @@
 
             qData.options.forEach((optText, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'baige-btn'; // Используем красивые кнопки из Бәйге
+                btn.className = 'baige-btn';
                 btn.style.background = 'var(--blue)';
                 btn.innerText = optText;
                 btn.onclick = () => checkAnswer(index === qData.correct);
@@ -167,7 +215,6 @@
                 audioWrong.currentTime = 0;
                 audioWrong.play();
                 
-                // Тряска панели при ошибке
                 controlsPanel.style.transition = 'transform 0.1s';
                 controlsPanel.style.transform = 'translateX(-10px)';
                 setTimeout(() => controlsPanel.style.transform = 'translateX(10px)', 100);
