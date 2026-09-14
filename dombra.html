@@ -80,6 +80,9 @@
                 </div>
             </div>
 
+             <div class="step-title" data-i18n="step1"><b>Шаг 1:</b> Скопируйте задание и отправьте его в ChatGPT, Яндекс Алису или Gemini вместе с материалом урока.</div>
+            <textarea id="prompt-to-copy" class="step-textarea" data-i18n-val="promptText" readonly style="height: 80px; background: #f8f9fa;">Ты профессиональный учитель. Составь 30 тестовых вопросов по моему тексту. Формат ответа - СТРОГО валидный JSON массив, без лишних слов и без маркдауна. Структура: {"q": "Вопрос", "correct": "Правильный", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}. Текст урока: [ВСТАВЬТЕ ТЕКСТ]</textarea>
+            
             <div class="step-title">Шаг 2: Вставьте вопросы (JSON от ИИ)</div>
             <textarea id="questions-input" class="step-textarea" rows="4" placeholder='[{"q": "Вопрос?", "options": ["Правильный", "Неверный 1", "Неверный 2", "Неверный 3"], "correct": 0}]'></textarea>
 
