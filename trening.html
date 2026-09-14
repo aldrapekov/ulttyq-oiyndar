@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор тренинга</title>
+    <style>
+        /* Базовые стили, чтобы страница выглядела аккуратно */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            margin-top: 60px;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        /* Сетка для карточек */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        /* Общий стиль для всех прямоугольников */
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+        }
+
+        /* Стиль для активной карточки "Угадай кто" */
+        .card.active {
+            color: #333;
+            cursor: pointer;
+            /* Фиолетовый акцент, чтобы гармонировать с шапкой вашего сайта */
+            border-color: #6a1b9a; 
+        }
+
+        .card.active:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(106, 27, 154, 0.2);
+            background-color: #faf5ff;
+        }
+
+        /* Стиль для неактивных карточек "Скоро" */
+        .card.disabled {
+            background-color: #e9ecef;
+            color: #a0a0a0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Плашка "Скоро" */
+        .badge {
+            background-color: #adb5bd;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Выберите формат интерактива</h1>
+
+    <div class="cards-container">
+        <!-- Активная карточка (ведет на анкету) -->
+        <a href="icebreaker.html" class="card active">
+            <div class="icon">🎭</div>
+            <div class="title">Угадай кто</div>
+        </a>
+
+        <!-- Неактивные карточки -->
+        <div class="card disabled">
+            <div class="icon">🧠</div>
+            <div class="title">Нейро-штурм</div>
+            <div class="badge">Скоро</div>
+        </div>
+
+        <div class="card disabled">
+            <div class="icon">⚡</div>
+            <div class="title">Блиц-опрос</div>
+            <div class="badge">Скоро</div>
+        </div>
+
+        <div class="card disabled">
+            <div class="icon">🧩</div>
+            <div class="title">Командный пазл</div>
+            <div class="badge">Скоро</div>
+        </div>
+    </div>
+
+</body>
+</html>
