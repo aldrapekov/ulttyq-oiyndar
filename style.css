@@ -233,7 +233,7 @@ select { padding: 12px; font-size: 1rem; width: 100%; border-radius: 8px; border
 /* ========================================= */
 .placeholder-text {
     font-size: 3.5rem; /* Делаем текст значительно крупнее */
-    font-weight: 900;
+    font-weight: 600;
     text-transform: uppercase;
     text-align: center;
     color: #ffffff; /* Полностью белый текст */
