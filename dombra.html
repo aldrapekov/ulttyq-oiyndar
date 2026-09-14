@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <!-- АУДИО ФАЙЛЫ (src для домбры теперь задается через JS) -->
+    <!-- АУДИО ФАЙЛЫ -->
     <audio id="audio-dombra" loop></audio>
     <audio id="audio-wrong" src="wrong_note.mp3"></audio>
 
@@ -18,7 +18,7 @@
             <button class="nav-btn" onclick="toggleSidebar()">☰</button>
             <button class="nav-btn" onclick="window.location.href='index.html'" style="font-size: 1.2rem;" title="На главную">🏠</button>
         </div>
-        <div class="nav-title" data-i18n="navTitle">ÚLY DALA OIYNDARY</div>
+        <div class="nav-title">ÚLY DALA OIYNDARY</div>
         <div style="display: flex; justify-content: flex-end;">
             <div class="main-lang-switcher">
                 <button onclick="setLanguage('kk')">KZ</button>
@@ -41,7 +41,7 @@
             <a class="sidebar-item" href="menu.html?game=baige">🐎 Бәйге</a>
             <a class="sidebar-item" href="menu.html?game=asyk">🦴 Асық Ату</a>
             <a class="sidebar-item" href="menu.html?game=kyzquu">🏇 Қыз қуу</a>
-            <a class="sidebar-item" href="dombra.html" style="color: #00B1C1;">🪕 Күйші (Одиночная)</a>
+            <a class="sidebar-item" href="dombra.html" style="color: #00B1C1;">🪕 Домбырашы (Одиночная)</a>
         </div>
         <div class="sidebar-category" style="margin-top: 10px;" onclick="toggleSubmenu('submenu-tools', 'arrow-tools')">
             <span>Құралдар / Инструменты</span><span class="category-arrow" id="arrow-tools">▼</span>
@@ -52,26 +52,16 @@
         </div>
     </nav>
 
-    <!-- РАЗДЕЛЕНИЕ ЭКРАНА -->
-    <div class="dombra-layout">
-        
-        <!-- ВЕРХНЯЯ ПОЛОВИНА: ВИДЕО И ПРОГРЕСС -->
-        <div class="dombra-media">
-            <div class="melody-progress-container">
-                <div class="melody-bar" id="melody-progress"></div>
-            </div>
+    <!-- ЭКРАН 1: НАСТРОЙКИ ИГРЫ (КАК В ДРУГИХ ИГРАХ) -->
+    <div class="content-overlay" id="setup-screen">
+        <div class="setup-card">
+            <h2 class="main-title" style="font-size: 1.5rem; margin-bottom: 15px;">🪕 Настройка режима «Домбырашы»</h2>
             
-            <video id="bg-video" src="dombra_playing.mp4" autoplay loop muted playsinline></video>
-            <img id="bg-angry" src="boy_angry_bg.jpeg" style="display: none;">
-        </div>
-
-        <!-- НИЖНЯЯ ПОЛОВИНА: ВОПРОСЫ И ОТВЕТЫ -->
-        <div class="dombra-controls-container">
-            <div class="dombra-controls" id="controls-panel">
-                
-                <!-- ВЫБОР КЮЯ -->
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <select id="kui-select" class="control-select" onchange="changeKui()" style="max-width: 350px; font-weight: bold; color: var(--blue); border-color: var(--blue); text-align: center;">
+            <div class="controls-row">
+                <!-- Выбор кюя -->
+                <div class="control-group" style="flex: 1;">
+                    <label class="control-label">Выберите кюй:</label>
+                    <select id="kui-select" class="control-select">
                         <option value="adai.mp3">Құрманғазы - Адай</option>
                         <option value="balbyrauyn.mp3">Құрманғазы - Балбырауын</option>
                         <option value="erke.mp3">Ә. Желдібаев - Ерке сылқым</option>
@@ -79,16 +69,40 @@
                     </select>
                 </div>
 
-                <div class="dombra-q-box" id="dombra-q">
-                    Қазақ халқының екі ішекті шертпелі музыкалық аспабы қалай аталады?
+                <!-- Выбор длины серии (сколько победных ответов подряд) -->
+                <div class="control-group" style="flex: 1;">
+                    <label class="control-label">Победная серия (правильных ответов):</label>
+                    <select id="streak-select" class="control-select">
+                        <option value="5">5 ответов</option>
+                        <option value="7" selected>7 ответов (стандарт)</option>
+                        <option value="10">10 ответов (сложно)</option>
+                    </select>
                 </div>
-                
-                <div class="baige-options" id="dombra-opt">
-                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(true)">Домбыра (Дұрыс жауап)</button>
-                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(false)">Қобыз</button>
-                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(false)">Сыбызғы</button>
-                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(false)">Жетіген</button>
-                </div>
+            </div>
+
+            <div class="step-title">Шаг 2: Вставьте вопросы (JSON от ИИ)</div>
+            <textarea id="questions-input" class="step-textarea" rows="4" placeholder='[{"q": "Вопрос?", "options": ["Правильный", "Неверный 1", "Неверный 2", "Неверный 3"], "correct": 0}]'></textarea>
+
+            <div class="buttons-row">
+                <button class="action-btn" onclick="startGame()">🚀 Начать игру</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ЭКРАН 2: САМАЯ ИГРА (СКРЫТА ДО СТАРТА) -->
+    <div class="dombra-layout" id="game-screen" style="display: none;">
+        <div class="dombra-media">
+            <div class="melody-progress-container">
+                <div class="melody-bar" id="melody-progress"></div>
+            </div>
+            <video id="bg-video" src="dombra_playing.mp4" loop muted playsinline></video>
+            <img id="bg-angry" src="boy_angry_bg.jpg" style="display: none;">
+        </div>
+
+        <div class="dombra-controls-container">
+            <div class="dombra-controls" id="controls-panel">
+                <div class="dombra-q-box" id="dombra-q">Вопрос загружается...</div>
+                <div class="baige-options" id="dombra-opt"></div>
             </div>
         </div>
     </div>
@@ -98,7 +112,7 @@
         <div class="modal-content">
             <h2 style="color:var(--blue); font-size: 2rem; margin-bottom: 10px;">Керемет! 🎵</h2>
             <p>Вы сыграли мелодию до конца!</p>
-            <button onclick="location.reload()" style="padding: 12px 20px; font-size: 1.1rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px;">Сыграть еще раз</button>
+            <button onclick="location.reload()" style="padding: 12px 20px; font-size: 1.1rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px;">Играть снова</button>
         </div>
     </div>
 
@@ -112,42 +126,86 @@
             document.getElementById(submenuId).classList.toggle('open');
             document.getElementById(arrowId).classList.toggle('open');
         }
+        function setLanguage(lang) { localStorage.setItem('siteLanguage', lang); location.reload(); }
 
-        // Логика игры
+        // Игровые переменные
         let streak = 0;
-        const targetStreak = 7; 
-        let gameStarted = false;
+        let targetStreak = 7; 
+        let questions = [];
+        let currentQIndex = 0;
 
+        const setupScreen = document.getElementById('setup-screen');
+        const gameScreen = document.getElementById('game-screen');
         const videoEl = document.getElementById('bg-video');
         const angryImg = document.getElementById('bg-angry');
         const progressBar = document.getElementById('melody-progress');
         const audioDombra = document.getElementById('audio-dombra');
         const audioWrong = document.getElementById('audio-wrong');
         const controlsPanel = document.getElementById('controls-panel');
-        const kuiSelect = document.getElementById('kui-select');
 
-        // Инициализация первого трека при загрузке
-        window.onload = () => {
-            audioDombra.src = kuiSelect.value;
-        };
+        // Стандартные вопросы, если пользователь ничего не вставил
+        const defaultQuestions = [
+            { q: "Қазақ халқының екі ішекті шертпелі музыкалық аспабы қалай аталады?", options: ["Домбыра", "Қобыз", "Сыбызғы", "Жетіген"], correct: 0 },
+            { q: "Құрманғазының әйгілі күйі қалай аталады?", options: ["Адай", "Қоштасу", "Желдірме", "Толғау"], correct: 0 },
+            { q: "Домбыраның неше ішегі бар?", options: ["2", "3", "4", "6"], correct: 0 },
+            { q: "«Ерке сылқым» күйінің авторы кім?", options: ["Әбдімомын Желдібаев", "Құрманғазы Сағырбайұлы", "Дина Нұрпейісова", "Тәттімбет"], correct: 0 },
+            { q: "Шертпе күй мектебінің негізін салушы кім?", options: ["Тәттімбет Қазанғапұлы", "Құрманғазы", "Дәулеткерей", "Ықылас"], correct: 0 },
+            { q: "Қобыз қандай аспаптар қатарына жатады?", options: ["Ысқышты", "Шертпелі", "Үрлемелі", "Ұрмалы"], correct: 0 },
+            { q: "Әйгілі «Сарыарқа» күйінің авторы кім?", options: ["Құрманғазы", "Тәттімбет", "Құдайберген", "Мұхит"], correct: 0 }
+        ];
 
-        // Функция смены кюя
-        function changeKui() {
-            const wasPlaying = !audioDombra.paused && gameStarted;
-            audioDombra.src = kuiSelect.value;
+        // Старт игры из экрана настроек
+        function startGame() {
+            // Читаем настройки
+            const kuiFile = document.getElementById('kui-select').value;
+            targetStreak = parseInt(document.getElementById('streak-select').value);
             
-            // Если мальчик уже играл, сразу продолжаем играть новую мелодию
-            if (wasPlaying) {
-                audioDombra.play();
+            // Читаем вопросы из текстового поля
+            const inputVal = document.getElementById('questions-input').value.trim();
+            if (inputVal) {
+                try {
+                    questions = JSON.parse(inputVal);
+                } catch(e) {
+                    alert("Ошибка в формате JSON! Проверьте правильность кавычек и скобок. Запущены стандартные вопросы.");
+                    questions = defaultQuestions;
+                }
+            } else {
+                questions = defaultQuestions;
             }
+
+            // Переключаем экраны
+            setupScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+
+            // Настраиваем и запускаем музыку
+            audioDombra.src = kuiFile;
+            audioDombra.play().catch(() => {});
+            videoEl.play().catch(() => {});
+
+            // Выводим первый вопрос
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (questions.length === 0) return;
+            // Берем вопрос по кругу
+            const qData = questions[currentQIndex % questions.length];
+            document.getElementById('dombra-q').innerText = qData.q;
+
+            const optContainer = document.getElementById('dombra-opt');
+            optContainer.innerHTML = '';
+
+            qData.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'baige-btn';
+                btn.style.background = 'var(--blue)';
+                btn.innerText = optText;
+                btn.onclick = () => checkAnswer(index === qData.correct);
+                optContainer.appendChild(btn);
+            });
         }
 
         function checkAnswer(isCorrect) {
-            if (!gameStarted) {
-                audioDombra.play();
-                gameStarted = true;
-            }
-
             if (isCorrect) {
                 streak++;
                 progressBar.style.width = (streak / targetStreak) * 100 + '%';
@@ -164,7 +222,9 @@
                     setTimeout(() => {
                         document.getElementById('modal-victory').classList.add('active');
                         audioDombra.pause();
-                    }, 500);
+                        videoEl.pause();
+                    }, 400);
+                    return;
                 }
             } else {
                 streak = 0;
@@ -175,6 +235,7 @@
                 angryImg.style.display = 'block';
                 
                 audioDombra.pause();
+                audioWrong.currentTime = 0;
                 audioWrong.play();
                 
                 controlsPanel.style.transition = 'transform 0.1s';
@@ -182,6 +243,9 @@
                 setTimeout(() => controlsPanel.style.transform = 'translateX(10px)', 100);
                 setTimeout(() => controlsPanel.style.transform = 'translateX(0)', 200);
             }
+
+            currentQIndex++;
+            loadQuestion();
         }
     </script>
 </body>
