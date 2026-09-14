@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домбырашы | ÚLY DALA OIYNDARY</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- АУДИО ФАЙЛЫ (src для домбры теперь задается через JS) -->
+    <audio id="audio-dombra" loop></audio>
+    <audio id="audio-wrong" src="wrong_note.mp3"></audio>
+
+    <!-- ВЕРХНЯЯ ШАПКА И МЕНЮ -->
+    <header class="top-navbar">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button class="nav-btn" onclick="toggleSidebar()">☰</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'" style="font-size: 1.2rem;" title="На главную">🏠</button>
+        </div>
+        <div class="nav-title" data-i18n="navTitle">ÚLY DALA OIYNDARY</div>
+        <div style="display: flex; justify-content: flex-end;">
+            <div class="main-lang-switcher">
+                <button onclick="setLanguage('kk')">KZ</button>
+                <button onclick="setLanguage('ru')">RU</button>
+                <button onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dark-overlay" id="dark-overlay" onclick="toggleSidebar()"></div>
+    <nav class="sidebar" id="sidebar">
+        <button class="close-sidebar" onclick="toggleSidebar()">✖</button>
+        <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;">🏠 Басты бет / Главная</a>
+        
+        <div class="sidebar-category" onclick="toggleSubmenu('submenu-games', 'arrow-games')">
+            <span>Ұлттық ойындар / Игры</span><span class="category-arrow" id="arrow-games">▼</span>
+        </div>
+        <div class="submenu" id="submenu-games">
+            <a class="sidebar-item" href="menu.html?game=arkan">➰ Арқан Тартыс</a>
+            <a class="sidebar-item" href="menu.html?game=baige">🐎 Бәйге</a>
+            <a class="sidebar-item" href="menu.html?game=asyk">🦴 Асық Ату</a>
+            <a class="sidebar-item" href="menu.html?game=kyzquu">🏇 Қыз қуу</a>
+            <a class="sidebar-item" href="dombra.html" style="color: #00B1C1;">🪕 Күйші (Одиночная)</a>
+        </div>
+        <div class="sidebar-category" style="margin-top: 10px;" onclick="toggleSubmenu('submenu-tools', 'arrow-tools')">
+            <span>Құралдар / Инструменты</span><span class="category-arrow" id="arrow-tools">▼</span>
+        </div>
+        <div class="submenu" id="submenu-tools">
+            <a class="sidebar-item" href="selector.html">📷 Случайный ученик</a>
+            <a class="sidebar-item" href="https://aldrapekov.github.io/trening/">🎯 Тренинг</a>
+        </div>
+    </nav>
+
+    <!-- РАЗДЕЛЕНИЕ ЭКРАНА -->
+    <div class="dombra-layout">
+        
+        <!-- ВЕРХНЯЯ ПОЛОВИНА: ВИДЕО И ПРОГРЕСС -->
+        <div class="dombra-media">
+            <div class="melody-progress-container">
+                <div class="melody-bar" id="melody-progress"></div>
+            </div>
+            
+            <video id="bg-video" src="dombra_playing.mp4" autoplay loop muted playsinline></video>
+            <img id="bg-angry" src="boy_angry_bg.jpg" style="display: none;">
+        </div>
+
+        <!-- НИЖНЯЯ ПОЛОВИНА: ВОПРОСЫ И ОТВЕТЫ -->
+        <div class="dombra-controls-container">
+            <div class="dombra-controls" id="controls-panel">
+                
+                <!-- ВЫБОР КЮЯ -->
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <select id="kui-select" class="control-select" onchange="changeKui()" style="max-width: 350px; font-weight: bold; color: var(--blue); border-color: var(--blue); text-align: center;">
+                        <option value="adai.mp3">Құрманғазы - Адай</option>
+                        <option value="balbyrauyn.mp3">Құрманғазы - Балбырауын</option>
+                        <option value="erke.mp3">Ә. Желдібаев - Ерке сылқым</option>
+                        <option value="saryarka.mp3">Құрманғазы - Сарыарқа</option>
+                    </select>
+                </div>
+
+                <div class="dombra-q-box" id="dombra-q">
+                    Қазақ халқының екі ішекті шертпелі музыкалық аспабы қалай аталады?
+                </div>
+                
+                <div class="baige-options" id="dombra-opt">
+                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(true)">Домбыра (Дұрыс жауап)</button>
+                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(false)">Қобыз</button>
+                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(false)">Сыбызғы</button>
+                    <button class="baige-btn" style="background: var(--blue);" onclick="checkAnswer(false)">Жетіген</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОКНО ПОБЕДЫ -->
+    <div id="modal-victory" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="color:var(--blue); font-size: 2rem; margin-bottom: 10px;">Керемет! 🎵</h2>
+            <p>Вы сыграли мелодию до конца!</p>
+            <button onclick="location.reload()" style="padding: 12px 20px; font-size: 1.1rem; background: var(--gold); border:none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px;">Сыграть еще раз</button>
+        </div>
+    </div>
+
+    <script>
+        // Меню
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('dark-overlay').classList.toggle('active');
+        }
+        function toggleSubmenu(submenuId, arrowId) {
+            document.getElementById(submenuId).classList.toggle('open');
+            document.getElementById(arrowId).classList.toggle('open');
+        }
+
+        // Логика игры
+        let streak = 0;
+        const targetStreak = 7; 
+        let gameStarted = false;
+
+        const videoEl = document.getElementById('bg-video');
+        const angryImg = document.getElementById('bg-angry');
+        const progressBar = document.getElementById('melody-progress');
+        const audioDombra = document.getElementById('audio-dombra');
+        const audioWrong = document.getElementById('audio-wrong');
+        const controlsPanel = document.getElementById('controls-panel');
+        const kuiSelect = document.getElementById('kui-select');
+
+        // Инициализация первого трека при загрузке
+        window.onload = () => {
+            audioDombra.src = kuiSelect.value;
+        };
+
+        // Функция смены кюя
+        function changeKui() {
+            const wasPlaying = !audioDombra.paused && gameStarted;
+            audioDombra.src = kuiSelect.value;
+            
+            // Если мальчик уже играл, сразу продолжаем играть новую мелодию
+            if (wasPlaying) {
+                audioDombra.play();
+            }
+        }
+
+        function checkAnswer(isCorrect) {
+            if (!gameStarted) {
+                audioDombra.play();
+                gameStarted = true;
+            }
+
+            if (isCorrect) {
+                streak++;
+                progressBar.style.width = (streak / targetStreak) * 100 + '%';
+                
+                angryImg.style.display = 'none';
+                videoEl.style.display = 'block';
+                videoEl.play();
+                
+                audioWrong.pause();
+                audioWrong.currentTime = 0;
+                if (audioDombra.paused) audioDombra.play();
+
+                if (streak >= targetStreak) {
+                    setTimeout(() => {
+                        document.getElementById('modal-victory').classList.add('active');
+                        audioDombra.pause();
+                    }, 500);
+                }
+            } else {
+                streak = 0;
+                progressBar.style.width = '0%';
+                
+                videoEl.pause();
+                videoEl.style.display = 'none';
+                angryImg.style.display = 'block';
+                
+                audioDombra.pause();
+                audioWrong.play();
+                
+                controlsPanel.style.transition = 'transform 0.1s';
+                controlsPanel.style.transform = 'translateX(-10px)';
+                setTimeout(() => controlsPanel.style.transform = 'translateX(10px)', 100);
+                setTimeout(() => controlsPanel.style.transform = 'translateX(0)', 200);
+            }
+        }
+    </script>
+</body>
+</html>
