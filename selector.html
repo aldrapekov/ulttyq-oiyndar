@@ -6,89 +6,143 @@
     <title>ULY DALA OYINDARY - Случайный Ученик</title>
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <style>
-        :root {
-            --blue: #00B1C1; --gold: #FFDA44; --red: #E30A17; --white: #ffffff; --purple: #6a1b9a;
-        }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', serif; background-color: #f0f0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        :root { --blue: #00B1C1; --gold: #FFDA44; --red: #E30A17; --white: #ffffff; --purple: #6a1b9a; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #d1d5db; overflow: hidden; }
         
-        /* Кнопка возврата на главную */
-        .back-button {
-            position: fixed; top: 20px; left: 20px; background-color: white; color: var(--purple);
-            padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: bold;
-            font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease; z-index: 1000; border: 1px solid #eee;
+        /* ВЕРХНЯЯ ПАНЕЛЬ ИЗ ОСНОВНОГО ДИЗАЙНА */
+        .top-navbar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 60px;
+            background: linear-gradient(90deg, #1a237e, #8e24aa);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; box-sizing: border-box; z-index: 1000; color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        .back-button:hover { background-color: var(--purple); color: white; transform: translateY(-2px); }
+        .nav-btn { background: none; border: none; color: white; cursor: pointer; font-size: 24px; display: flex; align-items: center; }
+        .nav-title { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* Переключатель языков */
-        .lang-switcher {
-            position: fixed; top: 20px; right: 20px; display: flex; gap: 5px; z-index: 1000;
+        .main-lang-switcher { display: flex; gap: 8px; }
+        .main-lang-switcher button {
+            background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white; padding: 5px 10px; border-radius: 6px; cursor: pointer;
+            font-weight: bold; font-size: 0.85rem; transition: all 0.3s ease;
         }
-        .lang-switcher button {
-            padding: 6px 12px; background-color: white; color: var(--purple); border: 1px solid #ddd;
-            border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+        .main-lang-switcher button:hover, .main-lang-switcher button:active {
+            background: white; color: var(--purple); border-color: white;
         }
-        .lang-switcher button:hover { background-color: var(--purple); color: white; border-color: var(--purple); }
 
-        /* Основной контейнер */
-        .main-container { text-align: center; z-index: 10; background: rgba(255,255,255,0.9); padding: 40px; border-radius: 20px; border: 4px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: opacity 0.5s; }
-        .main-title { color: var(--blue); font-size: 2.5rem; text-transform: uppercase; margin-bottom: 30px; }
-        .sub-title { font-size: 1.5rem; margin-top: 0; }
+        /* БОКОВОЕ МЕНЮ */
+        .dark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1001; opacity: 0; pointer-events: none; transition: 0.3s; }
+        .dark-overlay.active { opacity: 1; pointer-events: all; }
+        .sidebar { position: absolute; top: 0; left: -320px; width: 320px; height: 100%; background: white; z-index: 1002; box-shadow: 2px 0 15px rgba(0,0,0,0.5); transition: 0.3s; padding-top: 70px; box-sizing: border-box; }
+        .sidebar.active { left: 0; }
+        .sidebar-category { padding: 15px 20px 5px; font-size: 0.85rem; color: #aaa; text-transform: uppercase; font-weight: bold; border-bottom: 1px solid #eee; }
+        .sidebar-item { display: block; padding: 18px 20px; font-size: 1.1rem; color: #333; text-decoration: none; font-weight: bold; transition: 0.2s; cursor: pointer; }
+        .sidebar-item:hover { background: #f0faff; color: #00B1C1; padding-left: 28px; }
+        .close-sidebar { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #555; }
+
+        /* РАБОЧАЯ ОБЛАСТЬ ПОД ШАПКОЙ */
+        .content-area {
+            position: relative; width: 100%; height: calc(100vh - 60px); margin-top: 60px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        /* ОСНОВНОЙ КОНТЕЙНЕР (МЕНЮ ВЫБОРА) */
+        .main-container { text-align: center; z-index: 10; background: rgba(255,255,255,0.95); padding: 40px; border-radius: 20px; border: 4px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: opacity 0.5s; max-width: 600px;}
+        .main-title-text { color: var(--blue); font-size: 2.2rem; text-transform: uppercase; margin-bottom: 20px; margin-top: 0;}
+        .sub-title { font-size: 1.5rem; margin-top: 0; color: #333;}
         
         .action-btn { padding: 15px 40px; font-size: 1.2rem; border: none; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; background-color: var(--blue); box-shadow: 0 5px 0 rgba(0,0,0,0.2); transition: 0.1s; margin-top: 15px;}
         .action-btn:active { transform: translateY(3px); box-shadow: none; }
         .action-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
-        /* ОКНО КАМЕРЫ */
-        #camera-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; background: black; z-index: 100; justify-content: center; align-items: center; }
-        #video-element { height: 80vh; border: 5px solid var(--gold); border-radius: 15px; }
-        #overlay-canvas { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); height: 80vh; pointer-events: none; }
+        /* ОКНО КАМЕРЫ (Открывается строго внутри .content-area) */
+        #camera-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: black; z-index: 100; justify-content: center; align-items: center; }
+        #video-element { height: 80%; border: 5px solid var(--gold); border-radius: 15px; }
+        #overlay-canvas { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); height: 80%; pointer-events: none; }
 
         /* ОКНО РЕЗУЛЬТАТА */
-        #result-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; background: rgba(0,0,0,0.9); z-index: 200; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        #final-photo { border: 10px solid var(--gold); border-radius: 15px; max-width: 80vw; max-height: 70vh; margin-bottom: 20px; box-shadow: 0 0 50px rgba(255,218,68,0.5); }
-        .result-text { color: var(--gold); font-size: 3rem; font-weight: bold; text-transform: uppercase; animation: flash 1s infinite; }
+        #result-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: rgba(0,0,0,0.9); z-index: 200; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #final-photo { border: 10px solid var(--gold); border-radius: 15px; max-width: 80vw; max-height: 55vh; margin-bottom: 20px; box-shadow: 0 0 50px rgba(255,218,68,0.5); }
+        .result-text { color: var(--gold); font-size: 2.5rem; font-weight: bold; text-transform: uppercase; animation: flash 1s infinite; }
         @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
-        #close-result { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: white; cursor: pointer; background: none; border: none;}
+        #close-result { position: absolute; top: 20px; right: 20px; font-size: 3rem; color: white; cursor: pointer; background: none; border: none; padding: 0;}
     </style>
 </head>
 <body>
 
-    <!-- Кнопка возврата -->
-    <a href="index.html" class="back-button" data-i18n="homeBtn">🏠 Главная</a>
+    <!-- ШАПКА КАК ВО ВСЕМ ПРОЕКТЕ -->
+    <header class="top-navbar">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button class="nav-btn" onclick="toggleSidebar()">☰</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'" style="font-size: 1.2rem;" title="На главную">🏠</button>
+        </div>
+        
+        <div class="nav-title" data-i18n="navTitle">ÚLY DALA OIYNDARY</div>
+        
+        <div style="display: flex; justify-content: flex-end;">
+            <div class="main-lang-switcher">
+                <button onclick="setLanguage('kk')">KZ</button>
+                <button onclick="setLanguage('ru')">RU</button>
+                <button onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+    </header>
 
-    <!-- Переключатель языков -->
-    <div class="lang-switcher">
-        <button onclick="setLanguage('kk')">KZ</button>
-        <button onclick="setLanguage('ru')">RU</button>
-        <button onclick="setLanguage('en')">EN</button>
-    </div>
+    <!-- БОКОВОЕ МЕНЮ -->
+    <div class="dark-overlay" id="dark-overlay" onclick="toggleSidebar()"></div>
 
-    <div class="main-container" id="main-menu">
-        <h1 class="main-title">ULY DALA OYINDARY</h1>
-        <h2 class="sub-title" data-i18n="title">Выбор случайного ученика</h2>
-        <p data-i18n="desc">Нажмите кнопку, загрузится нейросеть, затем учитель направит камеру на класс.<br>Ученик будет выбран автоматически.</p>
-        <button class="action-btn" id="start-picker" onclick="randomPicker.init()" data-i18n="btnStart">Запустить Случайный Выбор</button>
-        <p id="status-text" style="color:var(--red); font-weight:bold; margin-top: 15px;"></p>
-    </div>
+    <nav class="sidebar" id="sidebar">
+        <button class="close-sidebar" onclick="toggleSidebar()">✖</button>
+        
+        <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;" data-i18n="menuHome">🏠 Басты бет / Главная</a>
 
-    <div id="camera-screen">
-        <video id="video-element" autoplay muted></video>
-        <canvas id="overlay-canvas"></canvas>
-    </div>
+        <div class="sidebar-category" data-i18n="catGames">Ұлттық ойындар / Игры</div>
+        <a class="sidebar-item" href="menu.html?game=arkan" data-i18n="gameArkan">➰ Арқан Тартыс</a>
+        <a class="sidebar-item" href="menu.html?game=baige" data-i18n="gameBaige">🐎 Бәйге</a>
+        <a class="sidebar-item" href="menu.html?game=asyk" data-i18n="gameAsyk">🦴 Асық Ату</a>
+        <a class="sidebar-item" href="menu.html?game=kyzquu" data-i18n="gameKyzquu">🏇 Қыз қуу</a>
 
-    <div id="result-screen">
-        <button id="close-result" onclick="randomPicker.hideResult()">×</button>
-        <img id="final-photo" src="" alt="Фото победителя">
-        <div class="result-text" data-i18n="resultText">выходит к доске!</div>
+        <div class="sidebar-category" style="margin-top: 20px;" data-i18n="catTools">Құралдар / Инструменты</div>
+        <a class="sidebar-item" href="selector.html" data-i18n="toolRandom">📷 Случайный ученик</a>
+        <a class="sidebar-item" href="https://aldrapekov.github.io/trening/" data-i18n="toolTraining">🎯 Тренинг</a>
+    </nav>
+
+    <!-- РАБОЧАЯ ОБЛАСТЬ ПОД ШАПКОЙ -->
+    <div class="content-area">
+        
+        <!-- Стартовое меню -->
+        <div class="main-container" id="main-menu">
+            <h1 class="main-title-text" data-i18n="navTitle">ULY DALA OYINDARY</h1>
+            <h2 class="sub-title" data-i18n="title">Выбор случайного ученика</h2>
+            <p data-i18n="desc" style="color: #555;">Нажмите кнопку, загрузится нейросеть, затем учитель направит камеру на класс.<br>Ученик будет выбран автоматически.</p>
+            <button class="action-btn" id="start-picker" onclick="randomPicker.init()" data-i18n="btnStart">Запустить Случайный Выбор</button>
+            <p id="status-text" style="color:var(--red); font-weight:bold; margin-top: 15px;"></p>
+        </div>
+
+        <!-- Окно камеры -->
+        <div id="camera-screen">
+            <video id="video-element" autoplay muted></video>
+            <canvas id="overlay-canvas"></canvas>
+        </div>
+
+        <!-- Окно результата -->
+        <div id="result-screen">
+            <button id="close-result" onclick="randomPicker.hideResult()">×</button>
+            <img id="final-photo" src="" alt="Фото победителя">
+            <div class="result-text" data-i18n="resultText">выходит к доске!</div>
+        </div>
     </div>
 
 <script>
-    // --- СЛОВАРЬ ПЕРЕВОДОВ ---
+    // --- СЛОВАРЬ ПЕРЕВОДОВ ИЗ ОБЕИХ СТРАНИЦ ---
     const translations = {
         ru: {
-            homeBtn: "🏠 Главная",
+            navTitle: "Úly Dala Oıyndary", menuHome: "🏠 Главная", catGames: "Игры",
+            gameArkan: "➰ Арқан Тартыс (Перетягивание каната)", gameBaige: "🐎 Бәйге (Скачки)",
+            gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу (Догони девушку)",
+            catTools: "Инструменты", toolRandom: "📷 Случайный ученик", toolTraining: "🎯 Тренинг",
+            
             title: "Выбор случайного ученика",
             desc: "Нажмите кнопку, загрузится нейросеть, затем учитель направит камеру на класс.<br>Ученик будет выбран автоматически.",
             btnStart: "Запустить Случайный Выбор",
@@ -99,7 +153,10 @@
             errNoFace: "❌ Ученики не найдены. Попробуйте еще раз."
         },
         kk: {
-            homeBtn: "🏠 Басты бет",
+            navTitle: "Ұлы Дала Ойындары", menuHome: "🏠 Басты бет", catGames: "Ұлттық ойындар",
+            gameArkan: "➰ Арқан Тартыс", gameBaige: "🐎 Бәйге", gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу",
+            catTools: "Құралдар", toolRandom: "📷 Кездейсоқ оқушы", toolTraining: "🎯 Тренинг",
+            
             title: "Кездейсоқ оқушыны таңдау",
             desc: "Түймені басыңыз, нейрожелі жүктеледі, содан кейін мұғалім камераны сыныпқа бағыттайды.<br>Оқушы автоматты түрде таңдалады.",
             btnStart: "Кездейсоқ таңдауды бастау",
@@ -110,7 +167,11 @@
             errNoFace: "❌ Оқушылар табылмады. Қайталап көріңіз."
         },
         en: {
-            homeBtn: "🏠 Home",
+            navTitle: "Games of the Great Steppe", menuHome: "🏠 Home", catGames: "National Games",
+            gameArkan: "➰ Arkan Tartys (Tug of War)", gameBaige: "🐎 Baige (Horse Racing)",
+            gameAsyk: "🦴 Asyk Atu", gameKyzquu: "🏇 Kyz Quu (Catch the Girl)",
+            catTools: "Tools", toolRandom: "📷 Random Student", toolTraining: "🎯 Training",
+            
             title: "Random Student Selector",
             desc: "Click the button to load the neural network, then point the camera at the class.<br>A student will be selected automatically.",
             btnStart: "Start Random Selection",
@@ -141,6 +202,12 @@
         setLanguage(savedLang);
     };
 
+    // Открытие/закрытие бокового меню
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('dark-overlay').classList.toggle('active');
+    }
+
     /**
      * ULY DALA OYINDARY: Random Student Picker
      */
@@ -165,7 +232,6 @@
             }
 
             this.startBtn.disabled = true;
-            // Использование динамического перевода
             this.status.innerText = translations[currentLang].statusLoading;
 
             try {
