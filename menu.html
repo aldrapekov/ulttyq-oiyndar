@@ -37,7 +37,7 @@
         <a class="sidebar-item" href="menu.html?game=baige" data-i18n="gameBaige">🐎 Бәйге</a>
         <a class="sidebar-item" href="menu.html?game=asyk" data-i18n="gameAsyk">🦴 Асық Ату</a>
         <a class="sidebar-item" href="menu.html?game=kyzquu" data-i18n="gameKyzquu">🏇 Қыз қуу</a>
-        <a class="sidebar-item" href="dombra.html" style="color: #00B1C1;">🪕 Домбырашы (Одиночная)</a>
+        <a class="sidebar-item" href="menu.html?game=dombra" data-i18n="gameDombra">🪕 Домбырашы (Одиночная)</a>
 
         <div class="sidebar-category" style="margin-top: 20px;" data-i18n="catTools">Құралдар / Инструменты</div>
         <a class="sidebar-item" href="selector.html" data-i18n="toolRandom">📷 Случайный ученик</a>
@@ -52,26 +52,26 @@
         <div class="setup-card">
             
             <div class="controls-row">
-                <div class="control-group">
-                    <span class="control-label" data-i18n="labelMode">режим</span>
-                    <select class="control-select" id="mode-select" onchange="app.saveSettings()">
-                        <option value="pve" data-i18n="optPve">игрок vs ИИ</option>
-                        <option value="pvp" data-i18n="optPvp">игрок vs игрок</option>
+                <!-- ПЕРВЫЙ СЕЛЕКТОР (Режим для обычных игр / Кюй для Домбры) -->
+                <div class="control-group" id="group-param-1">
+                    <span class="control-label" id="label-param-1" data-i18n="labelMode">режим</span>
+                    <select class="control-select" id="select-param-1">
+                        <!-- Динамические опции подставляются скриптом -->
                     </select>
                 </div>
                 
-                <div class="control-group" id="wrap-players" style="display:none;">
-                    <span class="control-label" data-i18n="labelPlayers">игроки</span>
-                    <select class="control-select" id="players-select" onchange="app.saveSettings()">
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
+                <!-- ВТОРОЙ СЕЛЕКТОР (Игроки для команд / Победная серия для Домбры) -->
+                <div class="control-group" id="group-param-2">
+                    <span class="control-label" id="label-param-2" data-i18n="labelPlayers">игроки</span>
+                    <select class="control-select" id="select-param-2">
+                        <!-- Динамические опции подставляются скриптом -->
                     </select>
                 </div>
                 
-                <div class="control-group" id="wrap-difficulty">
-                    <span class="control-label" data-i18n="labelTimer">таймер</span>
-                    <select class="control-select" id="difficulty-select" onchange="app.saveSettings()">
+                <!-- ТРЕТЬИЙ СЕЛЕКТОР (Таймер) -->
+                <div class="control-group" id="group-param-3">
+                    <span class="control-label" id="label-param-3" data-i18n="labelTimer">таймер</span>
+                    <select class="control-select" id="select-param-3">
                         <option value="easy" data-i18n="optEasy">6 сек</option>
                         <option value="medium" selected data-i18n="optMedium">5 сек</option>
                         <option value="hard" data-i18n="optHard">4 сек</option>
@@ -92,7 +92,7 @@
 
             <div class="buttons-row">
                 <button class="action-btn" onclick="copyPrompt()" data-i18n="btnCopy">Скопировать задание для ИИ</button>
-                <button class="action-btn" onclick="launchSelectedGame()" data-i18n="btnSave">Сохранить и перейти в игру</button>
+                <button class="action-btn" onclick="launchGame()" data-i18n="btnSave">Сохранить и перейти в игру</button>
             </div>
             
         </div>
@@ -105,7 +105,7 @@
             ru: {
                 navTitle: "Úly Dala Oıyndary", menuHome: "🏠 Главная", catGames: "Игры",
                 gameArkan: "➰ Арқан Тартыс (Перетягивание каната)", gameBaige: "🐎 Бәйге (Скачки)",
-                gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу (Догони девушку)",
+                gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу (Догони девушку)", gameDombra: "🪕 Домбырашы (Одиночная)",
                 catTools: "Инструменты", toolRandom: "📷 Случайный ученик", toolTraining: "🎯 Тренинг",
                 
                 labelMode: "РЕЖИМ", optPve: "игрок vs ИИ", optPvp: "игрок vs игрок",
@@ -119,7 +119,7 @@
             },
             kk: {
                 navTitle: "Ұлы Дала Ойындары", menuHome: "🏠 Басты бет", catGames: "Ұлттық ойындар",
-                gameArkan: "➰ Арқан Тартыс", gameBaige: "🐎 Бәйге", gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу",
+                gameArkan: "➰ Арқан Тартыс", gameBaige: "🐎 Бәйге", gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу", gameDombra: "🪕 Домбырашы",
                 catTools: "Құралдар", toolRandom: "📷 Кездейсоқ оқушы", toolTraining: "🎯 Тренинг",
                 
                 labelMode: "РЕЖИМ", optPve: "ойыншы vs ЖИ", optPvp: "ойыншы vs ойыншы",
@@ -134,7 +134,7 @@
             en: {
                 navTitle: "Games of the Great Steppe", menuHome: "🏠 Home", catGames: "National Games",
                 gameArkan: "➰ Arkan Tartys (Tug of War)", gameBaige: "🐎 Baige (Horse Racing)",
-                gameAsyk: "🦴 Asyk Atu", gameKyzquu: "🏇 Kyz Quu (Catch the Girl)",
+                gameAsyk: "🦴 Asyk Atu", gameKyzquu: "🏇 Kyz Quu (Catch the Girl)", gameDombra: "🪕 Dómbyrashy (Solo)",
                 catTools: "Tools", toolRandom: "📷 Random Student", toolTraining: "🎯 Training",
                 
                 labelMode: "MODE", optPve: "player vs AI", optPvp: "player vs player",
@@ -148,35 +148,101 @@
             }
         };
 
+        // Определяем, какая игра сейчас выбрана в ссылке (например: menu.html?game=dombra)
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentGame = urlParams.get('game') || 'arkan';
+
+        // Настраиваем интерфейс под конкретную игру при загрузке
+        window.onload = () => {
+            const savedLang = localStorage.getItem('siteLanguage') || 'ru';
+            setLanguage(savedLang);
+
+            // Если открыта домбра, перестраиваем селекторы под её параметры
+            if (currentGame === 'dombra') {
+                document.getElementById('label-param-1').innerText = "КҮЙ / КЮЙ";
+                const sel1 = document.getElementById('select-param-1');
+                sel1.innerHTML = `
+                    <option value="adai.mp3">Құрманғазы - Адай</option>
+                    <option value="balbyrauyn.mp3">Құрманғазы - Балбырауын</option>
+                    <option value="erke.mp3">Ә. Желдібаев - Ерке сылқым</option>
+                    <option value="saryarka.mp3">Құрманғазы - Сарыарқа</option>
+                `;
+
+                document.getElementById('label-param-2').innerText = "ЖЕҢІС СЕРИЯСЫ / СТРИК";
+                const sel2 = document.getElementById('select-param-2');
+                sel2.innerHTML = `
+                    <option value="5">5 ответов</option>
+                    <option value="7" selected>7 ответов (стандарт)</option>
+                    <option value="10">10 ответов (сложно)</option>
+                `;
+
+                // Таймер для домбры не нужен, скрываем третий блок
+                document.getElementById('group-param-3').style.display = 'none';
+            } else {
+                // Стандартная инициализация селекторов для остальных игр (через app.js)
+                if (window.app && typeof app.initSettings === 'function') {
+                    app.initSettings();
+                }
+            }
+        };
+
         // Функция смены языка
         function setLanguage(lang) {
-            // Перевод обычных текстовых блоков
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key]) {
                     el.innerHTML = translations[lang][key];
                 }
             });
-            // Перевод значения внутри textarea (для промпта ИИ)
             document.querySelectorAll('[data-i18n-val]').forEach(el => {
                 const key = el.getAttribute('data-i18n-val');
                 if (translations[lang] && translations[lang][key]) {
                     el.value = translations[lang][key];
                 }
             });
-            
             localStorage.setItem('siteLanguage', lang);
         }
-
-        // Загрузка сохраненного языка при открытии
-        window.onload = () => {
-            const savedLang = localStorage.getItem('siteLanguage') || 'ru';
-            setLanguage(savedLang);
-        };
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('dark-overlay').classList.toggle('active');
+        }
+
+        // Кнопка сохранения и перехода в игру
+        function launchGame() {
+            const jsonResult = document.getElementById('ai-json-result').value.trim();
+            if (jsonResult) {
+                localStorage.setItem('custom_questions', jsonResult);
+            }
+
+            if (currentGame === 'dombra') {
+                // Сохраняем настройки домбры в localStorage
+                const kui = document.getElementById('select-param-1').value;
+                const streak = document.getElementById('select-param-2').value;
+                localStorage.setItem('dombra_kui', kui);
+                localStorage.setItem('dombra_streak', streak);
+
+                // Переходим на игровой файл домбры
+                window.location.href = 'dombra.html';
+            } else {
+                // Переход для остальных игр через штатный метод app.js
+                if (window.app && typeof app.saveSettings === 'function') {
+                    app.saveSettings();
+                }
+                if (window.app && typeof app.startGame === 'function') {
+                    app.startGame();
+                } else {
+                    window.location.href = currentGame + '.html';
+                }
+            }
+        }
+
+        // Копирование промпта
+        function copyPrompt() {
+            const promptText = document.getElementById('prompt-to-copy');
+            promptText.select();
+            document.execCommand('copy');
+            alert('Промпт скопирован!');
         }
     </script>
 </body>
