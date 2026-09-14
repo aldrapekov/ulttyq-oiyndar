@@ -52,13 +52,12 @@
         </div>
     </nav>
 
-    <!-- ЭКРАН 1: НАСТРОЙКИ ИГРЫ (КАК В ДРУГИХ ИГРАХ) -->
+    <!-- ЭКРАН 1: НАСТРОЙКИ ИГРЫ -->
     <div class="content-overlay" id="setup-screen">
         <div class="setup-card">
             <h2 class="main-title" style="font-size: 1.5rem; margin-bottom: 15px;">🪕 Настройка режима «Домбырашы»</h2>
             
             <div class="controls-row">
-                <!-- Выбор кюя -->
                 <div class="control-group" style="flex: 1;">
                     <label class="control-label">Выберите кюй:</label>
                     <select id="kui-select" class="control-select">
@@ -69,7 +68,6 @@
                     </select>
                 </div>
 
-                <!-- Выбор длины серии (сколько победных ответов подряд) -->
                 <div class="control-group" style="flex: 1;">
                     <label class="control-label">Победная серия (правильных ответов):</label>
                     <select id="streak-select" class="control-select">
@@ -80,9 +78,6 @@
                 </div>
             </div>
 
-             <div class="step-title" data-i18n="step1"><b>Шаг 1:</b> Скопируйте задание и отправьте его в ChatGPT, Яндекс Алису или Gemini вместе с материалом урока.</div>
-            <textarea id="prompt-to-copy" class="step-textarea" data-i18n-val="promptText" readonly style="height: 80px; background: #f8f9fa;">Ты профессиональный учитель. Составь 30 тестовых вопросов по моему тексту. Формат ответа - СТРОГО валидный JSON массив, без лишних слов и без маркдауна. Структура: {"q": "Вопрос", "correct": "Правильный", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}. Текст урока: [ВСТАВЬТЕ ТЕКСТ]</textarea>
-            
             <div class="step-title">Шаг 2: Вставьте вопросы (JSON от ИИ)</div>
             <textarea id="questions-input" class="step-textarea" rows="4" placeholder='[{"q": "Вопрос?", "options": ["Правильный", "Неверный 1", "Неверный 2", "Неверный 3"], "correct": 0}]'></textarea>
 
@@ -92,20 +87,21 @@
         </div>
     </div>
 
-    <!-- ЭКРАН 2: САМАЯ ИГРА (СКРЫТА ДО СТАРТА) -->
+    <!-- ЭКРАН 2: САМАЯ ИГРА -->
     <div class="dombra-layout" id="game-screen" style="display: none;">
         <div class="dombra-media">
             <div class="melody-progress-container">
                 <div class="melody-bar" id="melody-progress"></div>
             </div>
             <video id="bg-video" src="dombra_playing.mp4" loop muted playsinline></video>
-            <img id="bg-angry" src="boy_angry_bg.jpg" style="display: none;">
+            <img id="bg-angry" src="boy_angry_bg.jpeg" style="display: none;">
         </div>
 
         <div class="dombra-controls-container">
             <div class="dombra-controls" id="controls-panel">
                 <div class="dombra-q-box" id="dombra-q">Вопрос загружается...</div>
-                <div class="baige-options" id="dombra-opt"></div>
+                <!-- Контейнер для ответов с правильным ID -->
+                <div id="dombra-opt"></div>
             </div>
         </div>
     </div>
@@ -120,7 +116,6 @@
     </div>
 
     <script>
-        // Меню
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('dark-overlay').classList.toggle('active');
@@ -131,7 +126,6 @@
         }
         function setLanguage(lang) { localStorage.setItem('siteLanguage', lang); location.reload(); }
 
-        // Игровые переменные
         let streak = 0;
         let targetStreak = 7; 
         let questions = [];
@@ -146,7 +140,6 @@
         const audioWrong = document.getElementById('audio-wrong');
         const controlsPanel = document.getElementById('controls-panel');
 
-        // Стандартные вопросы, если пользователь ничего не вставил
         const defaultQuestions = [
             { q: "Қазақ халқының екі ішекті шертпелі музыкалық аспабы қалай аталады?", options: ["Домбыра", "Қобыз", "Сыбызғы", "Жетіген"], correct: 0 },
             { q: "Құрманғазының әйгілі күйі қалай аталады?", options: ["Адай", "Қоштасу", "Желдірме", "Толғау"], correct: 0 },
@@ -157,13 +150,10 @@
             { q: "Әйгілі «Сарыарқа» күйінің авторы кім?", options: ["Құрманғазы", "Тәттімбет", "Құдайберген", "Мұхит"], correct: 0 }
         ];
 
-        // Старт игры из экрана настроек
         function startGame() {
-            // Читаем настройки
             const kuiFile = document.getElementById('kui-select').value;
             targetStreak = parseInt(document.getElementById('streak-select').value);
             
-            // Читаем вопросы из текстового поля
             const inputVal = document.getElementById('questions-input').value.trim();
             if (inputVal) {
                 try {
@@ -176,22 +166,18 @@
                 questions = defaultQuestions;
             }
 
-            // Переключаем экраны
             setupScreen.style.display = 'none';
             gameScreen.style.display = 'flex';
 
-            // Настраиваем и запускаем музыку
             audioDombra.src = kuiFile;
             audioDombra.play().catch(() => {});
             videoEl.play().catch(() => {});
 
-            // Выводим первый вопрос
             loadQuestion();
         }
 
         function loadQuestion() {
             if (questions.length === 0) return;
-            // Берем вопрос по кругу
             const qData = questions[currentQIndex % questions.length];
             document.getElementById('dombra-q').innerText = qData.q;
 
