@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Домбырашы | ÚLY DALA OIYNDARY</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Принудительные стили для сетки ответов на этой странице */
+        #dombra-opt {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 15px !important;
+            width: 100% !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -77,8 +86,7 @@
                     </select>
                 </div>
             </div>
-            <div class="step-title" data-i18n="step1"><b>Шаг 1:</b> Скопируйте задание и отправьте его в ChatGPT, Яндекс Алису или Gemini вместе с материалом урока.</div>
-            <textarea id="prompt-to-copy" class="step-textarea" data-i18n-val="promptText" readonly style="height: 80px; background: #f8f9fa;">Ты профессиональный учитель. Составь 30 тестовых вопросов по моему тексту. Формат ответа - СТРОГО валидный JSON массив, без лишних слов и без маркдауна. Структура: {"q": "Вопрос", "correct": "Правильный", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}. Текст урока: [ВСТАВЬТЕ ТЕКСТ]</textarea>
+
             <div class="step-title">Шаг 2: Вставьте вопросы (JSON от ИИ)</div>
             <textarea id="questions-input" class="step-textarea" rows="4" placeholder='[{"q": "Вопрос?", "options": ["Правильный", "Неверный 1", "Неверный 2", "Неверный 3"], "correct": 0}]'></textarea>
 
@@ -95,13 +103,13 @@
                 <div class="melody-bar" id="melody-progress"></div>
             </div>
             <video id="bg-video" src="dombra_playing.mp4" loop muted playsinline></video>
-            <img id="bg-angry" src="boy_angry_bg.jpeg" style="display: none;">
+            <img id="bg-angry" src="boy_angry_bg.jpg" style="display: none;">
         </div>
 
         <div class="dombra-controls-container">
             <div class="dombra-controls" id="controls-panel">
                 <div class="dombra-q-box" id="dombra-q">Вопрос загружается...</div>
-                <!-- Контейнер для ответов с правильным ID -->
+                <!-- Контейнер ответов -->
                 <div id="dombra-opt"></div>
             </div>
         </div>
