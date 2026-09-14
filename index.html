@@ -19,18 +19,42 @@
         .nav-btn { background: none; border: none; color: white; cursor: pointer; font-size: 24px; display: flex; align-items: center; }
         .nav-title { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
 
+        /* Переключатель языков в шапке */
+        .main-lang-switcher {
+            display: flex;
+            gap: 8px;
+        }
+        .main-lang-switcher button {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        .main-lang-switcher button:hover,
+        .main-lang-switcher button:active {
+            background: white;
+            color: #6a1b9a;
+            border-color: white;
+        }
+
         /* Видео и оверлей */
         .video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
         
         .content-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2; display: flex; justify-content: center; align-items: center;
-            background: rgba(0, 0, 0, 0.1); /* Совсем легкое затемнение */
+            background: rgba(0, 0, 0, 0.1);
         }
         
         .placeholder-text { 
             font-size: 2rem; font-weight: 900; max-width: 70%; line-height: 1.3; 
             text-transform: uppercase; color: rgba(255,255,255,0.7); text-align: center;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
         }
 
         /* Кнопка звука */
@@ -38,8 +62,9 @@
             position: absolute; bottom: 20px; right: 20px; z-index: 10; 
             background: rgba(0,0,0,0.5); border: none; color: white; border-radius: 50%;
             width: 50px; height: 50px; font-size: 24px; cursor: pointer; display: flex; 
-            justify-content: center; align-items: center;
+            justify-content: center; align-items: center; transition: 0.3s;
         }
+        .mute-btn:hover { background: rgba(0,0,0,0.8); transform: scale(1.1); }
 
         /* БОКОВОЕ МЕНЮ */
         .dark-overlay {
@@ -69,44 +94,49 @@
 
         .close-sidebar {
             position: absolute; top: 15px; right: 15px; background: none; border: none;
-            font-size: 24px; cursor: pointer; color: #555;
+            font-size: 24px; cursor: pointer; color: #555; transition: 0.2s;
         }
+        .close-sidebar:hover { color: #d32f2f; transform: rotate(90deg); }
     </style>
 </head>
 <body>
 
     <header class="top-navbar">
         <button class="nav-btn" onclick="toggleSidebar()">☰</button>
-        <div class="nav-title">Úly Dala Oıyndary</div>
-        <div style="width: 40px;"></div> </header>
+        <div class="nav-title" data-i18n="navTitle">Úly Dala Oıyndary</div>
+        
+        <!-- Новый переключатель языков -->
+        <div class="main-lang-switcher">
+            <button onclick="setLanguage('kk')">KZ</button>
+            <button onclick="setLanguage('ru')">RU</button>
+            <button onclick="setLanguage('en')">EN</button>
+        </div>
+    </header>
 
     <div class="dark-overlay" id="dark-overlay" onclick="toggleSidebar()"></div>
 
     <nav class="sidebar" id="sidebar">
         <button class="close-sidebar" onclick="toggleSidebar()">✖</button>
         
-        <!-- ВОТ ЭТА НОВАЯ СТРОЧКА -->
-        <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;">🏠 Басты бет / Главная</a>
+        <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;" data-i18n="menuHome">🏠 Басты бет / Главная</a>
 
-        <div class="sidebar-category">Ұлттық ойындар / Игры</div>
-        <!-- ... дальше твои игры ... -->
-        <a class="sidebar-item" href="menu.html?game=arkan">➰ Арқан Тартыс</a>
-        <a class="sidebar-item" href="menu.html?game=baige">🐎 Бәйге</a>
-        <a class="sidebar-item" href="menu.html?game=asyk">🦴 Асық Ату</a>
-        <a class="sidebar-item" href="menu.html?game=kyzquu">🏇 Қыз қуу</a>
+        <div class="sidebar-category" data-i18n="catGames">Ұлттық ойындар / Игры</div>
+        <a class="sidebar-item" href="menu.html?game=arkan" data-i18n="gameArkan">➰ Арқан Тартыс</a>
+        <a class="sidebar-item" href="menu.html?game=baige" data-i18n="gameBaige">🐎 Бәйге</a>
+        <a class="sidebar-item" href="menu.html?game=asyk" data-i18n="gameAsyk">🦴 Асық Ату</a>
+        <a class="sidebar-item" href="menu.html?game=kyzquu" data-i18n="gameKyzquu">🏇 Қыз қуу</a>
 
-        <!-- ДОБАВЬ ВОТ ЭТИ ДВЕ СТРОЧКИ -->
-        <div class="sidebar-category" style="margin-top: 20px;">Құралдар / Инструменты</div>
-        <a class="sidebar-item" href="selector.html">📷 Случайный ученик</a>
-        <a class="sidebar-item" href="https://aldrapekov.github.io/trening/">🎯 Тренинг</a>
+        <div class="sidebar-category" style="margin-top: 20px;" data-i18n="catTools">Құралдар / Инструменты</div>
+        <a class="sidebar-item" href="selector.html" data-i18n="toolRandom">📷 Случайный ученик</a>
+        <a class="sidebar-item" href="https://aldrapekov.github.io/trening/" data-i18n="toolTraining">🎯 Тренинг</a>
     </nav>
 
     <video class="video-bg" id="bg-video" autoplay loop muted playsinline>
         <source src="intro_bg.mp4" type="video/mp4">
-        </video>
+    </video>
 
     <div class="content-overlay">
-        <div class="placeholder-text">
+        <div class="placeholder-text" data-i18n="centerText">
             Выберите игру в меню слева
         </div>
     </div>
@@ -114,6 +144,68 @@
     <button class="mute-btn" onclick="toggleMute()">🔇</button>
 
     <script>
+        // --- СЛОВАРЬ ПЕРЕВОДОВ ---
+        const translations = {
+            ru: {
+                navTitle: "Úly Dala Oıyndary",
+                menuHome: "🏠 Главная",
+                catGames: "Игры",
+                gameArkan: "➰ Арқан Тартыс (Перетягивание каната)",
+                gameBaige: "🐎 Бәйге (Скачки)",
+                gameAsyk: "🦴 Асық Ату",
+                gameKyzquu: "🏇 Қыз қуу (Догони девушку)",
+                catTools: "Инструменты",
+                toolRandom: "📷 Случайный ученик",
+                toolTraining: "🎯 Тренинг",
+                centerText: "Выберите игру в меню слева"
+            },
+            kk: {
+                navTitle: "Ұлы Дала Ойындары",
+                menuHome: "🏠 Басты бет",
+                catGames: "Ұлттық ойындар",
+                gameArkan: "➰ Арқан Тартыс",
+                gameBaige: "🐎 Бәйге",
+                gameAsyk: "🦴 Асық Ату",
+                gameKyzquu: "🏇 Қыз қуу",
+                catTools: "Құралдар",
+                toolRandom: "📷 Кездейсоқ оқушы",
+                toolTraining: "🎯 Тренинг",
+                centerText: "Сол жақтағы мәзірден ойынды таңдаңыз"
+            },
+            en: {
+                navTitle: "Games of the Great Steppe",
+                menuHome: "🏠 Home",
+                catGames: "National Games",
+                gameArkan: "➰ Arkan Tartys (Tug of War)",
+                gameBaige: "🐎 Baige (Horse Racing)",
+                gameAsyk: "🦴 Asyk Atu",
+                gameKyzquu: "🏇 Kyz Quu (Catch the Girl)",
+                catTools: "Tools",
+                toolRandom: "📷 Random Student",
+                toolTraining: "🎯 Training",
+                centerText: "Select a game from the left menu"
+            }
+        };
+
+        // Функция смены языка
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            // Можно сохранить выбранный язык в localStorage, чтобы он не сбрасывался при обновлении страницы
+            localStorage.setItem('siteLanguage', lang);
+        }
+
+        // При загрузке страницы проверяем, был ли ранее выбран язык
+        window.onload = () => {
+            const savedLang = localStorage.getItem('siteLanguage') || 'ru'; // По умолчанию русский
+            setLanguage(savedLang);
+        };
+
+        // --- ЛОГИКА МЕНЮ И ВИДЕО ---
         function toggleMute() {
             const video = document.getElementById('bg-video');
             const btn = document.querySelector('.mute-btn');
