@@ -77,9 +77,18 @@
 <body>
 
     <header class="top-navbar">
-        <button class="nav-btn" onclick="toggleSidebar()">☰</button>
+        <!-- Группируем меню и домик слева -->
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button class="nav-btn" onclick="toggleSidebar()">☰</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'" style="font-size: 1.2rem;" title="На главную">🏠</button>
+        </div>
+        
         <div class="nav-title" id="top-nav-title">ÚLY DALA OIYNDARY</div>
-        <button class="nav-btn lang-btn" style="font-size: 1rem; font-weight: bold;">🌐 ҚАЗ</button>
+        
+        <!-- Пустой div нужной ширины справа, чтобы заголовок оставался ровно по центру -->
+        <div style="width: 70px; display: flex; justify-content: flex-end;">
+            <button class="nav-btn lang-btn" style="font-size: 1rem; font-weight: bold;">🌐 ҚАЗ</button>
+        </div>
     </header>
 
     <div class="dark-overlay" id="dark-overlay" onclick="toggleSidebar()"></div>
