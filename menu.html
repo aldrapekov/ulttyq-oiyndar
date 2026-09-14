@@ -19,6 +19,17 @@
         .nav-btn { background: none; border: none; color: white; cursor: pointer; font-size: 24px; display: flex; align-items: center; }
         .nav-title { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
 
+        /* Переключатель языков в шапке (добавлено) */
+        .main-lang-switcher { display: flex; gap: 8px; }
+        .main-lang-switcher button {
+            background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white; padding: 5px 10px; border-radius: 6px; cursor: pointer;
+            font-weight: bold; font-size: 0.85rem; transition: all 0.3s ease;
+        }
+        .main-lang-switcher button:hover, .main-lang-switcher button:active {
+            background: white; color: #6a1b9a; border-color: white;
+        }
+
         /* Видео фон */
         .video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
         
@@ -29,7 +40,7 @@
             background: rgba(0,0,0,0.3); padding: 20px; box-sizing: border-box; 
         }
 
-        /* Главная карточка настроек (как на скриншоте) */
+        /* Главная карточка настроек */
         .setup-card {
             background: rgba(255, 255, 255, 0.95);
             border: 2px solid #8e24aa;
@@ -44,7 +55,7 @@
         /* Блок с селектами */
         .controls-row { display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-end; flex-wrap: wrap; }
         .control-group { display: flex; flex-direction: column; }
-        .control-label { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .control-label { font-size: 0.9rem; color: #555; margin-bottom: 5px; font-weight: bold;}
         .control-select { padding: 8px 12px; font-size: 1.1rem; border: 1px solid #666; border-radius: 8px; background: white; cursor: pointer; color: #333; }
 
         /* Тексты шагов */
@@ -63,7 +74,7 @@
         }
         .action-btn:hover { background: #3b0764; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(76, 29, 149, 0.4); }
 
-        /* Боковое меню (Сайдбар) */
+        /* Боковое меню */
         .dark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 15; opacity: 0; pointer-events: none; transition: 0.3s; }
         .dark-overlay.active { opacity: 1; pointer-events: all; }
         .sidebar { position: absolute; top: 0; left: -320px; width: 320px; height: 100%; background: white; z-index: 25; box-shadow: 2px 0 15px rgba(0,0,0,0.5); transition: 0.3s; padding-top: 70px; box-sizing: border-box; }
@@ -77,17 +88,19 @@
 <body>
 
     <header class="top-navbar">
-        <!-- Группируем меню и домик слева -->
         <div style="display: flex; gap: 15px; align-items: center;">
             <button class="nav-btn" onclick="toggleSidebar()">☰</button>
             <button class="nav-btn" onclick="window.location.href='index.html'" style="font-size: 1.2rem;" title="На главную">🏠</button>
         </div>
         
-        <div class="nav-title" id="top-nav-title">ÚLY DALA OIYNDARY</div>
+        <div class="nav-title" data-i18n="navTitle">ÚLY DALA OIYNDARY</div>
         
-        <!-- Пустой div нужной ширины справа, чтобы заголовок оставался ровно по центру -->
-        <div style="width: 70px; display: flex; justify-content: flex-end;">
-            <button class="nav-btn lang-btn" style="font-size: 1rem; font-weight: bold;">🌐 ҚАЗ</button>
+        <div style="display: flex; justify-content: flex-end;">
+            <div class="main-lang-switcher">
+                <button onclick="setLanguage('kk')">KZ</button>
+                <button onclick="setLanguage('ru')">RU</button>
+                <button onclick="setLanguage('en')">EN</button>
+            </div>
         </div>
     </header>
 
@@ -96,20 +109,17 @@
     <nav class="sidebar" id="sidebar">
         <button class="close-sidebar" onclick="toggleSidebar()">✖</button>
         
-        <!-- ВОТ ЭТА НОВАЯ СТРОЧКА -->
-        <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;">🏠 Басты бет / Главная</a>
+        <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;" data-i18n="menuHome">🏠 Басты бет / Главная</a>
 
-        <div class="sidebar-category">Ұлттық ойындар / Игры</div>
-        <!-- ... дальше твои игры ... -->
-        <a class="sidebar-item" href="menu.html?game=arkan">➰ Арқан Тартыс</a>
-        <a class="sidebar-item" href="menu.html?game=baige">🐎 Бәйге</a>
-        <a class="sidebar-item" href="menu.html?game=asyk">🦴 Асық Ату</a>
-        <a class="sidebar-item" href="menu.html?game=kyzquu">🏇 Қыз қуу</a>
+        <div class="sidebar-category" data-i18n="catGames">Ұлттық ойындар / Игры</div>
+        <a class="sidebar-item" href="menu.html?game=arkan" data-i18n="gameArkan">➰ Арқан Тартыс</a>
+        <a class="sidebar-item" href="menu.html?game=baige" data-i18n="gameBaige">🐎 Бәйге</a>
+        <a class="sidebar-item" href="menu.html?game=asyk" data-i18n="gameAsyk">🦴 Асық Ату</a>
+        <a class="sidebar-item" href="menu.html?game=kyzquu" data-i18n="gameKyzquu">🏇 Қыз қуу</a>
 
-        <!-- ДОБАВЬ ВОТ ЭТИ ДВЕ СТРОЧКИ -->
-        <div class="sidebar-category" style="margin-top: 20px;">Құралдар / Инструменты</div>
-        <a class="sidebar-item" href="selector.html">📷 Случайный ученик</a>
-        <a class="sidebar-item" href="https://aldrapekov.github.io/trening/">🎯 Тренинг</a>
+        <div class="sidebar-category" style="margin-top: 20px;" data-i18n="catTools">Құралдар / Инструменты</div>
+        <a class="sidebar-item" href="selector.html" data-i18n="toolRandom">📷 Случайный ученик</a>
+        <a class="sidebar-item" href="https://aldrapekov.github.io/trening/" data-i18n="toolTraining">🎯 Тренинг</a>
     </nav>
 
     <video class="video-bg" id="bg-video" autoplay loop muted playsinline>
@@ -121,15 +131,15 @@
             
             <div class="controls-row">
                 <div class="control-group">
-                    <span class="control-label">режим</span>
+                    <span class="control-label" data-i18n="labelMode">режим</span>
                     <select class="control-select" id="mode-select" onchange="app.saveSettings()">
-                        <option value="pve">игрок vs ИИ</option>
-                        <option value="pvp">игрок vs игрок</option>
+                        <option value="pve" data-i18n="optPve">игрок vs ИИ</option>
+                        <option value="pvp" data-i18n="optPvp">игрок vs игрок</option>
                     </select>
                 </div>
                 
                 <div class="control-group" id="wrap-players" style="display:none;">
-                    <span class="control-label">игроки</span>
+                    <span class="control-label" data-i18n="labelPlayers">игроки</span>
                     <select class="control-select" id="players-select" onchange="app.saveSettings()">
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -138,29 +148,29 @@
                 </div>
                 
                 <div class="control-group" id="wrap-difficulty">
-                    <span class="control-label">таймер</span>
+                    <span class="control-label" data-i18n="labelTimer">таймер</span>
                     <select class="control-select" id="difficulty-select" onchange="app.saveSettings()">
-                        <option value="easy">6 сек</option>
-                        <option value="medium" selected>5 сек</option>
-                        <option value="hard">4 сек</option>
-                        <option value="impossible">3 сек</option>
+                        <option value="easy" data-i18n="optEasy">6 сек</option>
+                        <option value="medium" selected data-i18n="optMedium">5 сек</option>
+                        <option value="hard" data-i18n="optHard">4 сек</option>
+                        <option value="impossible" data-i18n="optImpossible">3 сек</option>
                     </select>
                 </div>
                 
-                <div style="flex: 1; color: #666; font-size: 0.9rem; display: flex; align-items: flex-end; padding-bottom: 10px;">
+                <div style="flex: 1; color: #666; font-size: 0.9rem; display: flex; align-items: flex-end; padding-bottom: 10px;" data-i18n="comingSoon">
                     сюда еще что-нибудь придумаю
                 </div>
             </div>
 
-            <div class="step-title"><b>Шаг 1:</b> Скопируйте задание и отправьте его в ChatGPT, Яндекс Алису или Gemini вместе с материалом урока.</div>
-            <textarea id="prompt-to-copy" class="step-textarea" readonly style="height: 80px; background: #f8f9fa;">Ты профессиональный учитель. Составь 30 тестовых вопросов по моему тексту. Формат ответа - СТРОГО валидный JSON массив, без лишних слов и без маркдауна. Структура: {"q": "Вопрос", "correct": "Правильный", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}. Текст урока: [ВСТАВЬТЕ ТЕКСТ]</textarea>
+            <div class="step-title" data-i18n="step1"><b>Шаг 1:</b> Скопируйте задание и отправьте его в ChatGPT, Яндекс Алису или Gemini вместе с материалом урока.</div>
+            <textarea id="prompt-to-copy" class="step-textarea" data-i18n-val="promptText" readonly style="height: 80px; background: #f8f9fa;">Ты профессиональный учитель. Составь 30 тестовых вопросов по моему тексту. Формат ответа - СТРОГО валидный JSON массив, без лишних слов и без маркдауна. Структура: {"q": "Вопрос", "correct": "Правильный", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}. Текст урока: [ВСТАВЬТЕ ТЕКСТ]</textarea>
 
-            <div class="step-title"><b>Шаг 2:</b> Скопируйте ответ от ИИ, вставьте сюда и загрузите в игру.</div>
+            <div class="step-title" data-i18n="step2"><b>Шаг 2:</b> Скопируйте ответ от ИИ, вставьте сюда и загрузите в игру.</div>
             <textarea id="ai-json-result" class="step-textarea" placeholder="[ { ... } ]" style="height: 100px;"></textarea>
 
             <div class="buttons-row">
-                <button class="action-btn" onclick="copyPrompt()">Скопировать задание для ИИ</button>
-                <button class="action-btn" onclick="launchSelectedGame()">Сохранить и перейти в игру</button>
+                <button class="action-btn" onclick="copyPrompt()" data-i18n="btnCopy">Скопировать задание для ИИ</button>
+                <button class="action-btn" onclick="launchSelectedGame()" data-i18n="btnSave">Сохранить и перейти в игру</button>
             </div>
             
         </div>
@@ -168,6 +178,80 @@
 
     <script src="app.js"></script>
     <script>
+        // --- СЛОВАРЬ ПЕРЕВОДОВ ДЛЯ МЕНЮ ---
+        const translations = {
+            ru: {
+                navTitle: "Úly Dala Oıyndary", menuHome: "🏠 Главная", catGames: "Игры",
+                gameArkan: "➰ Арқан Тартыс (Перетягивание каната)", gameBaige: "🐎 Бәйге (Скачки)",
+                gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу (Догони девушку)",
+                catTools: "Инструменты", toolRandom: "📷 Случайный ученик", toolTraining: "🎯 Тренинг",
+                
+                labelMode: "РЕЖИМ", optPve: "игрок vs ИИ", optPvp: "игрок vs игрок",
+                labelPlayers: "ИГРОКИ", labelTimer: "ТАЙМЕР",
+                optEasy: "6 сек", optMedium: "5 сек", optHard: "4 сек", optImpossible: "3 сек",
+                comingSoon: "сюда еще что-нибудь придумаю",
+                step1: "<b>Шаг 1:</b> Скопируйте задание и отправьте его в ChatGPT, Яндекс Алису или Gemini вместе с материалом урока.",
+                promptText: 'Ты профессиональный учитель. Составь 30 тестовых вопросов по моему тексту. Формат ответа - СТРОГО валидный JSON массив, без лишних слов и без маркдауна. Структура: {"q": "Вопрос", "correct": "Правильный", "wrong": ["Неверный 1", "Неверный 2", "Неверный 3"]}. Текст урока: [ВСТАВЬТЕ ТЕКСТ]',
+                step2: "<b>Шаг 2:</b> Скопируйте ответ от ИИ, вставьте сюда и загрузите в игру.",
+                btnCopy: "Скопировать задание для ИИ", btnSave: "Сохранить и перейти в игру"
+            },
+            kk: {
+                navTitle: "Ұлы Дала Ойындары", menuHome: "🏠 Басты бет", catGames: "Ұлттық ойындар",
+                gameArkan: "➰ Арқан Тартыс", gameBaige: "🐎 Бәйге", gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу",
+                catTools: "Құралдар", toolRandom: "📷 Кездейсоқ оқушы", toolTraining: "🎯 Тренинг",
+                
+                labelMode: "РЕЖИМ", optPve: "ойыншы vs ЖИ", optPvp: "ойыншы vs ойыншы",
+                labelPlayers: "ОЙЫНШЫЛАР", labelTimer: "УАҚЫТ",
+                optEasy: "6 сек", optMedium: "5 сек", optHard: "4 сек", optImpossible: "3 сек",
+                comingSoon: "бұл жерге тағы бірдеңе ойлап табармын",
+                step1: "<b>1-қадам:</b> Тапсырманы көшіріп, оны сабақ материалымен бірге ChatGPT, Яндекс Алиса немесе Gemini-ге жіберіңіз.",
+                promptText: 'Сен кәсіби мұғалімсің. Менің мәтінім бойынша 30 тест сұрағын құрастыр. Жауап форматы - ҚАТАҢ түрде валидті JSON массиві, артық сөздерсіз және маркдаунсыз. Құрылымы: {"q": "Сұрақ", "correct": "Дұрыс", "wrong": ["Қате 1", "Қате 2", "Қате 3"]}. Сабақ мәтіні: [МӘТІНДІ ЕНГІЗІҢІЗ]',
+                step2: "<b>2-қадам:</b> ЖИ жауабын көшіріп, осында енгізіңіз және ойынға жүктеңіз.",
+                btnCopy: "ЖИ үшін тапсырманы көшіру", btnSave: "Сақтау және ойынға өту"
+            },
+            en: {
+                navTitle: "Games of the Great Steppe", menuHome: "🏠 Home", catGames: "National Games",
+                gameArkan: "➰ Arkan Tartys (Tug of War)", gameBaige: "🐎 Baige (Horse Racing)",
+                gameAsyk: "🦴 Asyk Atu", gameKyzquu: "🏇 Kyz Quu (Catch the Girl)",
+                catTools: "Tools", toolRandom: "📷 Random Student", toolTraining: "🎯 Training",
+                
+                labelMode: "MODE", optPve: "player vs AI", optPvp: "player vs player",
+                labelPlayers: "PLAYERS", labelTimer: "TIMER",
+                optEasy: "6 sec", optMedium: "5 sec", optHard: "4 sec", optImpossible: "3 sec",
+                comingSoon: "I'll figure something out for this later",
+                step1: "<b>Step 1:</b> Copy the prompt and send it to ChatGPT, Yandex Alice, or Gemini along with your lesson material.",
+                promptText: 'You are a professional teacher. Create 30 test questions based on my text. The response format must be STRICTLY a valid JSON array, without extra words and without markdown. Structure: {"q": "Question", "correct": "Correct", "wrong": ["Wrong 1", "Wrong 2", "Wrong 3"]}. Lesson text: [INSERT TEXT]',
+                step2: "<b>Step 2:</b> Copy the AI's response, paste it here, and load it into the game.",
+                btnCopy: "Copy AI prompt", btnSave: "Save and start game"
+            }
+        };
+
+        // Функция смены языка
+        function setLanguage(lang) {
+            // Перевод обычных текстовых блоков
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            // Перевод значения внутри textarea (для промпта ИИ)
+            document.querySelectorAll('[data-i18n-val]').forEach(el => {
+                const key = el.getAttribute('data-i18n-val');
+                if (translations[lang] && translations[lang][key]) {
+                    el.value = translations[lang][key];
+                }
+            });
+            
+            localStorage.setItem('siteLanguage', lang);
+        }
+
+        // Загрузка сохраненного языка при открытии
+        window.onload = () => {
+            const savedLang = localStorage.getItem('siteLanguage') || 'ru';
+            setLanguage(savedLang);
+        };
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('dark-overlay').classList.toggle('active');
