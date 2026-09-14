@@ -27,17 +27,32 @@
         
         <a class="sidebar-item" href="index.html" style="color: #8e24aa; border-bottom: 2px solid #eee; margin-bottom: 10px;" data-i18n="menuHome">🏠 Басты бет / Главная</a>
 
-        <div class="sidebar-category" data-i18n="catGames">Ұлттық ойындар / Игры</div>
-        <a class="sidebar-item" href="menu.html?game=arkan" data-i18n="gameArkan">➰ Арқан Тартыс</a>
-        <a class="sidebar-item" href="menu.html?game=baige" data-i18n="gameBaige">🐎 Бәйге</a>
-        <a class="sidebar-item" href="menu.html?game=asyk" data-i18n="gameAsyk">🦴 Асық Ату</a>
-        <a class="sidebar-item" href="menu.html?game=kyzquu" data-i18n="gameKyzquu">🏇 Қыз қуу</a>
+        <!-- КЛИКАБЕЛЬНАЯ КАТЕГОРИЯ ИГР -->
+        <div class="sidebar-category" onclick="toggleSubmenu('submenu-games', 'arrow-games')">
+            <span data-i18n="catGames">Ұлттық ойындар / Игры</span>
+            <span class="category-arrow" id="arrow-games">▼</span>
+        </div>
+        
+        <!-- СКРЫТЫЙ СПИСОК ИГР (Свернут по умолчанию) -->
+        <div class="submenu" id="submenu-games">
+            <a class="sidebar-item" href="menu.html?game=arkan" data-i18n="gameArkan">➰ Арқан Тартыс</a>
+            <a class="sidebar-item" href="menu.html?game=baige" data-i18n="gameBaige">🐎 Бәйге</a>
+            <a class="sidebar-item" href="menu.html?game=asyk" data-i18n="gameAsyk">🦴 Асық Ату</a>
+            <a class="sidebar-item" href="menu.html?game=kyzquu" data-i18n="gameKyzquu">🏇 Қыз қуу</a>
+        </div>
 
-        <div class="sidebar-category" style="margin-top: 20px;" data-i18n="catTools">Құралдар / Инструменты</div>
-        <a class="sidebar-item" href="selector.html" data-i18n="toolRandom">📷 Случайный ученик</a>
-        <a class="sidebar-item" href="https://aldrapekov.github.io/trening/" data-i18n="toolTraining">🎯 Тренинг</a>
+        <!-- КЛИКАБЕЛЬНАЯ КАТЕГОРИЯ ИНСТРУМЕНТОВ -->
+        <div class="sidebar-category" style="margin-top: 10px;" onclick="toggleSubmenu('submenu-tools', 'arrow-tools')">
+            <span data-i18n="catTools">Құралдар / Инструменты</span>
+            <span class="category-arrow" id="arrow-tools">▼</span>
+        </div>
+        
+        <!-- СКРЫТЫЙ СПИСОК ИНСТРУМЕНТОВ (Свернут по умолчанию) -->
+        <div class="submenu" id="submenu-tools">
+            <a class="sidebar-item" href="selector.html" data-i18n="toolRandom">📷 Случайный ученик</a>
+            <a class="sidebar-item" href="https://aldrapekov.github.io/trening/" data-i18n="toolTraining">🎯 Тренинг</a>
+        </div>
     </nav>
-
     <video class="video-bg" id="bg-video" autoplay loop muted playsinline>
         <source src="intro_bg.mp4" type="video/mp4">
     </video>
@@ -125,6 +140,14 @@
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('dark-overlay').classList.toggle('active');
+        }
+        // Функция для сворачивания/разворачивания списков (Аккордеон)
+        function toggleSubmenu(submenuId, arrowId) {
+            const submenu = document.getElementById(submenuId);
+            const arrow = document.getElementById(arrowId);
+            
+            submenu.classList.toggle('open');
+            arrow.classList.toggle('open');
         }
     </script>
 </body>
