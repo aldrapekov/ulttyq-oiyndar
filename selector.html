@@ -6,6 +6,26 @@
     <title>ULY DALA OYINDARY - Случайный Ученик</title>
     <link rel="stylesheet" href="style.css">
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <style>
+        /* Гарантированное центрирование карточки с учетом фиксированной шапки */
+        .content-area {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .main-container {
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
 
@@ -40,6 +60,7 @@
         <a class="sidebar-item" href="menu.html?game=baige" data-i18n="gameBaige">🐎 Бәйге</a>
         <a class="sidebar-item" href="menu.html?game=asyk" data-i18n="gameAsyk">🦴 Асық Ату</a>
         <a class="sidebar-item" href="menu.html?game=kyzquu" data-i18n="gameKyzquu">🏇 Қыз қуу</a>
+        <a class="sidebar-item" href="menu.html?game=dombra" style="color: #00B1C1;" data-i18n="gameDombra">🪕 Домбырашы (Одиночная)</a>
 
         <div class="sidebar-category" style="margin-top: 20px;" data-i18n="catTools">Құралдар / Инструменты</div>
         <a class="sidebar-item" href="selector.html" data-i18n="toolRandom">📷 Случайный ученик</a>
@@ -53,14 +74,14 @@
         <div class="main-container" id="main-menu">
             <h1 class="main-title-text" data-i18n="navTitle">ULY DALA OYINDARY</h1>
             <h2 class="sub-title" data-i18n="title">Выбор случайного ученика</h2>
-            <p data-i18n="desc" style="color: #555;">Нажмите кнопку, загрузится нейросеть, затем учитель направит камеру на класс.<br>Ученик будет выбран автоматически.</p>
+            <p data-i18n="desc" style="color: #555; margin-bottom: 25px;">Нажмите кнопку, загрузится нейросеть, затем учитель направит камеру на класс.<br>Ученик будет выбран автоматически.</p>
             <button class="action-btn" id="start-picker" onclick="randomPicker.init()" data-i18n="btnStart">Запустить Случайный Выбор</button>
             <p id="status-text" style="color:var(--red); font-weight:bold; margin-top: 15px;"></p>
         </div>
 
         <!-- Окно камеры -->
         <div id="camera-screen">
-            <video id="video-element" autoplay muted></video>
+            <video id="video-element" autoplay muted playsinline></video>
             <canvas id="overlay-canvas"></canvas>
         </div>
 
@@ -73,12 +94,11 @@
     </div>
 
 <script>
-    // --- СЛОВАРЬ ПЕРЕВОДОВ ИЗ ОБЕИХ СТРАНИЦ ---
     const translations = {
         ru: {
             navTitle: "Úly Dala Oıyndary", menuHome: "🏠 Главная", catGames: "Игры",
             gameArkan: "➰ Арқан Тартыс (Перетягивание каната)", gameBaige: "🐎 Бәйге (Скачки)",
-            gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу (Догони девушку)",
+            gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу (Догони девушку)", gameDombra: "🪕 Домбырашы (Одиночная)",
             catTools: "Инструменты", toolRandom: "📷 Случайный ученик", toolTraining: "🎯 Тренинг",
             
             title: "Выбор случайного ученика",
@@ -92,7 +112,7 @@
         },
         kk: {
             navTitle: "Ұлы Дала Ойындары", menuHome: "🏠 Басты бет", catGames: "Ұлттық ойындар",
-            gameArkan: "➰ Арқан Тартыс", gameBaige: "🐎 Бәйге", gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу",
+            gameArkan: "➰ Арқан Тартыс", gameBaige: "🐎 Бәйге", gameAsyk: "🦴 Асық Ату", gameKyzquu: "🏇 Қыз қуу", gameDombra: "🪕 Домбырашы",
             catTools: "Құралдар", toolRandom: "📷 Кездейсоқ оқушы", toolTraining: "🎯 Тренинг",
             
             title: "Кездейсоқ оқушыны таңдау",
@@ -107,7 +127,7 @@
         en: {
             navTitle: "Games of the Great Steppe", menuHome: "🏠 Home", catGames: "National Games",
             gameArkan: "➰ Arkan Tartys (Tug of War)", gameBaige: "🐎 Baige (Horse Racing)",
-            gameAsyk: "🦴 Asyk Atu", gameKyzquu: "🏇 Kyz Quu (Catch the Girl)",
+            gameAsyk: "🦴 Asyk Atu", gameKyzquu: "🏇 Kyz Quu (Catch the Girl)", gameDombra: "🪕 Dómbyrashy (Solo)",
             catTools: "Tools", toolRandom: "📷 Random Student", toolTraining: "🎯 Training",
             
             title: "Random Student Selector",
@@ -134,21 +154,16 @@
         localStorage.setItem('siteLanguage', lang);
     }
 
-    // Подхватываем язык при загрузке страницы
     window.onload = () => {
         const savedLang = localStorage.getItem('siteLanguage') || 'ru';
         setLanguage(savedLang);
     };
 
-    // Открытие/закрытие бокового меню
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('active');
         document.getElementById('dark-overlay').classList.toggle('active');
     }
 
-    /**
-     * ULY DALA OYINDARY: Random Student Picker
-     */
     const randomPicker = {
         video: document.getElementById('video-element'),
         canvas: document.getElementById('overlay-canvas'),
@@ -188,7 +203,9 @@
 
         async startCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment" } 
+                });
                 this.video.srcObject = stream;
                 
                 this.mainMenu.style.display = 'none';
@@ -234,6 +251,9 @@
             if (detections.length === 0) {
                 alert(translations[currentLang].errNoFace);
                 this.stopCamera();
+                this.camScreen.style.display = 'none';
+                this.mainMenu.style.display = 'block';
+                this.startBtn.disabled = false;
                 return;
             }
 
@@ -255,11 +275,11 @@
             this.canvas.style.display = 'none'; 
 
             setTimeout(() => {
-                this.takeFinalPhoto(faceData, zoomScale);
+                this.takeFinalPhoto(faceData);
             }, 1600);
         },
 
-        takeFinalPhoto(faceData, zoomScale) {
+        takeFinalPhoto(faceData) {
             const tempCanvas = document.createElement('canvas');
             const ctx = tempCanvas.getContext('2d');
             
